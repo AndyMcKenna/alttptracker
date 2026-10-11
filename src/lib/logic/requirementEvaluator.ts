@@ -15,17 +15,37 @@ export interface EvaluationContext {
   /** OWR: Override world state for requirement evaluation on tiles whose effective
    *  world differs from the global setting (e.g., flipped tiles). */
   effectiveWorldState?: string;
-  /** Accumulates sequence-break reason keys whenever "ool" is returned. */
+  /** Accumulates reason keys whenever "ool" (sequence breaks) or "possible" (static key assumptions) is returned. */
   reasons?: Set<string>;
+}
+
+/** Per-traversal state for static key logic, shared by reference between all evaluators of a traversal. */
+export interface StaticKeyRuntime {
+  /** Small keys that may still be found in reachable unchecked locations (in-dungeon keys only), per dungeon */
+  extraKeys: Record<string, number>;
+}
+
+export interface RequirementEvaluatorOptions {
+  staticKeys?: StaticKeyRuntime;
+  /** All-items evaluators treat every static key requirement as met */
+  assumeAllStaticKeys?: boolean;
 }
 
 export class RequirementEvaluator {
   private state: GameState;
   private regions?: Record<string, RegionLogic>;
+  private options: RequirementEvaluatorOptions;
 
-  constructor(state: GameState, regions?: Record<string, RegionLogic>) {
+  constructor(state: GameState, regions?: Record<string, RegionLogic>, options: RequirementEvaluatorOptions = {}) {
     this.state = state;
     this.regions = regions;
+    this.options = options;
+  }
+
+  /** Chest keys collected for a dungeon; static key logic never counts vanilla key drops or pot keys. */
+  private collectedChestKeys(dungeonId: string): number {
+    const collected = this.state.dungeons[dungeonId]?.smallKeys ?? 0;
+    return Math.min(collected, DungeonsData[dungeonId]?.totalLocations?.smallkeys ?? collected);
   }
 
   public evaluateWorldLogic(worldLogic: WorldLogic, ctx: EvaluationContext): LogicStatus {
@@ -707,8 +727,27 @@ export class RequirementEvaluator {
         dungeon = this.state.dungeons[conditionParts[1]];
         return (dungeon.bigKey ?? false) ? "available" : "unavailable";
 
+      // Static key logic: keys|<dungeonId>|<count> of collected chest keys
       case "keys": {
-        return "available";
+        if (conditionParts.length < 3 || this.options.assumeAllStaticKeys) return "available";
+        const dungeonId = conditionParts[1];
+        const needed = parseInt(conditionParts[2]);
+        const collected = this.collectedChestKeys(dungeonId);
+        if (collected >= needed) return "available";
+        if (collected + (this.options.staticKeys?.extraKeys[dungeonId] ?? 0) >= needed) {
+          ctx.reasons?.add(`staticFindableKeys|${dungeonId}|${needed}`);
+          return "possible";
+        }
+        return "unavailable";
+      }
+
+      // Static key logic placement condition: assume|bigKey|<dungeonId>|<locations> or
+      // assume|smallKey|<dungeonId>|<locations>. The tracker never knows where items are, so these
+      // only ever make something "possible", with the condition kept as the reason.
+      case "assume": {
+        if (this.options.assumeAllStaticKeys) return "available";
+        ctx.reasons?.add(condition);
+        return "possible";
       }
 
       case "medallion": {

@@ -9,7 +9,7 @@ export interface CheckStatus {
   logic: LogicStatus;
   manuallyChecked: boolean;
   scoutedItems: string[];
-  /** Sequence-break keys that caused this location to be "ool". Only populated when logic === "ool". */
+  /** Reason keys behind an "ool" (sequence breaks) or "possible" (static key assumptions) status. Only populated for those statuses. */
   oolReasons?: string[];
 }
 
@@ -78,7 +78,7 @@ export const checksSlice = createSlice({
       Object.entries(locationsLogic).forEach(([location, logicStatus]) => {
         if (state.locationsChecks[location]) {
           state.locationsChecks[location].logic = logicStatus;
-          const newReasons = logicStatus === "ool" ? (locationReasons?.[location] ?? undefined) : undefined;
+          const newReasons = logicStatus === "ool" || logicStatus === "possible" ? (locationReasons?.[location] ?? undefined) : undefined;
           const oldReasons = state.locationsChecks[location].oolReasons;
           // Only update if changed to avoid Redux referential equality causing infinite loops.
           const reasonsChanged =
@@ -93,7 +93,7 @@ export const checksSlice = createSlice({
       Object.entries(entrancesLogic).forEach(([entrance, logicStatus]) => {
         if (state.entranceChecks[entrance]) {
           state.entranceChecks[entrance].logic = logicStatus;
-          const newReasons = logicStatus === "ool" ? (entranceReasons?.[entrance] ?? undefined) : undefined;
+          const newReasons = logicStatus === "ool" || logicStatus === "possible" ? (entranceReasons?.[entrance] ?? undefined) : undefined;
           const oldReasons = state.entranceChecks[entrance].oolReasons;
           // Only update if changed to avoid Redux referential equality causing infinite loops.
           const reasonsChanged =

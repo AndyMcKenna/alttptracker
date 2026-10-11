@@ -98,7 +98,9 @@ function LogicProvider({ children }: LogicProviderProps) {
 
     const snapshot = { items, settings: logicSettings, dungeons: effectiveDungeons, entrances, checks, overworld };
 
-    const traverser = new OverworldTraverser(snapshot, { regions: effectiveGraph.regions }, effectiveGraph.metadata);
+    // Static key logic runs on partial protection; its thresholds live in the graph overlay
+    const protection = logicSettings.keyLogic === "dangerous" ? "dangerous" : "partial";
+    const traverser = new OverworldTraverser(snapshot, { regions: effectiveGraph.regions }, effectiveGraph.metadata, protection);
     const newResults = traverser.calculateAll();
 
     dispatch(updateLogicStatuses(newResults));

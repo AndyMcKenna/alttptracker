@@ -108,6 +108,8 @@ export interface SettingsState {
   ganonVulnerable: ganonVulnerableTypes;
   wildSmallKeys: "inDungeon" | "wild" | "universal";
   wildBigKeys: boolean;
+  /** Small key logic algorithm. "static" (OWR's entrance randomizer rules) needs vanilla doors and unshuffled key drops/pots. */
+  keyLogic: "partial" | "dangerous" | "static";
   wildMaps: boolean;
   wildCompasses: boolean;
   pottery: "none" | "keys" | "cave" | "cavekeys" | "reduced" | "clustered" | "nonempty" | "dungeon" | "lottery";
@@ -179,6 +181,7 @@ export const initialState: SettingsState = {
   ganonVulnerable: "7",
   wildSmallKeys: "inDungeon",
   wildBigKeys: false,
+  keyLogic: "partial",
   wildMaps: false,
   wildCompasses: false,
   pottery: "none",

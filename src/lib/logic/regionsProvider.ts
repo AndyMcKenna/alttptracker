@@ -23,10 +23,11 @@
  * is never mutated. Transforms share a precomputed RegionMetadata context.
  */
 
-import type { ExitLogic, GameState, LogicRequirement, LogicState, RegionLogic, WorldLogic } from "@/data/logic/logicTypes";
+import type { ExitLogic, GameState, LogicRequirement, LogicState, RegionLogic, StaticTRVariant, WorldLogic } from "@/data/logic/logicTypes";
 import { entranceLocations } from "@/data/locationsData";
 import { whirlpoolRegistry, parallelLinks } from "@/data/logic/owData";
 import { getEntranceGroup } from "@/lib/dropdowns";
+import { applyStaticKeyLogic, computeTRReachability, isStaticKeyLogicActive, selectTRVariant } from "./staticKeyLogic";
 
 // ─── Shared metadata computed once for all transforms ──────────────────
 
@@ -49,6 +50,10 @@ export interface RegionMetadata {
   fluteSpotExits: Map<string, number>;
   /** Set of whirlpool exit names */
   whirlpoolExitNames: Set<string>;
+  /** Turtle Rock rule variant chosen for static key logic (only set when it is active) */
+  staticTRVariant?: StaticTRVariant;
+  /** The graph before the static key logic overlay, used to show what is reachable outside static logic */
+  staticBaseRegions?: Record<string, RegionLogic>;
 }
 
 /**
@@ -707,6 +712,13 @@ export function buildEffectiveRegions(
   regions = applyStandardLogicChanges(regions, effectiveState);
   regions = applyStandvertedPortalFixes(regions, effectiveState);
 
+  // Static key logic goes last: its Turtle Rock variant depends on the final layout
+  if (isStaticKeyLogicActive(effectiveState.settings)) {
+    const staticTRVariant = selectTRVariant(computeTRReachability(regions, effectiveState));
+    const staticBaseRegions = regions;
+    regions = applyStaticKeyLogic(regions, effectiveState, staticTRVariant);
+    return { regions, metadata: { ...metadata, staticTRVariant, staticBaseRegions } };
+  }
 
   return { regions, metadata };
 }

@@ -40,7 +40,7 @@
 
 import { type CrystalSwitchState, type GameState, type LinkState, type LogicState, type LogicStatus, type RegionLogic } from "@/data/logic/logicTypes";
 import type { LogicSet } from "./logicMapper";
-import { RequirementEvaluator, type EvaluationContext } from "./requirementEvaluator";
+import { RequirementEvaluator, type EvaluationContext, type StaticKeyRuntime } from "./requirementEvaluator";
 import { getLogicStateForWorld, createAllItemsState, isBetterStatus, minimumStatus } from "./logicHelpers";
 import { PriorityQueue } from "@datastructures-js/priority-queue";
 import { OVERWORLD_REGION_TYPES, isPotteryKeyShuffle, DOOR_PREFIX_TO_DUNGEON, PORTAL_TO_DUNGEON } from "./dungeonConstants";
@@ -131,16 +131,19 @@ export class DungeonTraverser {
   private canReachTargetsCache: WeakMap<object, string[]> = new WeakMap();
 
   private readonly actuallyHasBigKey: boolean;
+  // Static key logic state shared with the overworld traverser (findable keys), if any
+  private readonly staticKeyRuntime?: StaticKeyRuntime;
   private readonly effectivelyHasBigKey: boolean;
   private readonly allEntranceRegions: Set<string>;
 
-  constructor(state: GameState, logicSet: LogicSet, dungeonId: string, protection: "partial" | "dangerous" = "partial") {
+  constructor(state: GameState, logicSet: LogicSet, dungeonId: string, protection: "partial" | "dangerous" = "partial", staticKeyRuntime?: StaticKeyRuntime) {
     this.state = state;
     this.regions = logicSet.regions as Record<string, RegionLogic>;
     this.dungeonId = dungeonId;
     this.protection = protection;
+    this.staticKeyRuntime = staticKeyRuntime;
 
-    this.requirementEvaluator = new RequirementEvaluator(state, this.regions);
+    this.requirementEvaluator = new RequirementEvaluator(state, this.regions, { staticKeys: staticKeyRuntime });
 
     this.actuallyHasBigKey = !state.settings.wildBigKeys || !!state.dungeons[dungeonId]?.bigKey;
 
@@ -313,8 +316,11 @@ export class DungeonTraverser {
 
     // Key counting uses all-items (partial) or actual inventory (dangerous)
     const keyCountingState = this.protection === "partial" ? createAllItemsState(this.state) : this.state;
-    const keyCountingEvaluator = new RequirementEvaluator(keyCountingState, this.regions);
-    this.requirementEvaluator = new RequirementEvaluator(this.state, this.regions);
+    const keyCountingEvaluator = new RequirementEvaluator(keyCountingState, this.regions, {
+      staticKeys: this.staticKeyRuntime,
+      assumeAllStaticKeys: this.protection === "partial",
+    });
+    this.requirementEvaluator = new RequirementEvaluator(this.state, this.regions, { staticKeys: this.staticKeyRuntime });
 
     if (this.state.settings.wildSmallKeys === "wild") {
       // Pass 1: Dijkstra with actual inventory, assuming big key for door discovery
@@ -829,7 +835,7 @@ export class DungeonTraverser {
       });
       // Seed entry ool reasons from portal (e.g. dark room navigation to reach dungeon)
       const portalReasons = entryOolReasons?.get(regionName);
-      if (thisEntryStatus === "ool" && portalReasons?.length) {
+      if ((thisEntryStatus === "ool" || thisEntryStatus === "possible") && portalReasons?.length) {
         this.addEntryOolReasons(ctx, regionName, portalReasons);
       }
       // Use the best status if this region is also another entry portal
@@ -965,8 +971,8 @@ export class DungeonTraverser {
           if (reviveCap === "ool" && cappedRegionEntryStatus === "ool") {
             this.addEntryOolReasons(ctx, exit.to, ["canDungeonBunnyRevive"]);
           }
-          // If entry status (from portal) is ool, propagate those reasons to children too
-          if (cappedRegionEntryStatus === "ool") {
+          // If entry status (from portal) is ool/possible, propagate those reasons to children too
+          if (cappedRegionEntryStatus === "ool" || cappedRegionEntryStatus === "possible") {
             const regionEntryReasons = ctx.regionEntryOolReasons.get(region);
             if (regionEntryReasons?.size) {
               this.addEntryOolReasons(ctx, exit.to, regionEntryReasons);
@@ -1357,8 +1363,8 @@ export class DungeonTraverser {
       // Final status is the combination of entry status and key status
       regionState.status = minimumStatus(entryRegionStatus, keyStatus);
 
-      // Populate ool reasons for this region
-      if (regionState.status === "ool") {
+      // Populate reasons for this region (sequence breaks for ool, static key assumptions for possible)
+      if (regionState.status === "ool" || regionState.status === "possible") {
         const reasons = new Set<string>();
         // Reasons from entry traversal (exit requirements that returned ool, e.g. hover)
         const entryReasons = ctx.regionEntryOolReasons.get(regionName);

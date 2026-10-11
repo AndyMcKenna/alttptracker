@@ -41,7 +41,8 @@
 
 import { type RegionReachability, type ExitLogic, type GameState, type LinkState, type RegionLogic, type LogicStatus } from "@/data/logic/logicTypes";
 import type { LogicSet } from "./logicMapper";
-import { RequirementEvaluator, type EvaluationContext } from "./requirementEvaluator";
+import { RequirementEvaluator, type EvaluationContext, type StaticKeyRuntime } from "./requirementEvaluator";
+import { staticKeyCandidates } from "./staticKeyLogic";
 import { DungeonTraverser } from "./dungeonTraverser";
 import { combineLinkStates, createAllItemsState, isBetterStatus, combineStatuses, minimumStatus } from "./logicHelpers";
 import { DungeonsData } from "@/data/dungeonData";
@@ -84,6 +85,32 @@ const doorPrefixToDungeon = DOOR_PREFIX_TO_DUNGEON;
 const DOOR_PREFIXES = Object.keys(DOOR_PREFIX_TO_DUNGEON);
 const PORTAL_PREFIX_ENTRIES = Object.entries(PORTAL_TO_DUNGEON);
 
+/** Reasons are kept for statuses that need explaining: sequence breaks (ool) and static key assumptions (possible). */
+function keepsReasons(status: LogicStatus): boolean {
+  return status === "ool" || status === "possible";
+}
+
+/**
+ * Static key logic: anything the key engine can technically reach with what the player has is
+ * obtainable but outside static logic, so it is raised to "ool". A technical "possible" only means the
+ * keys must be spent in the right order (the technical pass uses actual keys and the big key as
+ * marked, so no inference is involved).
+ */
+function mergeTechnicalKeyAccess(
+  statuses: Record<string, LogicStatus>,
+  reasons: Record<string, string[]>,
+  technical: Record<string, LogicStatus>,
+  technicalReasons: Record<string, string[]>,
+): void {
+  for (const [name, technicalStatus] of Object.entries(technical)) {
+    const current = statuses[name] ?? "unavailable";
+    if (current === "information" || technicalStatus === "information") continue;
+    if (technicalStatus === "unavailable" || !isBetterStatus("ool", current)) continue;
+    statuses[name] = "ool";
+    reasons[name] = [...(technicalReasons[name] ?? []), "staticKeysOutOfLogic"];
+  }
+}
+
 /** Merge two oolReasons arrays into a deduplicated string array, or undefined if both are empty. */
 function mergeOolReasons(a?: string[], b?: string[]): string[] | undefined {
   if (!a?.length && !b?.length) return undefined;
@@ -123,6 +150,11 @@ export class OverworldTraverser {
   // Identity of the reachable map the cache was built against — a different
   // map (e.g. evaluateLocations called with a custom snapshot) invalidates it.
   private routeCacheForMap?: Map<string, RegionReachability>;
+  // Static key logic: set when the graph carries the static overlay (buildEffectiveRegions).
+  private readonly staticKeyLogic: boolean;
+  private readonly staticKeyRuntime: StaticKeyRuntime = { extraKeys: {} };
+  // Memo: location name → region name (static key candidates)
+  private locationRegion?: Map<string, string>;
 
   constructor(state: GameState, logicSet: LogicSet, metadataOrProtection?: RegionMetadata | "partial" | "dangerous", protection?: "partial" | "dangerous") {
     // Support legacy signature: (state, logicSet, protection?)
@@ -139,17 +171,18 @@ export class OverworldTraverser {
     this.state = applyStandvertedState(state);
     this.logicSet = logicSet;
     this.regions = logicSet.regions as Record<string, RegionLogic>;
-    this.requirementEvaluator = new RequirementEvaluator(this.state, this.regions);
+    this.requirementEvaluator = new RequirementEvaluator(this.state, this.regions, { staticKeys: this.staticKeyRuntime });
     this.protection = resolvedProtection;
     this.isInverted = ["inverted", "inverted_1", "standverted"].includes(this.state.settings.worldState);
 
     // Build or use provided metadata
     this.metadata = metadata ?? buildRegionMetadata(this.regions);
+    this.staticKeyLogic = this.metadata.staticTRVariant !== undefined;
 
     // In partial mode, create an all-items evaluator for discovering regions
     if (resolvedProtection === "partial") {
       const allItemsState = createAllItemsState(this.state);
-      this.allItemsEvaluator = new RequirementEvaluator(allItemsState, this.regions);
+      this.allItemsEvaluator = new RequirementEvaluator(allItemsState, this.regions, { staticKeys: this.staticKeyRuntime, assumeAllStaticKeys: true });
     }
 
     // OWR active flag
@@ -395,7 +428,24 @@ export class OverworldTraverser {
     const reachableRegions = this.traverse();
     const { locationStatuses: locationsLogic, locationReasons } = this.evaluateLocations(reachableRegions);
     const { entranceStatuses: entrancesLogic, entranceReasons } = this.evaluateEntrances(reachableRegions);
+    if (this.staticKeyLogic && this.metadata.staticBaseRegions) {
+      const technical = this.calculateTechnicalKeyAccess(this.metadata.staticBaseRegions);
+      mergeTechnicalKeyAccess(locationsLogic, locationReasons, technical.locationsLogic, technical.locationReasons);
+      mergeTechnicalKeyAccess(entrancesLogic, entranceReasons, technical.entrancesLogic, technical.entranceReasons);
+    }
     return { locationsLogic, locationReasons, entrancesLogic, entranceReasons };
+  }
+
+  /**
+   * Static key logic: what is technically reachable with what the player actually has, by spending
+   * keys on doors (the regular key engine on the graph without the static overlay). Small keys and the
+   * big key are treated as wild so only collected keys and a marked big key count; nothing is inferred.
+   */
+  private calculateTechnicalKeyAccess(baseRegions: Record<string, RegionLogic>) {
+    const settings = { ...this.state.settings, wildSmallKeys: "wild" as const, wildBigKeys: true, keyLogic: "partial" as const };
+    const state: GameState = { ...this.state, settings };
+    const metadata: RegionMetadata = { ...this.metadata, staticTRVariant: undefined, staticBaseRegions: undefined };
+    return new OverworldTraverser(state, { ...this.logicSet, regions: baseRegions }, metadata, "partial").calculateAll();
   }
 
   // Memo: region → dungeon id (called per location per evaluation pass).
@@ -534,7 +584,7 @@ export class OverworldTraverser {
       status: combinedStatus,
       linkState: combinedLinkState,
       crystalStates: current.crystalStates,
-      oolReasons: combinedStatus === "ool" ? mergeOolReasons(current.oolReasons, newOolReasons) : undefined,
+      oolReasons: keepsReasons(combinedStatus) ? mergeOolReasons(current.oolReasons, newOolReasons) : undefined,
     });
 
     // The region's reachability improved (better status and/or link state). Re-queue
@@ -612,7 +662,7 @@ export class OverworldTraverser {
         const portalExitReasons = new Set<string>();
         const actualExitStatus = this.allItemsEvaluator ? this.evaluateExitRequirements(exit, fromRegion, ctx, false, portalExitReasons, fromRegionReachability.linkState) : exitStatus;
         const newStatus = minimumStatus(fromRegionReachability.status, actualExitStatus === "unavailable" ? "unavailable" : actualExitStatus);
-        const portalOolReasons = newStatus === "ool"
+        const portalOolReasons = keepsReasons(newStatus)
           ? mergeOolReasons(fromRegionReachability.oolReasons, portalExitReasons.size ? Array.from(portalExitReasons) : undefined)
           : undefined;
 
@@ -667,7 +717,7 @@ export class OverworldTraverser {
 
     const newLinkState = this.computeLinkStateForExit(fromRegionReachability.linkState, exit.type, exitName, exit.to);
     const newStatus = minimumStatus(fromRegionReachability.status, exitStatus);
-    const newOolReasons = newStatus === "ool"
+    const newOolReasons = keepsReasons(newStatus)
       ? mergeOolReasons(fromRegionReachability.oolReasons, exitReasons?.size ? Array.from(exitReasons) : undefined)
       : undefined;
 
@@ -727,7 +777,7 @@ export class OverworldTraverser {
       // Traverse the dungeon with a canReach callback for overworld regions.
       let dungeonTraverser = this.dungeonTraverserCache.get(dungeonId);
       if (!dungeonTraverser) {
-        dungeonTraverser = new DungeonTraverser(this.state, this.logicSet, dungeonId, this.protection);
+        dungeonTraverser = new DungeonTraverser(this.state, this.logicSet, dungeonId, this.protection, this.staticKeyRuntime);
         this.dungeonTraverserCache.set(dungeonId, dungeonTraverser);
       }
       const canReachOverworldRegion = (regionName: string): LogicStatus => {
@@ -743,7 +793,20 @@ export class OverworldTraverser {
         return regionReach.status;
       };
 
-      const result = dungeonTraverser.traverse(entryMap, entryStatus, inventoryKeys, entryKeyCost, canReachOverworldRegion, entryOolReasons);
+      let result = dungeonTraverser.traverse(entryMap, entryStatus, inventoryKeys, entryKeyCost, canReachOverworldRegion, entryOolReasons);
+
+      // Static key logic with in-dungeon keys: keys still missing may be in reachable unchecked
+      // locations. Assume as many as there are such locations (capped by the keys left) and
+      // re-traverse; what only opens up this way is "possible". Extra keys only ever grow, so this
+      // is bounded by the dungeon's chest key count.
+      if (this.staticKeyLogic && this.state.settings.wildSmallKeys === "inDungeon") {
+        for (;;) {
+          const findable = this.countFindableStaticKeys(dungeonId, result.regionStatuses, ctx.reachable);
+          if (findable <= (this.staticKeyRuntime.extraKeys[dungeonId] ?? 0)) break;
+          this.staticKeyRuntime.extraKeys[dungeonId] = findable;
+          result = dungeonTraverser.traverse(entryMap, entryStatus, inventoryKeys, entryKeyCost, canReachOverworldRegion, entryOolReasons);
+        }
+      }
 
       // Store key-gated regions from first traversal only (most conservative set).
       if (result.bigKeyGatedRegions && !this.dungeonBigKeyGatedRegions.has(dungeonId)) {
@@ -814,6 +877,43 @@ export class OverworldTraverser {
     return madeProgress;
   }
 
+  /**
+   * Static key logic: how many of a dungeon's missing small keys could be in locations that are
+   * reachable now and not yet checked. Only counts locations, never what is in them.
+   */
+  private countFindableStaticKeys(dungeonId: string, dungeonRegions: Map<string, RegionReachability>, overworld: Map<string, RegionReachability>): number {
+    const chestKeys = DungeonsData[dungeonId]?.totalLocations?.smallkeys ?? 0;
+    const collected = Math.min(this.state.dungeons[dungeonId]?.smallKeys ?? 0, chestKeys);
+    const missing = chestKeys - collected;
+    if (missing <= 0) return 0;
+
+    if (!this.locationRegion) {
+      this.locationRegion = new Map();
+      for (const [regionName, region] of Object.entries(this.regions)) {
+        for (const locationName of Object.keys(region.locations ?? {})) this.locationRegion.set(locationName, regionName);
+      }
+    }
+
+    let findable = 0;
+    for (const locationName of staticKeyCandidates(dungeonId, this.state.settings)) {
+      if (this.state.checks?.[locationName]?.checked) continue;
+      const regionName = this.locationRegion.get(locationName);
+      if (!regionName) continue;
+      const region = dungeonRegions.get(regionName) ?? overworld.get(regionName);
+      if (!region || region.status === "unavailable" || region.linkState === "bunny") continue;
+      const status = this.requirementEvaluator.evaluateWorldLogic(this.regions[regionName].locations[locationName].requirements, {
+        regionName,
+        dungeonId,
+        crystalStates: region.crystalStates,
+        linkState: region.linkState,
+        canReachRegion: (name: string) => dungeonRegions.get(name)?.status ?? overworld.get(name)?.status ?? "unavailable",
+        effectiveWorldState: this.getEffectiveWorldState(regionName),
+      });
+      if (status !== "unavailable" && ++findable >= missing) break;
+    }
+    return findable;
+  }
+
   public evaluateLocations(reachable: Map<string, RegionReachability>): { locationStatuses: Record<string, LogicStatus>; locationReasons: Record<string, string[]> } {
     const locationStatuses: Record<string, LogicStatus> = {};
     const locationReasons: Record<string, string[]> = {};
@@ -878,15 +978,17 @@ export class OverworldTraverser {
           finalStatus = minimumStatus(finalStatus, "ool");
           if (finalStatus === "ool") reasons.add("canMirrorSuperBunny");
         }
-        // Merge region-level ool reasons (e.g. from dungeon traversal: die-to-revive, hover)
-        if (finalStatus === "ool" && regionReachability.oolReasons) {
+        // Merge region-level reasons (e.g. from dungeon traversal: die-to-revive, hover, static key assumptions)
+        if (keepsReasons(finalStatus) && regionReachability.oolReasons) {
           for (const r of regionReachability.oolReasons) reasons.add(r);
         }
         // The Hyrule Castle big key drops from a guard in a fixed, early spot.
         // With vanilla doors and unshuffled enemy drops it is guaranteed to be
         // there, so it must not be downgraded by small-key contention — if the
         // room is reachable at all, the drop is obtainable.
+        // Static key logic has no contention, so the override is not needed (and would hide "possible").
         if (
+          !this.staticKeyLogic &&
           locationName === "Hyrule Castle - Big Key Drop" &&
           this.state.settings.enemyDrop === "none" &&
           this.state.settings.doors === "vanilla" &&
@@ -895,7 +997,7 @@ export class OverworldTraverser {
           finalStatus = "available";
         }
         locationStatuses[locationName] = finalStatus;
-        if (finalStatus === "ool" && reasons.size > 0) {
+        if (keepsReasons(finalStatus) && reasons.size > 0) {
           locationReasons[locationName] = Array.from(reasons);
         }
       }
@@ -920,7 +1022,8 @@ export class OverworldTraverser {
           (gated?.has(regionName) ?? false) || locationName.includes("Big Chest"),
       },
       {
-        enabled: this.state.settings.wildSmallKeys === "inDungeon",
+        // Static key logic infers findable keys itself (countFindableStaticKeys)
+        enabled: this.state.settings.wildSmallKeys === "inDungeon" && !this.staticKeyLogic,
         keyType: "smallKey",
         gatedRegions: this.dungeonSmallKeyGatedRegions,
         isLocked: (_locationName, regionName, gated) => gated?.has(regionName) ?? false,
@@ -1246,6 +1349,7 @@ export class OverworldTraverser {
   public traverse(): Map<string, RegionReachability> {
     this.routeCacheEnabled = false;
     this.routeResultCache.clear();
+    this.staticKeyRuntime.extraKeys = {};
     const ctx = this.initStartRegions();
 
     // In partial mode, first discover all reachable portals with all-items

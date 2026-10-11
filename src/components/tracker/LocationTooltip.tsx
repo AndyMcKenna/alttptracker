@@ -5,7 +5,7 @@ import type { CheckStatus } from "@/store/checksSlice";
 import type { ScoutedItem } from "@/store/scoutsSlice";
 import { getScoutedItemIcon, getScoutedItemLabel } from "@/lib/scoutedItems";
 import { tooltipStatusText } from "@/hooks/useStatusColors";
-import { getSequenceBreakLabel } from "@/data/sequenceBreakLabels";
+import { formatLogicReasons } from "@/data/sequenceBreakLabels";
 
 export type TooltipCheckInfo = { displayName: string; status: CheckStatus };
 export type TooltipDisplayItem = { key: string; info: TooltipCheckInfo };
@@ -164,8 +164,8 @@ export function LocationTooltip({ name, xPercent, yPercent, items, singleCheck, 
                   <span className="min-w-0 wrap-break-word">{firstLine}</span>
                   <span
                     className={cn("w-12 shrink-0 text-right", tooltipStatusText(singleCheck.status.checked ? "checked" : singleCheck.status.logic))}
-                    title={singleCheck.status.logic === "ool" && singleCheck.status.oolReasons?.length ? `Requires: ${singleCheck.status.oolReasons.map(getSequenceBreakLabel).join(", ")}` : undefined}
-                  >{singleCheck.status.checked ? "checked" : singleCheck.status.logic}{singleCheck.status.logic === "ool" && singleCheck.status.oolReasons?.length ? " ?" : ""}</span>
+                    title={formatLogicReasons(singleCheck.status.logic, singleCheck.status.oolReasons)}
+                  >{singleCheck.status.checked ? "checked" : singleCheck.status.logic}{formatLogicReasons(singleCheck.status.logic, singleCheck.status.oolReasons) ? " ?" : ""}</span>
                 </div>
                 {restLines.length > 0 && (
                   <div className={cn("font-normal opacity-70 whitespace-pre-wrap wrap-break-word", size === "md" ? "text-2xs" : "text-4xs")}>{restLines.join("\n")}</div>
@@ -206,8 +206,8 @@ export function LocationTooltip({ name, xPercent, yPercent, items, singleCheck, 
                       <span className="flex-1 min-w-0 truncate">{item.info.displayName}</span>
                       <span
                         className={cn(statusWidth, "shrink-0 text-right", tooltipStatusText(item.info.status.checked ? "checked" : item.info.status.logic))}
-                        title={item.info.status.logic === "ool" && item.info.status.oolReasons?.length ? `Requires: ${item.info.status.oolReasons.map(getSequenceBreakLabel).join(", ")}` : undefined}
-                      >{item.info.status.checked ? "checked" : item.info.status.logic}{item.info.status.logic === "ool" && item.info.status.oolReasons?.length ? " ?" : ""}</span>
+                        title={formatLogicReasons(item.info.status.logic, item.info.status.oolReasons)}
+                      >{item.info.status.checked ? "checked" : item.info.status.logic}{formatLogicReasons(item.info.status.logic, item.info.status.oolReasons) ? " ?" : ""}</span>
                     </div>
                   ) : (
                     <div
