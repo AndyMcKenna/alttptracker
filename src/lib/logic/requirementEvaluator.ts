@@ -314,6 +314,8 @@ export class RequirementEvaluator {
       case "canUseSilverArrows":
         return this.boolToStatus(items.bow.amount >= 4);
       case "canUseMedallionPad":
+        // Using a medallion needs Link: a bunny (no Moon Pearl) cannot use items
+        if (ctx.linkState === "bunny" || ctx.linkState === "superbunny") return "unavailable";
         return this.boolToStatus(this.hasItem("sword")); // || TODO: Add swordless logic
       case "canTakeDamage":
         if (ctx.linkState === "superbunny") return "unavailable";
@@ -613,7 +615,10 @@ export class RequirementEvaluator {
       case "never":
         return "unavailable";
 
+      // Dashing needs Link: a bunny cannot use the boots. OWR's can_boots_clip_lw/dw express this as
+      // "Moon Pearl in the other world"; the link state at the source region says the same thing.
       case "canBootsClip":
+        if (ctx.linkState === "bunny") return "unavailable";
         return this.boolToStatus(this.state.settings.logicMode !== "noglitches" && this.hasItem("boots"));
 
       // The player is in superbunny state right now (this is decided by the
@@ -633,10 +638,12 @@ export class RequirementEvaluator {
       case "canFakeFlipper":
         return this.boolToStatus(this.state.settings.logicMode !== "noglitches");
       case "canWaterWalk":
+        if (ctx.linkState === "bunny") return "unavailable";
         return this.boolToStatus(this.state.settings.logicMode !== "noglitches" && this.hasItem("boots"));
       case "canBunnyPocket":
         return this.boolToStatus(this.state.settings.logicMode !== "noglitches" && this.hasItem("boots") && (this.hasItem("mirror") || this.getBottleCount() > 0));
       case "canSpinSpeedClip":
+        if (ctx.linkState === "bunny") return "unavailable";
         return this.boolToStatus(this.state.settings.logicMode !== "noglitches" && this.hasItem("boots") && (this.hasItem("sword") || this.hasItem("hookshot")));
       
       // This is a meta check to show HC main as out of logic

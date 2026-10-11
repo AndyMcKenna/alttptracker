@@ -20,6 +20,7 @@ import { logic_regions } from "@/data/logic/logic_regions";
 import type { SettingsState } from "@/store/settingsSlice";
 import { baseLocationsData } from "@/data/locationsData";
 import { DungeonsData } from "@/data/dungeonData";
+import { hasNonGlitchedPath } from "./logicHelpers";
 
 export type LocationCategory = "chest" | "keyDrop" | "potKey" | "pot" | "enemy" | "shop" | "prize" | "bonk" | "event";
 
@@ -152,7 +153,9 @@ function buildLocationMapping(): {
     }
   }
 
-  // BFS helper: expand from start regions following exits to regions of allowed types
+  // BFS helper: expand from start regions following exits to regions of allowed types.
+  // Glitch-only exits are skipped: locations belong to the dungeon/cave they are in without glitches,
+  // even though e.g. an HMG clip can reach Desert Palace from Thieves' Town.
   function bfsRegions(startRegions: string[], allowedTypes: Set<string>, skipRegions: Set<string>): Set<string> {
     const visited = new Set<string>();
     const queue: string[] = [];
@@ -172,6 +175,7 @@ function buildLocationMapping(): {
       for (const exit of Object.values(region.exits || {})) {
         const dest = exit.to;
         if (visited.has(dest) || skipRegions.has(dest)) continue;
+        if (!hasNonGlitchedPath(exit.requirements)) continue;
         const destRegion = regions[dest];
         if (destRegion && allowedTypes.has(destRegion.type)) {
           visited.add(dest);

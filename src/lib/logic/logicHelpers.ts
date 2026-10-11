@@ -123,3 +123,27 @@ export function getLogicStateForWorld(state: GameState, worldLogic: WorldLogic, 
 
   return requirements as LogicState;
 }
+const GLITCH_PREFIXES = ["owg|", "hmg|"];
+
+/** Whether a requirement has at least one alternative that needs no glitch (owg|/hmg|) token. */
+function requirementWithoutGlitches(req: LogicRequirement | LogicState | undefined): boolean {
+  if (req === undefined) return true;
+  if (typeof req === "string") return req !== "never" && !GLITCH_PREFIXES.some((p) => req.startsWith(p));
+  if ("allOf" in req && req.allOf && !req.allOf.every((r) => requirementWithoutGlitches(r))) return false;
+  if ("anyOf" in req && req.anyOf && req.anyOf.length > 0 && !req.anyOf.some((r) => requirementWithoutGlitches(r))) return false;
+  if ("always" in req || "logical" in req || "required" in req) {
+    const state = req as LogicState;
+    return [state.always, state.logical, state.required].every((r) => requirementWithoutGlitches(r));
+  }
+  return true;
+}
+
+/**
+ * Whether an exit or location can be used without glitches in some world state. Glitch-only edges
+ * (e.g. the HMG clips between dungeons) must not change which dungeon or cave a location belongs to.
+ */
+export function hasNonGlitchedPath(worldLogic: WorldLogic): boolean {
+  return (["Open", "Inverted", "Inverted_1", "Standard"] as const).some(
+    (key) => worldLogic[key] !== undefined && requirementWithoutGlitches(worldLogic[key]),
+  );
+}

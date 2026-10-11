@@ -1880,6 +1880,36 @@ describe("LogicEngine", () => {
       expect(calculate(state).locationsLogic["Ice Palace - Conveyor Key Drop"]).toBe("available");
     });
   });
+
+  // A bunny (Dark World without the Moon Pearl) cannot dash or use items, so boots clips and
+  // medallion pads need Link even in overworld glitches.
+  describe("Overworld Glitches Without Moon Pearl", () => {
+    const owg = () => gameState().withSettings({ logicMode: "overworldglitches" });
+    const calculate = (builder: ReturnType<typeof gameState>) =>
+      new OverworldTraverser(builder.build(), getLogicSet("overworldglitches")).calculateAll().locationsLogic;
+
+    it("does not boots clip as a bunny", () => {
+      const result = calculate(owg().withItems({ boots: 1 }));
+      expect(result["Bumper Cave Ledge"]).toBe("unavailable");
+      expect(result["Pyramid"]).toBe("unavailable");
+      const withPearl = calculate(owg().withItems({ boots: 1, moonpearl: 1 }));
+      expect(withPearl["Bumper Cave Ledge"]).toBe("available");
+    });
+
+    it("cannot open Misery Mire or enter Thieves' Town as a bunny", () => {
+      const result = calculate(owg().withAllItems().withoutItems(["moonpearl"]).withDungeon("ct", { bossDefeated: true }));
+      expect(result["Misery Mire - Main Lobby"]).toBe("unavailable");
+      expect(result["Thieves' Town - Map Chest"]).toBe("unavailable");
+      // Standing items stay collectable as a bunny
+      expect(result["Pyramid"]).toBe("available");
+    });
+
+    it("needs no Moon Pearl for Dark World dungeons in inverted", () => {
+      const result = calculate(owg().withSettings({ worldState: "inverted" }).withAllItems().withoutItems(["moonpearl"]));
+      expect(result["Misery Mire - Main Lobby"]).toBe("available");
+      expect(result["Thieves' Town - Map Chest"]).toBe("available");
+    });
+  });
 });
 
 /**
