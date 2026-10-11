@@ -1426,6 +1426,22 @@ describe("LogicEngine", () => {
       expect(result.locationsLogic["Mire Shed - Left"]).toBe("available");
     });
 
+    it("Inverted 2.0 - PoD is open with only the flute (Kiki needs no Moon Pearl in the Dark World)", () => {
+      const state = gameState().withItems({ flute: 1 }).withSettings({ worldState: "inverted" }).build();
+
+      const result = new OverworldTraverser(state, getLogicSet("noglitches")).calculateAll();
+
+      expect(result.entrancesLogic["Palace of Darkness"]).toBe("available");
+      expect(result.locationsLogic["Palace of Darkness - Shooter Room"]).toBe("available");
+    });
+
+    it("Open - PoD needs the Moon Pearl to bring Kiki", () => {
+      const withoutPearl = gameState().withAllItems().withoutItems(["moonpearl"]).withDungeon("ct", { bossDefeated: true }).build();
+      const result = new OverworldTraverser(withoutPearl, getLogicSet("noglitches")).calculateAll();
+
+      expect(result.locationsLogic["Palace of Darkness - Shooter Room"]).toBe("unavailable");
+    });
+
     it("Inverted 1.0 - Flute is not active without access to kak", () => {
       const state = gameState().withItems({ flute: 1 }).withSettings({ worldState: "inverted_1" }).build();
 

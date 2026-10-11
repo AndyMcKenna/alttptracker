@@ -394,7 +394,10 @@ export class RequirementEvaluator {
         return minimumStatus(this.resolveSimple("canCollectOldMan", ctx), this.resolveComplex("canReachFrom|Old Man Cave (West)|Old Man Drop Off", ctx));
       case "canCollectKiki":
         // TODO Follower shuffle logic
-        return minimumStatus(this.resolveComplex("canReach|Palace of Darkness Area", ctx), this.resolveSimple("moonpearl", ctx));
+        // Kiki must be picked up as Link. Only evaluated at the Palace of Darkness screen, so the link
+        // state there decides it: no Moon Pearl needed where the Dark World is home (inverted, flipped tiles).
+        if (ctx.linkState === "bunny") return "unavailable";
+        return this.resolveComplex("canReach|Palace of Darkness Area", ctx);
       case "canOpenPod":
         return minimumStatus(this.resolveSimple("canCollectKiki", ctx), this.resolveComplex("canReach|Palace of Darkness Area", ctx));
       case "canCollectLocksmith":
