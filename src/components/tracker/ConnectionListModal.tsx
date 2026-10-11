@@ -49,7 +49,7 @@ function ConnectionListModal() {
     }
     // Links sorted by destination so the player can quickly find a placed location.
     links.sort((a, b) => a.to.localeCompare(b.to) || a.source.localeCompare(b.source));
-    connectors.sort((a, b) => a.source.localeCompare(b.source));
+    connectors.sort((a, b) => a.to.localeCompare(b.to));
     return { links, connectors };
   }, [entrances]);
 
