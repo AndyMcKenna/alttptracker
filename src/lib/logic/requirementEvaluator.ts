@@ -624,6 +624,9 @@ export class RequirementEvaluator {
         if (this.state.dungeons["ct"].bossDefeated) return "unavailable";
         ctx.reasons?.add("canReachHCMain");
         return "ool";
+      // Unconditional rule; only emitted behind a mode prefix (owg|true / hmg|true)
+      case "true":
+        return "available";
       default:
         // Covers all simple item checks - works because all items are counted now rather than boolean
         // Putting this here allows us to use more complex logic conditions above (i.e. flute)

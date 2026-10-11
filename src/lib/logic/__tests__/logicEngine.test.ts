@@ -1841,6 +1841,45 @@ describe("LogicEngine", () => {
       expect(result.locationsLogic["Catfish"]).toBe("available");
     });
   });
+
+  // Glitched-mode rules that are unconditional in OWR (TRUE) must stay gated on
+  // the glitch mode (owg|true / hmg|true) rather than leaking into noglitches.
+  describe("Unconditional Glitch Rules", () => {
+    const calculate = (state: ReturnType<ReturnType<typeof gameState>["build"]>) => {
+      const logicSet = getLogicSet(state.settings.logicMode);
+      return new OverworldTraverser(state, logicSet).calculateAll();
+    };
+
+    it("should require flippers for water drops in noglitches", () => {
+      const result = calculate(gameState().withItems({ bomb: 1 }).build());
+
+      expect(result.locationsLogic["Hobo"]).toBe("unavailable");
+      expect(result.locationsLogic["King Zora"]).toBe("unavailable");
+    });
+
+    it("should allow fake flippers in overworldglitches", () => {
+      const result = calculate(gameState().withItems({ bomb: 1 }).withSettings({ logicMode: "overworldglitches" }).build());
+
+      expect(result.locationsLogic["Hobo"]).toBe("available");
+    });
+
+    it("should not allow the Ice Lobby clip in noglitches", () => {
+      const state = gameState().withAllItems().withSettings({ wildSmallKeys: "wild", pottery: "keys", enemyDrop: "keys", wildBigKeys: true }).withDungeon("ip", { smallKeys: 0 }).build();
+
+      // Conveyor Key Drop is only reachable without keys via Ice Lobby → Ice Bomb Drop - Top
+      expect(calculate(state).locationsLogic["Ice Palace - Conveyor Key Drop"]).toBe("unavailable");
+    });
+
+    it("should allow the Ice Lobby clip in hybridglitches", () => {
+      const state = gameState()
+        .withAllItems()
+        .withSettings({ logicMode: "hybridglitches", wildSmallKeys: "wild", pottery: "keys", enemyDrop: "keys", wildBigKeys: true })
+        .withDungeon("ip", { smallKeys: 0 })
+        .build();
+
+      expect(calculate(state).locationsLogic["Ice Palace - Conveyor Key Drop"]).toBe("available");
+    });
+  });
 });
 
 /**

@@ -287,6 +287,9 @@ function applyEntranceShuffle(
   // Feeders are limited to genuine two-way overworld adjacencies: drop exits
   // (ledge/water drops, e.g. "River Bend Water Drop") are one-directional — you
   // can't climb back up — so they are never used as a free egress target.
+  // Walking out of a pocket also keeps you on the pocket's own screen, so the
+  // feeder must share its owid; cross-screen links (offset mirrors, clips) never
+  // qualify.
   const OVERWORLD_TYPES = new Set(["LightWorld", "DarkWorld"]);
   const isDropExit = (exitName: string) => /\bDrop\b/i.test(exitName);
   const hasOverworldEgress = new Set<string>();
@@ -296,8 +299,9 @@ function applyEntranceShuffle(
     for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
       if (!exit?.to || !OVERWORLD_TYPES.has(exit.type)) continue;
       hasOverworldEgress.add(regionName);
-      // Only genuine (non-drop) overworld links qualify as a free egress feeder.
-      if (!isDropExit(exitName) && !pocketFeeder.has(exit.to)) {
+      // Only genuine (non-drop) same-screen overworld links qualify as a free egress feeder.
+      const sameScreen = regionLogic.owid != null && regions[exit.to]?.owid === regionLogic.owid;
+      if (!isDropExit(exitName) && sameScreen && !pocketFeeder.has(exit.to)) {
         pocketFeeder.set(exit.to, { source: regionName, type: exit.type });
       }
     }
