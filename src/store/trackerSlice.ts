@@ -41,6 +41,11 @@ export const trackerSlice = createSlice({
       const [entrance, openModal] = action.payload;
       state.selectedEntrance = entrance;
       state.modalOpen = openModal ? "entrance" : "none";
+      // Clearing the selection or opening an entrance's menu ends any pending connection
+      // (otherwise the crosshair cursor stays on)
+      if ((entrance === null || openModal) && (state.currentMode === "connect" || state.currentMode === "generic_connect")) {
+        state.currentMode = "none";
+      }
     },
     setSelectedLocation: (state, action) => {
       state.selectedLocation = action.payload;

@@ -178,8 +178,14 @@ function MapLocation(props: MapLocationProps) {
     if (e.button === 1 && e.type === "auxclick") {
       if (!selectedEntrance) {
         dispatch(setSelectedEntrance([locName, false]));
+        // "connect": a left click on another entrance links to it, a middle click makes a connector
         dispatch(setCurrentMode("connect"));
-      } else if (currentMode === "connect" && selectedEntrance !== locName) {
+      } else if (selectedEntrance === locName) {
+        // Middle-clicking the pending entrance again clears its connections and cancels.
+        dispatch(setEntranceLink({ entrance: locName, to: null, zelgaWoods, entranceMode }));
+        dispatch(setSelectedEntrance([null, false]));
+        dispatch(setCurrentMode("none"));
+      } else if (currentMode === "connect" || currentMode === "generic_connect") {
         // Dropdowns/paired doors can't form generic connectors (see above).
         if (getEntrancePool(selectedEntrance, entranceMode, zelgaWoods) === "normal" && getEntrancePool(locName, entranceMode, zelgaWoods) === "normal") {
           dispatch(connectGenericConnector({ source: selectedEntrance, destination: locName, connectorId: maxConnectorGroup + 1 }));
@@ -307,7 +313,7 @@ function MapLocation(props: MapLocationProps) {
   return (
     <div
       key={locName}
-      className={cn("absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 group z-10 hover:z-20", props.className, hidden && "hidden", currentMode === "connect" && "cursor-crosshair")}
+      className={cn("absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 group z-10 hover:z-20", props.className, hidden && "hidden", (currentMode === "connect" || currentMode === "generic_connect") && "cursor-crosshair")}
       style={{ top: `${yPercent}%`, left: `${xPercent}%` }}
       onMouseOver={handleMouseEnter}
       onMouseOut={handleMouseLeave}

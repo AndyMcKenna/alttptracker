@@ -194,7 +194,7 @@ function OWMap({ world = "lw" }: OWMapProps) {
 
   return (
     <div
-      className={cn("w-full h-full relative", currentMode === "connect" && "cursor-crosshair")}
+      className={cn("w-full h-full relative", (currentMode === "connect" || currentMode === "generic_connect") && "cursor-crosshair")}
       key={world}
       style={{
         backgroundImage: `url("${bgimg}")`,
