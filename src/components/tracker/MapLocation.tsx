@@ -327,7 +327,7 @@ function MapLocation(props: MapLocationProps) {
         className={cn(
           "absolute inset-0 border",
           isFaded && "opacity-80",
-          !labelColor && (showAsDiamond && !["bg-status-connector", "bg-status-checked"].includes(bgClass) ? "border-status-connector" : "border-black"),
+          (!labelColor || isFaded) && (showAsDiamond && !["bg-status-connector", "bg-status-checked"].includes(bgClass) ? "border-status-connector" : "border-black"),
           bgClass,
           isRound && "rounded-full",
           isHatched && "is-hatched",
@@ -337,7 +337,7 @@ function MapLocation(props: MapLocationProps) {
           note && "ring-2 ring-purple-500",
           showAsDiamond && "rotate-45",
         )}
-        style={labelColor ? { borderColor: labelColor, borderWidth: "2px" } : undefined}
+        style={labelColor && !isFaded ? { borderColor: labelColor, borderWidth: "2px" } : undefined}
       >
         
         {firstScoutIcon && !prizeIcon && (
