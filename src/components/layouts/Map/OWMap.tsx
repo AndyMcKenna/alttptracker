@@ -47,14 +47,14 @@ function OWMap({ world = "lw" }: OWMapProps) {
       fullSize = "h-2.5 w-2.5";
       smallSize = "h-1.5 w-1.5";
       dungeonSize = "h-3.5 w-3.5";
-      entranceDungeonSize = "h-3.25 w-3.25";
-      entranceSize = "h-2.25 w-2.25";
+      entranceDungeonSize = "h-3 w-3";
+      entranceSize = "h-2.5 w-2.5";
       break;
     default:
       fullSize = "h-4 w-4";
       smallSize = "h-2.5 w-2.5";
       dungeonSize = "h-6 w-6";
-      entranceDungeonSize = "h-4.75 w-4.75";
+      entranceDungeonSize = "h-4.5 w-4.5";
       entranceSize = "h-3 w-3";
       break;
   }
