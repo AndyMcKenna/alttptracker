@@ -56,7 +56,7 @@ export function getTrackerWindowSizeForEventLogMode(mapMode: MapMode, eventLogMo
   const { width, height } = getTrackerLayoutDimensions(mapMode);
   return {
     width,
-    height: height + (eventLogMode === "attached" ? EVENT_LOG_LAYOUT_HEIGHT : 0),
+    height: height + 1 + (eventLogMode === "attached" ? EVENT_LOG_LAYOUT_HEIGHT + 1 : 0), // +1s are needed due to space between tracker and log
   };
 }
 

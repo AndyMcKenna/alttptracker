@@ -18,6 +18,7 @@ import { allConnectorEntrances, getConnectorGroup } from "@/data/entranceConnect
 import { buildEntranceTooltipName, getConnectorGroupSides } from "@/lib/entranceTrace";
 import { isDropdown, isPairedEntrance, getEntrancePool, getEntranceGroup } from "@/lib/dropdowns";
 import type { LogicStatus } from "@/data/logic/logicTypes";
+import { PrizeImages } from "@/data/itemData";
 
 interface MapLocationProps {
   name: string;
@@ -51,6 +52,7 @@ function MapLocation(props: MapLocationProps) {
   const zelgaWoods = useSelector((state: RootState) => state.settings.zelgaWoods);
   const entranceLabelOverrides = useSelector((state: RootState) => state.settings.entranceLabelOverrides);
   const showInsetBossSquare = useSelector((state: RootState) => state.settings.showInsetBossSquare);
+  const compactMap = useSelector((state: RootState) => state.settings.mapMode === "compact");
   const currentMode = useSelector((state: RootState) => state.trackerState.currentMode);
   const showTooltip = useSelector((state: RootState) => state.settings.showMapTooltips);
   const hoveredDungeon = useSelector((state: RootState) => state.trackerState.hoveredDungeon);
@@ -246,6 +248,10 @@ function MapLocation(props: MapLocationProps) {
       : undefined;
   const bossBgClass = bossCheckStatus ? (bossCheckStatus.checked ? mapStatusBg("checked") : mapStatusBg(bossCheckStatus.logic)) : undefined;
 
+  // Known dungeon prize, drawn inside the boss inset (too small to read on the compact map)
+  const prize = useSelector((state: RootState) => (resolvedDungeonId ? state.dungeons[resolvedDungeonId]?.prize : undefined));
+  const prizeIcon = prize && prize !== "unknown" && !compactMap ? PrizeImages[prize] : undefined;
+
   // CT/GT: surface the Agahnim boss as a tooltip entry. Clicking it toggles the
   // main tracker's Aga boss item (dungeon.bossDefeated) rather than a location check.
   const bossTooltipItem: TooltipListItem | undefined =
@@ -327,7 +333,8 @@ function MapLocation(props: MapLocationProps) {
         )}
         style={labelColor ? { borderColor: labelColor, borderWidth: "2px" } : undefined}
       >
-        {firstScoutIcon && (
+        
+        {firstScoutIcon && !prizeIcon && (
           <div
             className={cn("absolute inset-0 pointer-events-none", showAsDiamond && "-rotate-45")}
             style={{
@@ -336,6 +343,7 @@ function MapLocation(props: MapLocationProps) {
               backgroundSize: "100%",
               backgroundRepeat: "no-repeat",
               imageRendering: "pixelated",
+              zIndex: 10
             }}
           />
         )}
@@ -343,7 +351,21 @@ function MapLocation(props: MapLocationProps) {
       {/* Boss inset rendered as a sibling so it keeps its own colour/opacity
           instead of inheriting the faded square's opacity when greyed out. */}
       {showInsetBossSquare && bossBgClass && (
-        <div className={cn("absolute inset-1 border border-black pointer-events-none", showAsDiamond && "rotate-45", bossBgClass, bossCheckStatus?.checked && "opacity-80")} />
+        <div className={cn("absolute inset-1 border border-black pointer-events-none", showAsDiamond && "rotate-45", bossBgClass, bossCheckStatus?.checked && "opacity-80")}>
+          {prizeIcon && (
+            <div
+              className={cn("absolute inset-0", showAsDiamond && "-rotate-45")}
+              style={{
+                backgroundImage: `url(${prizeIcon})`,
+                backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "100%",
+                imageRendering: "pixelated",
+                zIndex: 10,
+              }}
+            />
+          )}
+        </div>
       )}
       {showTooltip && (
         <LocationTooltip
