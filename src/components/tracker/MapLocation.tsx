@@ -52,6 +52,7 @@ function MapLocation(props: MapLocationProps) {
   const zelgaWoods = useSelector((state: RootState) => state.settings.zelgaWoods);
   const entranceLabelOverrides = useSelector((state: RootState) => state.settings.entranceLabelOverrides);
   const showInsetBossSquare = useSelector((state: RootState) => state.settings.showInsetBossSquare);
+  const useOldStyleDungeonSquares = useSelector((state: RootState) => state.settings.useOldStyleDungeonSquares);
   const compactMap = useSelector((state: RootState) => state.settings.mapMode === "compact");
   const currentMode = useSelector((state: RootState) => state.trackerState.currentMode);
   const showTooltip = useSelector((state: RootState) => state.settings.showMapTooltips);
@@ -211,7 +212,11 @@ function MapLocation(props: MapLocationProps) {
     }
   }
 
-  const isHatched = (!isEntrance || isLinked) && status === "some" && !noNonDungeonItemsLeft;
+  // Old style: an entrance placed to a dungeon is a plain square in the dungeon label's colour,
+  // without logic colouring, hatching, boss square or prize icon.
+  const oldStyleDungeonSquare = useOldStyleDungeonSquares && isLinkedToDungeon && !!labelColor;
+
+  const isHatched = !oldStyleDungeonSquare && (!isEntrance || isLinked) && status === "some" && !noNonDungeonItemsLeft;
 
   // let bgClass: string;
 
@@ -256,7 +261,7 @@ function MapLocation(props: MapLocationProps) {
 
   // Known dungeon prize, drawn inside the boss inset (too small to read on the compact map)
   const prize = useSelector((state: RootState) => (resolvedDungeonId ? state.dungeons[resolvedDungeonId]?.prize : undefined));
-  const prizeIcon = prize && prize !== "unknown" && !compactMap ? PrizeImages[prize] : undefined;
+  const prizeIcon = prize && prize !== "unknown" && !compactMap && !oldStyleDungeonSquare ? PrizeImages[prize] : undefined;
 
   // CT/GT: surface the Agahnim boss as a tooltip entry. Clicking it toggles the
   // main tracker's Aga boss item (dungeon.bossDefeated) rather than a location check.
@@ -310,6 +315,10 @@ function MapLocation(props: MapLocationProps) {
     bgClass = mapStatusBg("checked");
   }
 
+  // Old style dungeon square: label colour fill (set below) instead of a status colour, unless selected
+  const oldStyleFill = oldStyleDungeonSquare && locName !== selectedEntrance;
+  if (oldStyleFill) bgClass = "";
+
   return (
     <div
       key={locName}
@@ -327,7 +336,7 @@ function MapLocation(props: MapLocationProps) {
         className={cn(
           "absolute inset-0 border",
           isFaded && "opacity-80",
-          (!labelColor || isFaded) && (showAsDiamond && !["bg-status-connector", "bg-status-checked"].includes(bgClass) ? "border-status-connector" : "border-black"),
+          (!labelColor || isFaded || oldStyleDungeonSquare) && (showAsDiamond && !["bg-status-connector", "bg-status-checked"].includes(bgClass) ? "border-status-connector" : "border-black"),
           bgClass,
           isRound && "rounded-full",
           isHatched && "is-hatched",
@@ -337,7 +346,7 @@ function MapLocation(props: MapLocationProps) {
           note && "ring-2 ring-purple-500",
           showAsDiamond && "rotate-45",
         )}
-        style={labelColor && !isFaded ? { borderColor: labelColor, borderWidth: "2px" } : undefined}
+        style={oldStyleFill ? { backgroundColor: labelColor } : labelColor && !isFaded && !oldStyleDungeonSquare ? { borderColor: labelColor, borderWidth: "2px" } : undefined}
       >
         
         {firstScoutIcon && !prizeIcon && (
@@ -356,7 +365,7 @@ function MapLocation(props: MapLocationProps) {
       </div>
       {/* Boss inset rendered as a sibling so it keeps its own colour/opacity
           instead of inheriting the faded square's opacity when greyed out. */}
-      {showInsetBossSquare && bossBgClass && (
+      {showInsetBossSquare && bossBgClass && !oldStyleDungeonSquare && (
         <div className={cn("absolute inset-1 border border-black pointer-events-none", showAsDiamond && "rotate-45", bossBgClass, bossCheckStatus?.checked && "opacity-80")}>
           {prizeIcon && (
             <div

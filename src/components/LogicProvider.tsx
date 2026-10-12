@@ -31,6 +31,7 @@ function normalizeSettingsForLogic(settings: SettingsState): SettingsState {
     showChestTooltips: false,
     entranceLabelsMode: "off",
     showInsetBossSquare: false,
+    useOldStyleDungeonSquares: false,
     alwaysShowHCCTCounts: false,
     alwaysShowBigKeys: false,
     alwaysShowSmallKeys: false,

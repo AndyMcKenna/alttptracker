@@ -158,6 +158,8 @@ export interface SettingsState {
   showChestTooltips: boolean;
   entranceLabelsMode: "off" | "labels" | "labels_lines";
   showInsetBossSquare: boolean;
+  /** Entrance modes: draw placed dungeons as a plain square in their label colour (no logic colouring) */
+  useOldStyleDungeonSquares: boolean;
   alwaysShowHCCTCounts: boolean;
   alwaysShowBigKeys: boolean;
   alwaysShowSmallKeys: boolean;
@@ -231,6 +233,7 @@ export const initialState: SettingsState = {
   showChestTooltips: true,
   entranceLabelsMode: "labels_lines",
   showInsetBossSquare: true,
+  useOldStyleDungeonSquares: false,
   alwaysShowHCCTCounts: false,
   alwaysShowBigKeys: false,
   alwaysShowSmallKeys: false,

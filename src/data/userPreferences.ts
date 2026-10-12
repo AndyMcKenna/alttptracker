@@ -25,6 +25,7 @@ export const REMEMBERED_SETTINGS = [
   "spriteName",
   "entranceLabelsMode",
   "showInsetBossSquare",
+  "useOldStyleDungeonSquares",
   "alwaysShowHCCTCounts",
   "alwaysShowBigKeys",
   "alwaysShowSmallKeys",
