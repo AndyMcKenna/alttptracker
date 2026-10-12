@@ -17,7 +17,17 @@ function SpriteSquare() {
   const keyDrop = useSelector((state: RootState) => state.settings.enemyDrop) !== "none";
   const autotracking = useSelector((state: RootState) => state.settings.autotracking);
   const spriteName = useSelector((state: RootState) => state.settings.spriteName);
+  const alwaysShowSmallKeys = useSelector((state: RootState) => state.settings.alwaysShowSmallKeys);
+  const alwaysShowBigKeys = useSelector((state: RootState) => state.settings.alwaysShowBigKeys);
   const doors = false;
+  const doorShuffle = useSelector((state: RootState) => state.settings.doors) !== "vanilla";
+
+  // Same rules as DungeonSquare
+  const showSmallKeys = alwaysShowSmallKeys || wildSmallKeys === "wild";
+  const showBigKeys = alwaysShowBigKeys || wildBigKeys;
+  // HC's big key is an enemy drop; CT only has a big key with door shuffle
+  const showHCBigKey = showBigKeys || keyDrop;
+  const showCTBigKey = doorShuffle && (showBigKeys || keyDrop);
 
   return (
     <div className="relative w-full h-full">
@@ -53,13 +63,13 @@ function SpriteSquare() {
         </div>
       )}
       {/* HC */}
-      {(wildSmallKeys === "wild" || keyDrop) && (
+      {(showSmallKeys || showHCBigKey) && (
         <div>
           <div className="h-4 w-4 absolute top-4 right-4">
-            {wildSmallKeys === "wild" && <SmallKeyTracker dungeon="hc" size="1x1" />}
-            {keyDrop && (
-              <div className={`h-1 w-1 absolute ${wildSmallKeys === "wild" ? "top-4 right-3" : "top-0 right-3"} rounded-full bg-black`}>
-                <BigKeyTracker dungeon="hc" size={wildSmallKeys === "wild" ? "1x1" : "1x2"} />
+            {showSmallKeys && <SmallKeyTracker dungeon="hc" size="1x1" />}
+            {showHCBigKey && (
+              <div className={`h-1 w-1 absolute ${showSmallKeys ? "top-4 right-3" : "top-0 right-3"} rounded-full bg-black`}>
+                <BigKeyTracker dungeon="hc" size={showSmallKeys ? "1x1" : "1x2"} />
               </div>
             )}
           </div>
@@ -67,13 +77,13 @@ function SpriteSquare() {
         </div>
       )}
       {/* CT */}
-      {(wildSmallKeys === "wild" || keyDrop) && (
+      {(showSmallKeys || showCTBigKey) && (
         <div>
           <div className="h-4 w-4 absolute top-16 right-4">
-            {wildSmallKeys === "wild" && <SmallKeyTracker dungeon="ct" size="1x1" />}
-            {keyDrop && (
-              <div className={`h-1 w-1 absolute ${wildSmallKeys === "wild" ? "top-4 right-3" : "top-0 right-3"} rounded-full bg-black`}>
-                <BigKeyTracker dungeon="ct" size={wildSmallKeys === "wild" ? "1x1" : "1x2"} />
+            {showSmallKeys && <SmallKeyTracker dungeon="ct" size="1x1" />}
+            {showCTBigKey && (
+              <div className={`h-1 w-1 absolute ${showSmallKeys ? "top-4 right-3" : "top-0 right-3"} rounded-full bg-black`}>
+                <BigKeyTracker dungeon="ct" size={showSmallKeys ? "1x1" : "1x2"} />
               </div>
             )}
           </div>
@@ -85,8 +95,8 @@ function SpriteSquare() {
         <div className="flex flex-row h-8 w-8">
           <ChestCounter dungeon="gt" small />
         </div>
-        {wildBigKeys && <BigKeyTracker dungeon="gt" />}
-        {wildSmallKeys === "wild" && <SmallKeyTracker dungeon="gt" size={doors ? "1x1" : "1x2"} />}
+        {showBigKeys && <BigKeyTracker dungeon="gt" />}
+        {showSmallKeys && <SmallKeyTracker dungeon="gt" size={doors ? "1x1" : "1x2"} />}
       </div>
     </div>
   );
