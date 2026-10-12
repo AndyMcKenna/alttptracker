@@ -568,4 +568,29 @@ describe("Entrance Shuffle", () => {
       expect(noFire.entrancesLogic["Skull Woods Second Section Door (West)"]).toBe("available");
     });
   });
+
+  describe("Assume old man access on item collect", () => {
+    const oldManHouse = (assumeOldManOnCollect: boolean, checks: string[]) => {
+      const state = gameState()
+        .withSettings({ entranceMode: "crossed", shuffleLinks: true, assumeOldManOnCollect })
+        .withEntranceLink("Links House", "Links House")
+        .withChecks(checks)
+        .build();
+      const logicSet = getLogicSet("noglitches");
+      const { regions, metadata } = buildEffectiveRegions(logicSet.regions as Record<string, RegionLogic>, state);
+      return new OverworldTraverser(state, { ...logicSet, regions }, metadata).traverse().get("Old Man House")?.status;
+    };
+
+    it("reaches the Old Man S&Q spot once the Old Man item is collected", () => {
+      expect(oldManHouse(true, ["Old Man"])).toBe("available");
+    });
+
+    it("needs the Old Man item to be collected", () => {
+      expect(oldManHouse(true, [])).toBeUndefined();
+    });
+
+    it("does nothing when disabled", () => {
+      expect(oldManHouse(false, ["Old Man"])).toBeUndefined();
+    });
+  });
 });

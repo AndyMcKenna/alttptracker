@@ -391,6 +391,9 @@ export class RequirementEvaluator {
         // TODO Follower shuffle logic
         return this.resolveComplex("canReach|Old Man Cave (West)", ctx);
       case "canRescueOldMan":
+        // Optional assumption: collecting the Old Man's item proves he was rescued, so his S&Q spot is
+        // reachable even if the rescue caves have not been placed (entrance shuffle).
+        if (this.state.settings.assumeOldManOnCollect && this.state.checks?.["Old Man"]?.checked) return "available";
         return minimumStatus(this.resolveSimple("canCollectOldMan", ctx), this.resolveComplex("canReachFrom|Old Man Cave (West)|Old Man Drop Off", ctx));
       case "canCollectKiki":
         // TODO Follower shuffle logic

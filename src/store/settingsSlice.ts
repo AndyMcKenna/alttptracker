@@ -130,6 +130,8 @@ export interface SettingsState {
   followerShuffle: boolean;
   tavernShuffle: boolean;
   zelgaWoods: boolean;
+  /** Once the Old Man item is collected, treat the Old Man S&Q spot as reachable without placing the rescue caves */
+  assumeOldManOnCollect: boolean;
 
   // DR Stuff
   doors: "vanilla" | "basic" | "partitioned" | "crossed"
@@ -202,6 +204,7 @@ export const initialState: SettingsState = {
   followerShuffle: false,
   tavernShuffle: false,
   zelgaWoods: false,
+  assumeOldManOnCollect: false,
 
   // DR Stuff
   doors: "vanilla",

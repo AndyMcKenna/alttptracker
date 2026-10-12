@@ -117,6 +117,17 @@ export function TrackerSettingsTab({
               />
             </div>
           </div>
+          <div className="space-y-2">
+            <Label className="text-xs font-medium">Logic</Label>
+            <div className="flex flex-col gap-2">
+              <SettingSwitch
+                label="Assume old man access on item collect"
+                description="When the old man item has been collected, assume logical access to Old Man S&Q spot without placing Old Man rescue caves"
+                checked={settings.assumeOldManOnCollect}
+                onChange={(v) => updateSetting("assumeOldManOnCollect", v)}
+              />
+            </div>
+          </div>
         </CardContent>
       </Card>
     </TabsContent>
