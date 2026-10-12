@@ -130,6 +130,8 @@ export class OverworldTraverser {
   private dungeonBigKeyGatedRegions: Map<string, Set<string>> = new Map();
   // Per-dungeon set of regions that are only reachable via small key doors
   private dungeonSmallKeyGatedRegions: Map<string, Set<string>> = new Map();
+  // SK-gated regions another (unusable) entry reaches without keys — a key may be inside
+  private dungeonSmallKeyAltAccessRegions: Map<string, Set<string>> = new Map();
   // Cache of DungeonTraverser instances reused across processPendingDungeons iterations.
   // State is immutable for this traverser's lifetime, so exit metadata + key caches
   // computed in the dungeon traverser's constructor can be reused.
@@ -812,8 +814,11 @@ export class OverworldTraverser {
       if (result.bigKeyGatedRegions && !this.dungeonBigKeyGatedRegions.has(dungeonId)) {
         this.dungeonBigKeyGatedRegions.set(dungeonId, result.bigKeyGatedRegions);
       }
+      // The first traversal runs once the overworld BFS is done, so its usable entries are the ones
+      // reachable from the overworld (not portals only reachable back out through the dungeon itself).
       if (result.smallKeyGatedRegions && !this.dungeonSmallKeyGatedRegions.has(dungeonId)) {
         this.dungeonSmallKeyGatedRegions.set(dungeonId, result.smallKeyGatedRegions);
+        this.dungeonSmallKeyAltAccessRegions.set(dungeonId, result.smallKeyAltAccessRegions);
       }
 
       // Incorporate dungeon region statuses (always use latest traversal).
@@ -1044,7 +1049,9 @@ export class OverworldTraverser {
         const gated = pass.gatedRegions.get(dungeonId);
         for (const locationName of Object.keys(regionLogic.locations)) {
           if (pass.isLocked(locationName, regionName, gated) && locationStatuses[locationName] !== undefined) {
-            locationStatuses[locationName] = minimumStatus(locationStatuses[locationName], availability);
+            const current = locationStatuses[locationName];
+            // Key uncertainty ("possible") must not hide that a location is out of logic (e.g. dark rooms)
+            locationStatuses[locationName] = current === "ool" && availability === "possible" ? "ool" : minimumStatus(current, availability);
           }
         }
       }
@@ -1176,6 +1183,22 @@ export class OverworldTraverser {
         if (bkGated) for (const r of bkGated) excludedRegions.add(r);
       }
 
+      // Locations that may hold a shuffled key
+      const isKeyCandidate = (locationName: string): boolean => {
+        // Common exclusions (non-treasure locations)
+        if (locationName === "Crystal_Switch") return false;
+        if (locationName.endsWith("Boss Kill")) return false;
+        if (locationName.endsWith("Prize")) return false;
+        // TODO: Update when more pot/drop shuffles are enabled
+        if (/Pot #\d+$/.test(locationName)) return false;
+        if (/Enemy #\d+$/.test(locationName)) return false;
+        // Key Drop/Pot Key: when their respective settings are off, these locations
+        // have fixed keys and aren't part of the shuffle pool (applies to both BK and SK).
+        if (locationName.includes("Key Drop") && this.state.settings.enemyDrop === "none") return false;
+        if (locationName.endsWith("Pot Key") && !isPotteryKeyShuffle(this.state.settings.pottery)) return false;
+        return true;
+      };
+
       // Scan all non-gated treasure locations in this dungeon
       let allNonGatedReachable = true;
       let allReachableChecked = true; // Only used for BK
@@ -1188,20 +1211,8 @@ export class OverworldTraverser {
         if (!regionLogic.locations) continue;
 
         for (const locationName of Object.keys(regionLogic.locations)) {
-          // Common exclusions (non-treasure locations)
-          if (locationName === "Crystal_Switch") continue;
-          if (locationName.endsWith("Boss Kill")) continue;
-          if (locationName.endsWith("Prize")) continue;
-
-          // TODO: Update when more pot/drop shuffles are enabled
-          if (/Pot #\d+$/.test(locationName)) continue;
-          if (/Enemy #\d+$/.test(locationName)) continue;
-
+          if (!isKeyCandidate(locationName)) continue;
           if (isBigKey && locationName.includes("Big Chest") && !["sp"].includes(dungeonId)) continue;
-          // Key Drop/Pot Key: when their respective settings are off, these locations
-          // have fixed keys and aren't part of the shuffle pool (applies to both BK and SK).
-          if (locationName.includes("Key Drop") && this.state.settings.enemyDrop === "none") continue;
-          if (locationName.endsWith("Pot Key") && !isPotteryKeyShuffle(this.state.settings.pottery)) continue;
 
           hasAnyNonGatedLocation = true;
           const status = locationStatuses[locationName];
@@ -1217,7 +1228,17 @@ export class OverworldTraverser {
         }
       }
 
-      if (!hasAnyNonGatedLocation || allNonGatedReachable) {
+      // SK: a key may sit behind its own door when another (not yet usable) entry reaches that
+      // area without keys, so while such a location is unchecked the key is not guaranteed.
+      const keyMayBeBehindDoor =
+        !isBigKey &&
+        [...(this.dungeonSmallKeyAltAccessRegions.get(dungeonId) ?? [])].some((regionName) =>
+          Object.keys(this.regions[regionName]?.locations ?? {}).some((locationName) => isKeyCandidate(locationName) && !this.state.checks?.[locationName]?.checked),
+        );
+
+      if (keyMayBeBehindDoor) {
+        result.set(dungeonId, "possible");
+      } else if (!hasAnyNonGatedLocation || allNonGatedReachable) {
         result.set(dungeonId, "available");
       } else if (isBigKey && allReachableChecked) {
         // All reachable non-BK locations checked without finding BK → unreachable

@@ -73,6 +73,7 @@ function categorizeLocation(name: string): LocationCategory | null {
     name.includes("Ice Block Drop") ||
     name === "Agahnim 1" ||
     name === "Agahnim 2" ||
+    name === "Ganon" ||
     name === "Locksmith" ||
     name === "Flute Activation" ||
     name === "Kiki" ||

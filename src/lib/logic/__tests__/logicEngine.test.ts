@@ -134,6 +134,29 @@ describe("LogicEngine", () => {
     });
   });
 
+  describe("Hyrule Castle Secret Room", () => {
+    // HC's chest key may be in the Secret Room, which the glove (Sanctuary Grave drop) reaches
+    // without keys; from the front (lamp) it is behind a key door.
+    const secretRoom = "Sewers - Secret Room - Left";
+
+    it("is possible with only the lamp", () => {
+      const state = gameState().withItems({ lantern: 1, bomb: 1 }).build();
+      expect(new OverworldTraverser(state, getLogicSet("noglitches")).calculateAll().locationsLogic[secretRoom]).toBe("possible");
+    });
+
+    it("does not let key uncertainty hide dark room navigation (stays ool)", () => {
+      const state = gameState().withSequenceBreaks({ canNavigateDarkRooms: true }).build();
+      const result = new OverworldTraverser(state, getLogicSet("noglitches")).calculateAll();
+      expect(result.locationsLogic["Hyrule Castle - Key Rat Key Drop"]).toBe("ool");
+      expect(result.locationReasons["Hyrule Castle - Key Rat Key Drop"]).toContain("canNavigateDarkRooms");
+    });
+
+    it("is available with the glove", () => {
+      const state = gameState().withItems({ lantern: 1, bomb: 1, glove: 1 }).build();
+      expect(new OverworldTraverser(state, getLogicSet("noglitches")).calculateAll().locationsLogic[secretRoom]).toBe("available");
+    });
+  });
+
   describe("Eastern Palace Key Logic", () => {
     it("Should mark big key chest as ool with sequence breaks enabled", () => {
       const state = gameState().withSequenceBreaks({ canNavigateDarkRooms: true }).build();
@@ -1440,6 +1463,16 @@ describe("LogicEngine", () => {
       const result = new OverworldTraverser(withoutPearl, getLogicSet("noglitches")).calculateAll();
 
       expect(result.locationsLogic["Palace of Darkness - Shooter Room"]).toBe("unavailable");
+    });
+
+    it("Sick Kid and Sahasrahla need no Moon Pearl (bunny can collect them)", () => {
+      for (const worldState of ["inverted", "inverted_1"] as const) {
+        const state = gameState().withAllItems().withoutItems(["moonpearl"]).withSettings({ worldState })
+          .withDungeon("ep", { prize: "greenPendant", prizeCollected: true }).build();
+        const result = new OverworldTraverser(state, getLogicSet("noglitches")).calculateAll();
+        expect(result.locationsLogic["Sick Kid"]).toBe("available");
+        expect(result.locationsLogic["Sahasrahla"]).toBe("available");
+      }
     });
 
     it("Inverted 1.0 - Flute is not active without access to kak", () => {

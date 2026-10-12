@@ -58,7 +58,9 @@ export interface DungeonTraversalResult {
   regionStatuses: Map<string, DungeonRegionState>; // Internal region statuses
   externalExits: Map<string, { to: string; status: LogicStatus; linkState: LinkState; keysUsedToReach: number }>; // Dungeon -> Overworld exits
   bigKeyGatedRegions: Set<string>; // Regions only reachable via big key doors
-  smallKeyGatedRegions: Set<string>; // Regions only reachable via small key doors
+  smallKeyGatedRegions: Set<string>; // Regions only reachable via small key doors (from usable entries)
+  /** Small-key-gated regions that another, not yet usable, entry reaches without small keys: a key may be inside */
+  smallKeyAltAccessRegions: Set<string>;
 }
 
 interface DungeonContext {
@@ -418,13 +420,14 @@ export class DungeonTraverser {
       }
     }
 
-    const { bigKeyGated, smallKeyGated } = this.computeKeyGatedRegions(ctx, entryRegions);
+    const { bigKeyGated, smallKeyGated, smallKeyAltAccess } = this.computeKeyGatedRegions(ctx, entryRegions, entryStatus);
 
     return {
       regionStatuses: ctx.reachable,
       externalExits,
       bigKeyGatedRegions: bigKeyGated,
       smallKeyGatedRegions: smallKeyGated,
+      smallKeyAltAccessRegions: smallKeyAltAccess,
     };
   }
 
@@ -435,13 +438,15 @@ export class DungeonTraverser {
   private computeKeyGatedRegions(
     ctx: DungeonContext,
     entryRegions: Map<string, { linkState: LinkState }>,
-  ): { bigKeyGated: Set<string>; smallKeyGated: Set<string> } {
+    entryStatus: Map<string, LogicStatus>,
+  ): { bigKeyGated: Set<string>; smallKeyGated: Set<string>; smallKeyAltAccess: Set<string> } {
     // BFS from entry regions that refuses to traverse the given key-door type;
     // any reachable region NOT visited is gated behind that key type.
-    const bfsSkippingDoorType = (skipBKDoors: boolean): Set<string> => {
+    const bfsSkippingDoorType = (skipBKDoors: boolean, usableEntriesOnly = false): Set<string> => {
       const reached = new Set<string>();
       const queue: string[] = [];
       for (const [regionName] of entryRegions) {
+        if (usableEntriesOnly && entryStatus.get(regionName) === "unavailable") continue;
         if (ctx.reachable.has(regionName)) {
           reached.add(regionName);
           queue.push(regionName);
@@ -464,15 +469,23 @@ export class DungeonTraverser {
     };
 
     const reachableNoBK = bfsSkippingDoorType(true);
-    const reachableNoSK = bfsSkippingDoorType(false);
+    // Small keys: gated relative to the entries the player can use now. A region that only an
+    // unusable entry reaches without keys (e.g. HC Secret Room via the Sanctuary Grave drop without a
+    // glove) is still behind a key door for the player, and may hold the very key that opens it.
+    const reachableNoSKAnyEntry = bfsSkippingDoorType(false);
+    const reachableNoSK = bfsSkippingDoorType(false, true);
 
     const bigKeyGated = new Set<string>();
     const smallKeyGated = new Set<string>();
+    const smallKeyAltAccess = new Set<string>();
     for (const regionName of ctx.reachable.keys()) {
       if (!reachableNoBK.has(regionName)) bigKeyGated.add(regionName);
-      if (!reachableNoSK.has(regionName)) smallKeyGated.add(regionName);
+      if (!reachableNoSK.has(regionName)) {
+        smallKeyGated.add(regionName);
+        if (reachableNoSKAnyEntry.has(regionName)) smallKeyAltAccess.add(regionName);
+      }
     }
-    return { bigKeyGated, smallKeyGated };
+    return { bigKeyGated, smallKeyGated, smallKeyAltAccess };
   }
 
   private dijkstraMinKeys(ctx: DungeonContext, entryRegions: Map<string, { linkState: LinkState }>, entryKeyCost: Map<string, number>, evaluator: RequirementEvaluator, assumeBigKey: boolean = true, targetMap?: Map<string, number>, collectPendingDoors: boolean = true) {

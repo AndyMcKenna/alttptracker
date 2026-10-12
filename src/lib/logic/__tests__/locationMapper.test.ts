@@ -30,4 +30,9 @@ describe("Location mapping", () => {
     expect(namesOf("Tower of Hera")).toContain("Tower of Hera - Big Key Chest");
     expect(namesOf("Swamp Palace")).toContain("Swamp Palace - Big Chest");
   });
+
+  it("gives the Pyramid entrances no checks (Ganon is an event)", () => {
+    expect(namesOf("Pyramid Entrance")).toEqual([]);
+    expect(namesOf("Pyramid Hole")).toEqual([]);
+  });
 });
