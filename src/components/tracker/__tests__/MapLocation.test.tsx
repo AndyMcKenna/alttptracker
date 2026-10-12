@@ -1,7 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
 import MapLocation from "../MapLocation";
-import { renderWithStore } from "./renderWithStore";
+import { createTestStore, renderWithStore } from "./renderWithStore";
+import { updateDungeonState } from "@/store/dungeonsSlice";
 import type { LogicStatus } from "@/data/logic/logicTypes";
 
 // Mock the hook that MapLocation depends on
@@ -122,5 +123,34 @@ describe("MapLocation", () => {
     const yPercent = (200 / 512) * 100;
     expect(el.style.left).toBe(`${xPercent}%`);
     expect(el.style.top).toBe(`${yPercent}%`);
+  });
+
+  describe("prize icon in the boss square", () => {
+    const epLocation = { ...defaultLocation, overworld: false, isDungeon: true };
+    const renderEP = (prize: string) => {
+      mockHookReturn.itemLocations = ["Eastern Palace - Boss"];
+      mockHookReturn.itemChecks = {
+        "Eastern Palace - Boss": {
+          displayName: "Boss",
+          status: { checked: false, logic: "available", manuallyChecked: false, scoutedItems: [] },
+        },
+      } as unknown as typeof mockHookReturn.itemChecks;
+      const store = createTestStore();
+      store.dispatch(updateDungeonState({ dungeon: "ep", newState: { prize: prize as never } }));
+      renderWithStore(<MapLocation name="Eastern Palace" location={epLocation} type="item" isEntrance={false} />, { store });
+      return Array.from(document.querySelectorAll<HTMLElement>("[style]")).map((el) => el.style.backgroundImage);
+    };
+
+    it("shows the prize once it is known", () => {
+      expect(renderEP("greenPendant").some((bg) => bg.includes("/dungeons/green_pendant.png"))).toBe(true);
+    });
+
+    it("shows the map icon when only the map is known", () => {
+      expect(renderEP("map").some((bg) => bg.includes("/dungeons/map.png"))).toBe(true);
+    });
+
+    it("shows nothing for an unknown prize", () => {
+      expect(renderEP("unknown").some((bg) => bg.includes("/dungeons/"))).toBe(false);
+    });
   });
 });
