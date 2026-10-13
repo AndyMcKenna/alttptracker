@@ -38,7 +38,7 @@
  *   for the lifetime of this instance (state is immutable per traverse pass).
  */
 
-import { type CrystalSwitchState, type GameState, type LinkState, type LogicState, type LogicStatus, type RegionLogic } from "@/data/logic/logicTypes";
+import { type CrystalSwitchState, type ExitLogic, type GameState, type LinkState, type LogicState, type LogicStatus, type RegionLogic } from "@/data/logic/logicTypes";
 import type { LogicSet } from "./logicMapper";
 import { RequirementEvaluator, type EvaluationContext, type StaticKeyRuntime } from "./requirementEvaluator";
 import { getLogicStateForWorld, createAllItemsState, isBetterStatus, minimumStatus } from "./logicHelpers";
@@ -109,7 +109,26 @@ interface ExitMeta {
 interface SharedExitMeta {
   exitMeta: Map<string, ExitMeta>;
   exitToSourceRegion: Map<string, string>;
+  /** Region name → its exits with metadata, built lazily (see getRegionExits) */
+  regionExits: Map<string, RegionExit[]>;
 }
+
+/** An exit together with its metadata, so hot loops avoid Object.entries and string-keyed lookups. */
+interface RegionExit {
+  name: string;
+  exit: ExitLogic[string];
+  meta: ExitMeta;
+}
+
+const DEFAULT_EXIT_META: ExitMeta = { isSKDoor: false, isBKDoor: false, isPairedWithBK: false, isBidirectional: false, isOverworld: false };
+
+// One shared single-state set per crystal state, for evaluation contexts (which only read them).
+// Never mutate these; region state that collects crystal states uses its own sets.
+const SINGLE_CRYSTAL_STATE: Record<CrystalSwitchState, Set<CrystalSwitchState>> = {
+  orange: new Set(["orange"]),
+  blue: new Set(["blue"]),
+  unknown: new Set(["unknown"]),
+};
 const sharedExitMetaCache = new WeakMap<object, Map<string, SharedExitMeta>>();
 
 /** Per-graph cache of computeAllEntranceRegions results, keyed "dungeonId|entranceActive". */
@@ -127,6 +146,8 @@ export class DungeonTraverser {
   private exitMeta: Map<string, ExitMeta> = new Map();
   // Cache for exit name → source region mapping
   private exitToSourceRegion: Map<string, string> = new Map();
+  // Region name → exits with metadata (shared per graph + world state)
+  private regionExits: Map<string, RegionExit[]> = new Map();
   // Cache for small keys per region (populated lazily, cleared never — state is immutable)
   private smallKeysCache: Map<string, string[]> = new Map();
   // Memo for findCanReachTargets: requirements object identity → resolved targets list.
@@ -161,11 +182,12 @@ export class DungeonTraverser {
     let shared = byMode.get(modeKey);
     if (!shared) {
       this.buildExitMetadata();
-      shared = { exitMeta: this.exitMeta, exitToSourceRegion: this.exitToSourceRegion };
+      shared = { exitMeta: this.exitMeta, exitToSourceRegion: this.exitToSourceRegion, regionExits: this.regionExits };
       byMode.set(modeKey, shared);
     } else {
       this.exitMeta = shared.exitMeta;
       this.exitToSourceRegion = shared.exitToSourceRegion;
+      this.regionExits = shared.regionExits;
     }
 
     this.effectivelyHasBigKey = protection === "partial" || this.actuallyHasBigKey;
@@ -270,7 +292,17 @@ export class DungeonTraverser {
 
   /** Get cached exit metadata. Falls back to safe defaults for unknown exits. */
   private getExitMeta(regionName: string, exitName: string): ExitMeta {
-    return this.exitMeta.get(`${regionName}|${exitName}`) ?? { isSKDoor: false, isBKDoor: false, isPairedWithBK: false, isBidirectional: false, isOverworld: false };
+    return this.exitMeta.get(`${regionName}|${exitName}`) ?? DEFAULT_EXIT_META;
+  }
+
+  /** A region's exits with their metadata (cached; the graph is never mutated after it is built). */
+  private getRegionExits(regionName: string): RegionExit[] {
+    let list = this.regionExits.get(regionName);
+    if (!list) {
+      list = Object.entries(this.regions[regionName]?.exits ?? {}).map(([name, exit]) => ({ name, exit, meta: this.getExitMeta(regionName, name) }));
+      this.regionExits.set(regionName, list);
+    }
+    return list;
   }
 
   /**
@@ -395,9 +427,8 @@ export class DungeonTraverser {
       const regionLogic = this.regions[regionName];
       const minKeysForRegion = ctx.regionMinKeysUsed.get(regionName) ?? 0;
       if (regionLogic?.exits) {
-        for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+        for (const { name: exitName, exit, meta } of this.getRegionExits(regionName)) {
           if (!exit.to) continue;
-          const meta = this.getExitMeta(regionName, exitName);
           if (!meta.isOverworld) continue;
           const exitStatus = this.requirementEvaluator.evaluateWorldLogic(exit.requirements, {
             regionName,
@@ -456,9 +487,8 @@ export class DungeonTraverser {
         const current = queue.shift()!;
         const regionLogic = this.regions[current];
         if (!regionLogic?.exits) continue;
-        for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+        for (const { exit, meta } of this.getRegionExits(current)) {
           if (!exit.to) continue;
-          const meta = this.getExitMeta(current, exitName);
           if (meta.isOverworld || !ctx.reachable.has(exit.to) || reached.has(exit.to)) continue;
           if (skipBKDoors ? meta.isBKDoor : meta.isSKDoor) continue;
           reached.add(exit.to);
@@ -535,9 +565,8 @@ export class DungeonTraverser {
         }
 
         if (regionLogic.exits) {
-          for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+          for (const { name: exitName, exit, meta } of this.getRegionExits(region)) {
             if (!exit.to) continue;
-            const meta = this.getExitMeta(region, exitName);
             if (meta.isOverworld) continue;
 
             // For bidirectional SK doors, check if already opened from other side.
@@ -556,7 +585,7 @@ export class DungeonTraverser {
             const status = evaluator.evaluateWorldLogic(exit.requirements, {
               regionName: region,
               dungeonId: this.dungeonId,
-              crystalStates: new Set([crystalState]),
+              crystalStates: SINGLE_CRYSTAL_STATE[crystalState],
               linkState: regionState?.linkState ?? "link",
               assumeSmallKey: meta.isSKDoor,
               assumeBigKey: hasBigKey,
@@ -591,7 +620,7 @@ export class DungeonTraverser {
             this.canHitCrystalSwitch(region, {
               regionName: region,
               dungeonId: this.dungeonId,
-              crystalStates: new Set([crystalState]),
+              crystalStates: SINGLE_CRYSTAL_STATE[crystalState],
               linkState: regionState?.linkState ?? "link",
             })
           ) {
@@ -701,9 +730,8 @@ export class DungeonTraverser {
           }
 
           if (regionLogic.exits) {
-            for (const [nextExitName, exit] of Object.entries(regionLogic.exits)) {
+            for (const { name: nextExitName, exit, meta } of this.getRegionExits(region)) {
               if (!exit.to) continue;
-              const meta = this.getExitMeta(region, nextExitName);
               if (meta.isOverworld) continue;
               const countsAsKeyDoor = meta.isSKDoor && !meta.isPairedWithBK;
 
@@ -712,7 +740,7 @@ export class DungeonTraverser {
               const status = evaluator.evaluateWorldLogic(exit.requirements, {
                 regionName: region,
                 dungeonId: this.dungeonId,
-                crystalStates: new Set([crystalState]),
+                crystalStates: SINGLE_CRYSTAL_STATE[crystalState],
                 linkState: regionState?.linkState ?? "link",
                 assumeSmallKey: meta.isSKDoor,
                 assumeBigKey: this.effectivelyHasBigKey,
@@ -758,7 +786,7 @@ export class DungeonTraverser {
               this.canHitCrystalSwitch(region, {
                 regionName: region,
                 dungeonId: this.dungeonId,
-                crystalStates: new Set([crystalState]),
+                crystalStates: SINGLE_CRYSTAL_STATE[crystalState],
                 linkState: regionState?.linkState ?? "link",
               })
             ) {
@@ -911,9 +939,8 @@ export class DungeonTraverser {
       }
 
       if (regionLogic.exits) {
-        for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+        for (const { exit, meta } of this.getRegionExits(region)) {
           if (!exit.to) continue;
-          const meta = this.getExitMeta(region, exitName);
           if (meta.isOverworld) continue;
 
           // Discovery: evaluate with keyCountingEvaluator + assumeBigKey.
@@ -922,7 +949,7 @@ export class DungeonTraverser {
           const requirementStatus = keyCountingEvaluator.evaluateWorldLogic(exit.requirements, {
             regionName: region,
             dungeonId: this.dungeonId,
-            crystalStates: new Set([crystalState]),
+            crystalStates: SINGLE_CRYSTAL_STATE[crystalState],
             linkState: effectiveLinkState,
             assumeSmallKey: meta.isSKDoor,
             assumeBigKey: this.effectivelyHasBigKey,
@@ -942,7 +969,7 @@ export class DungeonTraverser {
           const actualStatus = this.requirementEvaluator.evaluateWorldLogic(exit.requirements, {
             regionName: region,
             dungeonId: this.dungeonId,
-            crystalStates: new Set([crystalState]),
+            crystalStates: SINGLE_CRYSTAL_STATE[crystalState],
             linkState: effectiveLinkState,
             assumeSmallKey: meta.isSKDoor,
             assumeBigKey: this.actuallyHasBigKey,
@@ -1035,7 +1062,7 @@ export class DungeonTraverser {
           this.canHitCrystalSwitch(region, {
             regionName: region,
             dungeonId: this.dungeonId,
-            crystalStates: new Set([crystalState]),
+            crystalStates: SINGLE_CRYSTAL_STATE[crystalState],
             linkState: effectiveLinkState,
           })
         ) {
@@ -1621,9 +1648,8 @@ export class DungeonTraverser {
       const regionLogic = this.regions[region];
       if (!regionLogic?.exits) continue;
 
-      for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+      for (const { exit, meta } of this.getRegionExits(region)) {
         if (!exit.to) continue;
-        const meta = this.getExitMeta(region, exitName);
         if (meta.isOverworld || reachable.has(exit.to)) continue;
         if (meta.isSKDoor) continue;
 
@@ -1679,9 +1705,8 @@ export class DungeonTraverser {
         if (!adj.has(region)) adj.set(region, []);
         const regionAdj = adj.get(region)!;
 
-        for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+        for (const { name: exitName, exit, meta } of this.getRegionExits(region)) {
           if (!exit.to) continue;
-          const meta = this.getExitMeta(region, exitName);
           if (meta.isOverworld) continue;
           if (regionAdj.some((e) => e.exitName === exitName)) continue;
 

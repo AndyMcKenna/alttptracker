@@ -44,7 +44,7 @@ import type { LogicSet } from "./logicMapper";
 import { RequirementEvaluator, type EvaluationContext, type StaticKeyRuntime } from "./requirementEvaluator";
 import { staticKeyCandidates } from "./staticKeyLogic";
 import { DungeonTraverser } from "./dungeonTraverser";
-import { combineLinkStates, createAllItemsState, isBetterStatus, combineStatuses, minimumStatus } from "./logicHelpers";
+import { combineLinkStates, createAllItemsState, isBetterStatus, combineStatuses, minimumStatus, exitEntries } from "./logicHelpers";
 import { DungeonsData } from "@/data/dungeonData";
 import { entranceLocations } from "@/data/locationsData";
 import { buildRegionMetadata, applyStandvertedState, type RegionMetadata } from "./regionsProvider";
@@ -152,6 +152,10 @@ export class OverworldTraverser {
   // Identity of the reachable map the cache was built against — a different
   // map (e.g. evaluateLocations called with a custom snapshot) invalidates it.
   private routeCacheForMap?: Map<string, RegionReachability>;
+  // Results of the route search itself (source → target for a given starting link state). The search
+  // builds its own reachability from the source, so it depends only on the game state and graph and can
+  // be reused throughout traversal. Cleared when static key logic's assumed extra keys change.
+  private routeSearchCache: Map<string, LogicStatus> = new Map();
   // Static key logic: set when the graph carries the static overlay (buildEffectiveRegions).
   private readonly staticKeyLogic: boolean;
   private readonly staticKeyRuntime: StaticKeyRuntime = { extraKeys: {} };
@@ -370,11 +374,13 @@ export class OverworldTraverser {
         const regionLogic = this.regions[current];
         if (!regionLogic?.exits) continue;
 
-        for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+        for (const [exitName, exit] of exitEntries(regionLogic)) {
           if (this.processRouteExit(exitName, exit, current, regionReachability, ctx)) {
             madeProgress = true;
           }
         }
+        // Statuses only improve, so once the target is fully available the answer is final
+        if (ctx.reachable.get(targetRegion)?.status === "available") return "available";
       }
 
       if (this.reevaluateRouteBlockedExits(ctx)) {
@@ -400,6 +406,7 @@ export class OverworldTraverser {
     }
 
     const searchKey = `${sourceRegion}\u0000${targetRegion}`;
+    const sourceLinkState = knownSource?.linkState ?? "link";
     if (this.routeCacheEnabled) {
       if (this.routeCacheForMap !== knownReachable) {
         this.routeResultCache.clear();
@@ -412,18 +419,25 @@ export class OverworldTraverser {
       return "unavailable";
     }
 
-    this.canReachFromInProgress.add(searchKey);
-    try {
-      const sourceStatus = knownSource?.status ?? "available";
-      const routeStatus = this.searchRouteFromRegion(sourceRegion, targetRegion, knownSource?.linkState ?? "link");
-      const result = minimumStatus(sourceStatus, routeStatus);
-      if (this.routeCacheEnabled) {
-        this.routeResultCache.set(searchKey, result);
+    const sourceStatus = knownSource?.status ?? "available";
+    const routeKey = `${searchKey}\u0000${sourceLinkState}`;
+    let routeStatus = this.routeSearchCache.get(routeKey);
+    if (routeStatus === undefined) {
+      // Only outermost searches are cached: a nested search can be cut short by the cycle guard above.
+      const outermost = this.canReachFromInProgress.size === 0;
+      this.canReachFromInProgress.add(searchKey);
+      try {
+        routeStatus = this.searchRouteFromRegion(sourceRegion, targetRegion, sourceLinkState);
+      } finally {
+        this.canReachFromInProgress.delete(searchKey);
       }
-      return result;
-    } finally {
-      this.canReachFromInProgress.delete(searchKey);
+      if (outermost) this.routeSearchCache.set(routeKey, routeStatus);
     }
+    const result = minimumStatus(sourceStatus, routeStatus);
+    if (this.routeCacheEnabled) {
+      this.routeResultCache.set(searchKey, result);
+    }
+    return result;
   }
 
   public calculateAll() {
@@ -806,6 +820,7 @@ export class OverworldTraverser {
           const findable = this.countFindableStaticKeys(dungeonId, result.regionStatuses, ctx.reachable);
           if (findable <= (this.staticKeyRuntime.extraKeys[dungeonId] ?? 0)) break;
           this.staticKeyRuntime.extraKeys[dungeonId] = findable;
+          this.routeSearchCache.clear(); // routes through this dungeon may open up
           result = dungeonTraverser.traverse(entryMap, entryStatus, inventoryKeys, entryKeyCost, canReachOverworldRegion, entryOolReasons);
         }
       }
@@ -1297,7 +1312,7 @@ export class OverworldTraverser {
       const regionLogic = this.regions[current];
       if (!regionLogic?.exits) continue;
 
-      for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+      for (const [exitName, exit] of exitEntries(regionLogic)) {
         if (!exit?.to || exit.type === "Dungeon") continue;
 
         const evalCtx: EvaluationContext = {
@@ -1326,7 +1341,7 @@ export class OverworldTraverser {
       const regionLogic = this.regions[current];
       if (!regionLogic?.exits) continue;
 
-      for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+      for (const [exitName, exit] of exitEntries(regionLogic)) {
         if (!exit?.to) continue;
 
         const evalCtx: EvaluationContext = {
@@ -1370,6 +1385,7 @@ export class OverworldTraverser {
   public traverse(): Map<string, RegionReachability> {
     this.routeCacheEnabled = false;
     this.routeResultCache.clear();
+    this.routeSearchCache.clear();
     this.staticKeyRuntime.extraKeys = {};
     const ctx = this.initStartRegions();
 
@@ -1392,7 +1408,7 @@ export class OverworldTraverser {
 
         if (!regionLogic?.exits) continue;
 
-        for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+        for (const [exitName, exit] of exitEntries(regionLogic)) {
           if (!exit?.to) continue; // Severed exit — skip
           this.processExit(exitName, exit, current, regionReachability, ctx);
         }

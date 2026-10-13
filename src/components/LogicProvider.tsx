@@ -44,6 +44,17 @@ function normalizeSettingsForLogic(settings: SettingsState): SettingsState {
   };
 }
 
+/** Equal when every location's checked flag matches (logic statuses and other fields are ignored). */
+function sameCheckedFlags(a: RootState["checks"]["locationsChecks"], b: RootState["checks"]["locationsChecks"]): boolean {
+  if (a === b) return true;
+  const keys = Object.keys(a);
+  if (keys.length !== Object.keys(b).length) return false;
+  for (const key of keys) {
+    if (a[key]?.checked !== b[key]?.checked) return false;
+  }
+  return true;
+}
+
 interface LogicProviderProps {
   children: React.ReactNode;
 }
@@ -54,7 +65,9 @@ function LogicProvider({ children }: LogicProviderProps) {
   const items = useSelector((state: RootState) => state.items);
   const dungeons = useSelector((state: RootState) => state.dungeons);
   const entrances = useSelector((state: RootState) => state.entrances);
-  const locationsChecks = useSelector((state: RootState) => state.checks.locationsChecks);
+  // Only the checked flags feed the logic. The logic writes its own results (statuses, reasons) back
+  // into locationsChecks, so depending on the whole object would re-run every computation a second time.
+  const locationsChecks = useSelector((state: RootState) => state.checks.locationsChecks, sameCheckedFlags);
   const overworld = useSelector((state: RootState) => state.overworld);
 
   const url = new URL(window.location.href);
