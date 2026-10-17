@@ -41,10 +41,10 @@
 import { type CrystalSwitchState, type ExitLogic, type GameState, type LinkState, type LogicState, type LogicStatus, type RegionLogic } from "@/data/logic/logicTypes";
 import type { LogicSet } from "./logicMapper";
 import { RequirementEvaluator, type EvaluationContext, type StaticKeyRuntime } from "./requirementEvaluator";
-import { getLogicStateForWorld, createAllItemsState, isBetterStatus, minimumStatus } from "./logicHelpers";
+import { getLogicStateForWorld, createAllItemsState, isBetterStatus, minimumStatus, combineLinkStates } from "./logicHelpers";
 import { PriorityQueue } from "@datastructures-js/priority-queue";
 import { OVERWORLD_REGION_TYPES, isPotteryKeyShuffle, DOOR_PREFIX_TO_DUNGEON, PORTAL_TO_DUNGEON } from "./dungeonConstants";
-import { bunnyRevivableEntrances, superbunnyRevivableEntrances, swordSuperbunnyRevivableEntrances } from "@/data/logic/superbunnyLogic";
+import { bunnyImpassableDoors, bunnyRevivableEntrances, superbunnyRevivableEntrances, swordSuperbunnyRevivableEntrances } from "@/data/logic/superbunnyLogic";
 
 export interface DungeonRegionState {
   status: LogicStatus;
@@ -97,6 +97,7 @@ interface ExitMeta {
   isPairedWithBK: boolean;   // SK door whose reverse side is a BK door (auto-opens)
   isBidirectional: boolean;  // SK door with a matching SK door on the reverse side
   isOverworld: boolean;      // exit leads to an overworld region
+  isBunnyImpassable: boolean; // blocked for a bunny, e.g. pots or blocks must be lifted/pushed (OWR bunny_impassible_doors)
 }
 
 /**
@@ -120,7 +121,7 @@ interface RegionExit {
   meta: ExitMeta;
 }
 
-const DEFAULT_EXIT_META: ExitMeta = { isSKDoor: false, isBKDoor: false, isPairedWithBK: false, isBidirectional: false, isOverworld: false };
+const DEFAULT_EXIT_META: ExitMeta = { isSKDoor: false, isBKDoor: false, isPairedWithBK: false, isBidirectional: false, isOverworld: false, isBunnyImpassable: false };
 
 // One shared single-state set per crystal state, for evaluation contexts (which only read them).
 // Never mutate these; region state that collects crystal states uses its own sets.
@@ -268,7 +269,14 @@ export class DungeonTraverser {
         // Single tree-walk to detect both key types.
         const { isSK, isBK } = this.detectKeyTypes(reqs);
         const isOW = OVERWORLD_REGION_TYPES.has(this.regions[exit.to]?.type || "");
-        this.exitMeta.set(`${regionName}|${exitName}`, { isSKDoor: isSK, isBKDoor: isBK, isPairedWithBK: false, isBidirectional: false, isOverworld: isOW });
+        this.exitMeta.set(`${regionName}|${exitName}`, {
+          isSKDoor: isSK,
+          isBKDoor: isBK,
+          isPairedWithBK: false,
+          isBidirectional: false,
+          isOverworld: isOW,
+          isBunnyImpassable: bunnyImpassableDoors.has(exitName),
+        });
       }
     }
     // Second pass: compute paired/bidirectional using the flags from pass 1
@@ -859,6 +867,27 @@ export class DungeonTraverser {
     // Best entry status per "region|crystalState" (prevents cross-crystal-state borrowing).
     const regionEntryStatus = new Map<string, LogicStatus>();
 
+    // A region's link state belongs to the path that gives it its best status. Without this, a link
+    // state from one path (e.g. an unusable entrance seeded as Link) would be paired with the status
+    // of another (a bunny walking in from a usable entrance), letting the bunny act as Link.
+    // Returns true when the region's link state changed (its exits must then be re-evaluated).
+    const regionLinkStatus = new Map<string, LogicStatus>();
+    const recordLinkState = (region: string, status: LogicStatus, linkState: LinkState): boolean => {
+      const state = ctx.reachable.get(region);
+      if (!state) return false;
+      const previous = regionLinkStatus.get(region);
+      let next = state.linkState;
+      if (previous === undefined || isBetterStatus(status, previous)) {
+        regionLinkStatus.set(region, status);
+        next = linkState;
+      } else if (status === previous) {
+        next = combineLinkStates(state.linkState, linkState);
+      }
+      if (next === state.linkState) return false;
+      state.linkState = next;
+      return true;
+    };
+
     // Track whether entry regions have been upgraded to Link via die-to-revive.
     // When any deep room triggers die-to-revive, we re-queue entry regions as Link
     // (player respawns at entry and can re-traverse as Link).
@@ -869,11 +898,14 @@ export class DungeonTraverser {
       queue.push({ region: regionName, crystalState: "orange", fromEntryStatus: thisEntryStatus });
       // Apply die-to-revive for entry regions.
       const { linkState: effectiveLinkState } = this.getDieReviveState(regionName, linkState);
-      ctx.reachable.set(regionName, {
-        status: "available", // Placeholder, will be updated in Phase 3
-        linkState: effectiveLinkState,
-        crystalStates: new Set(["orange"]),
-      });
+      if (!regionLinkStatus.has(regionName)) {
+        ctx.reachable.set(regionName, {
+          status: "available", // Placeholder, will be updated in Phase 3
+          linkState: effectiveLinkState,
+          crystalStates: new Set(["orange"]),
+        });
+      }
+      recordLinkState(regionName, thisEntryStatus, effectiveLinkState);
       // Seed entry ool reasons from portal (e.g. dark room navigation to reach dungeon)
       const portalReasons = entryOolReasons?.get(regionName);
       if ((thisEntryStatus === "ool" || thisEntryStatus === "possible") && portalReasons?.length) {
@@ -893,11 +925,13 @@ export class DungeonTraverser {
       // Use current entry status (not stale queued value) for correct propagation.
       const currentRegionEntryStatus = regionEntryStatus.get(`${region}|${crystalState}`) ?? queuedEntryStatus;
 
-      const visitKey = `${region}|${crystalState}|${currentRegionEntryStatus}`;
+      const regionState = ctx.reachable.get(region);
+      // Link state is part of the visit key: a region re-reached with a different link state must be
+      // re-processed, since its exits evaluate differently for Link and a bunny.
+      const visitKey = `${region}|${crystalState}|${currentRegionEntryStatus}|${regionState?.linkState}`;
       if (visited.has(visitKey)) continue;
       visited.add(visitKey);
 
-      const regionState = ctx.reachable.get(region);
       const regionLogic = this.regions[region];
       if (!regionLogic) continue;
 
@@ -924,7 +958,9 @@ export class DungeonTraverser {
             // Clear visited so re-processing happens with the link state.
             for (const crystalState2 of (ctx.reachable.get(entryName)?.crystalStates ?? ["orange"])) {
               for (const st of ["available", "ool", "possible", "unavailable"] as LogicStatus[]) {
-                visited.delete(`${entryName}|${crystalState2}|${st}`);
+                for (const ls of ["link", "superbunny", "bunny"] as LinkState[]) {
+                  visited.delete(`${entryName}|${crystalState2}|${st}|${ls}`);
+                }
               }
             }
             queue.push({ region: entryName, crystalState: "orange", fromEntryStatus: entryStatus2 });
@@ -942,6 +978,10 @@ export class DungeonTraverser {
         for (const { exit, meta } of this.getRegionExits(region)) {
           if (!exit.to) continue;
           if (meta.isOverworld) continue;
+          // A bunny cannot lift the pots or push the blocks in the way. The extracted graph only has
+          // these as Moon Pearl rules where OWR's vanilla layout makes the room a bunny region, so with
+          // entrance shuffle (a dungeon entered from the other world) they are enforced here.
+          if (meta.isBunnyImpassable && effectiveLinkState === "bunny") continue;
 
           // Discovery: evaluate with keyCountingEvaluator + assumeBigKey.
           // Track canReach targets to detect alternate-path divergence with actual evaluator.
@@ -1027,9 +1067,17 @@ export class DungeonTraverser {
               linkState,
               crystalStates: new Set([crystalState]),
             });
+            regionLinkStatus.set(exit.to, effectiveEntryStatus);
             regionEntryStatus.set(`${exit.to}|${crystalState}`, effectiveEntryStatus);
             queue.push({ region: exit.to, crystalState, fromEntryStatus: effectiveEntryStatus });
           } else {
+            // A better (or equally good) path can change who the player is in this region
+            if (recordLinkState(exit.to, effectiveEntryStatus, effectiveLinkState)) {
+              for (const reachedCrystalState of ctx.reachable.get(exit.to)!.crystalStates) {
+                const reachedStatus = regionEntryStatus.get(`${exit.to}|${reachedCrystalState}`) ?? effectiveEntryStatus;
+                queue.push({ region: exit.to, crystalState: reachedCrystalState, fromEntryStatus: reachedStatus });
+              }
+            }
             // Update crystal states if we've reached from a different crystal state
             const existing = ctx.reachable.get(exit.to)!;
             if (!existing.crystalStates.has(crystalState)) {

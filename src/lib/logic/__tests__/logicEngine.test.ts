@@ -1458,6 +1458,19 @@ describe("LogicEngine", () => {
       expect(result.locationsLogic["Palace of Darkness - Shooter Room"]).toBe("available");
     });
 
+    it("Inverted - a Light World bunny cannot get through Desert Palace's pot-blocked doors", () => {
+      // Without the Moon Pearl the player is a bunny in the Light World, so the Desert Ledge (reached by
+      // walking through Desert Palace from the south entrance) is out of reach.
+      const calculate = (withPearl: boolean) => {
+        const builder = gameState().withAllItems().withSettings({ worldState: "inverted" });
+        const state = (withPearl ? builder : builder.withoutItems(["moonpearl"])).build();
+        return new OverworldTraverser(state, getLogicSet("noglitches")).calculateAll();
+      };
+
+      expect(calculate(false).locationsLogic["Desert Ledge"]).toBe("unavailable");
+      expect(calculate(true).locationsLogic["Desert Ledge"]).toBe("available");
+    });
+
     it("Open - PoD needs the Moon Pearl to bring Kiki", () => {
       const withoutPearl = gameState().withAllItems().withoutItems(["moonpearl"]).withDungeon("ct", { bossDefeated: true }).build();
       const result = new OverworldTraverser(withoutPearl, getLogicSet("noglitches")).calculateAll();
@@ -1893,6 +1906,7 @@ describe("LogicEngine", () => {
 
   // Glitched-mode rules that are unconditional in OWR (TRUE) must stay gated on
   // the glitch mode (owg|true / hmg|true) rather than leaking into noglitches.
+  // The glitched-mode side of these is tested in glitchedLogic.test.ts.
   describe("Unconditional Glitch Rules", () => {
     const calculate = (state: ReturnType<ReturnType<typeof gameState>["build"]>) => {
       const logicSet = getLogicSet(state.settings.logicMode);
@@ -1906,57 +1920,11 @@ describe("LogicEngine", () => {
       expect(result.locationsLogic["King Zora"]).toBe("unavailable");
     });
 
-    it("should allow fake flippers in overworldglitches", () => {
-      const result = calculate(gameState().withItems({ bomb: 1 }).withSettings({ logicMode: "overworldglitches" }).build());
-
-      expect(result.locationsLogic["Hobo"]).toBe("available");
-    });
-
     it("should not allow the Ice Lobby clip in noglitches", () => {
       const state = gameState().withAllItems().withSettings({ wildSmallKeys: "wild", pottery: "keys", enemyDrop: "keys", wildBigKeys: true }).withDungeon("ip", { smallKeys: 0 }).build();
 
       // Conveyor Key Drop is only reachable without keys via Ice Lobby → Ice Bomb Drop - Top
       expect(calculate(state).locationsLogic["Ice Palace - Conveyor Key Drop"]).toBe("unavailable");
-    });
-
-    it("should allow the Ice Lobby clip in hybridglitches", () => {
-      const state = gameState()
-        .withAllItems()
-        .withSettings({ logicMode: "hybridglitches", wildSmallKeys: "wild", pottery: "keys", enemyDrop: "keys", wildBigKeys: true })
-        .withDungeon("ip", { smallKeys: 0 })
-        .build();
-
-      expect(calculate(state).locationsLogic["Ice Palace - Conveyor Key Drop"]).toBe("available");
-    });
-  });
-
-  // A bunny (Dark World without the Moon Pearl) cannot dash or use items, so boots clips and
-  // medallion pads need Link even in overworld glitches.
-  describe("Overworld Glitches Without Moon Pearl", () => {
-    const owg = () => gameState().withSettings({ logicMode: "overworldglitches" });
-    const calculate = (builder: ReturnType<typeof gameState>) =>
-      new OverworldTraverser(builder.build(), getLogicSet("overworldglitches")).calculateAll().locationsLogic;
-
-    it("does not boots clip as a bunny", () => {
-      const result = calculate(owg().withItems({ boots: 1 }));
-      expect(result["Bumper Cave Ledge"]).toBe("unavailable");
-      expect(result["Pyramid"]).toBe("unavailable");
-      const withPearl = calculate(owg().withItems({ boots: 1, moonpearl: 1 }));
-      expect(withPearl["Bumper Cave Ledge"]).toBe("available");
-    });
-
-    it("cannot open Misery Mire or enter Thieves' Town as a bunny", () => {
-      const result = calculate(owg().withAllItems().withoutItems(["moonpearl"]).withDungeon("ct", { bossDefeated: true }));
-      expect(result["Misery Mire - Main Lobby"]).toBe("unavailable");
-      expect(result["Thieves' Town - Map Chest"]).toBe("unavailable");
-      // Standing items stay collectable as a bunny
-      expect(result["Pyramid"]).toBe("available");
-    });
-
-    it("needs no Moon Pearl for Dark World dungeons in inverted", () => {
-      const result = calculate(owg().withSettings({ worldState: "inverted" }).withAllItems().withoutItems(["moonpearl"]));
-      expect(result["Misery Mire - Main Lobby"]).toBe("available");
-      expect(result["Thieves' Town - Map Chest"]).toBe("available");
     });
   });
 });

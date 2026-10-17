@@ -43,7 +43,7 @@ import { type RegionReachability, type ExitLogic, type GameState, type LinkState
 import type { LogicSet } from "./logicMapper";
 import { RequirementEvaluator, type EvaluationContext, type StaticKeyRuntime } from "./requirementEvaluator";
 import { staticKeyCandidates } from "./staticKeyLogic";
-import { DungeonTraverser } from "./dungeonTraverser";
+import { DungeonTraverser, type DungeonRegionState } from "./dungeonTraverser";
 import { combineLinkStates, createAllItemsState, isBetterStatus, combineStatuses, minimumStatus, exitEntries } from "./logicHelpers";
 import { DungeonsData } from "@/data/dungeonData";
 import { entranceLocations } from "@/data/locationsData";
@@ -72,6 +72,10 @@ interface OverworldTraverserContext {
   // Track key cost for overworld regions reached via dungeon exits
   // This maps overworld region name -> minimum keys used to reach it via any dungeon exit
   overworldKeyCost: Map<string, number>;
+  // Latest region results of each dungeon's traversal. Glitched edges (e.g. HMG clips between dungeons)
+  // let one dungeon's traversal reach another dungeon's rooms, so a room's status is the best over all
+  // dungeons that reach it, not whichever traversal ran last.
+  dungeonRegionResults: Map<string, Map<string, DungeonRegionState>>;
 }
 
 interface RouteSearchContext {
@@ -507,6 +511,7 @@ export class OverworldTraverser {
       pendingDungeons: new Map<string, Map<string, { linkState: LinkState; status: LogicStatus; keyCost: number; oolReasons?: string[] }>>(),
       allDiscoveredPortals: new Map<string, Map<string, { linkState: LinkState; status: LogicStatus; keyCost: number; oolReasons?: string[] }>>(),
       overworldKeyCost: new Map<string, number>(),
+      dungeonRegionResults: new Map(),
     };
   }
 
@@ -762,6 +767,27 @@ export class OverworldTraverser {
     return madeProgress;
   }
 
+  /**
+   * A dungeon room's reachability over every dungeon traversal that reaches it: the best status, with
+   * the link state of the traversal(s) giving that status (a link state from a worse path would let a
+   * bunny act as Link). Ties combine link states, crystal states and reasons.
+   */
+  private bestDungeonRegionState(ctx: OverworldTraverserContext, regionName: string): RegionReachability | undefined {
+    let best: RegionReachability | undefined;
+    for (const results of ctx.dungeonRegionResults.values()) {
+      const state = results.get(regionName);
+      if (!state) continue;
+      if (!best || isBetterStatus(state.status, best.status)) {
+        best = { status: state.status, linkState: state.linkState, crystalStates: new Set(state.crystalStates), oolReasons: state.oolReasons };
+      } else if (state.status === best.status) {
+        best.linkState = combineLinkStates(best.linkState, state.linkState);
+        for (const crystalState of state.crystalStates) best.crystalStates!.add(crystalState);
+        best.oolReasons = mergeOolReasons(best.oolReasons, state.oolReasons);
+      }
+    }
+    return best;
+  }
+
   private processPendingDungeons(ctx: OverworldTraverserContext): boolean {
     let madeProgress = false;
 
@@ -836,23 +862,18 @@ export class OverworldTraverser {
         this.dungeonSmallKeyAltAccessRegions.set(dungeonId, result.smallKeyAltAccessRegions);
       }
 
-      // Incorporate dungeon region statuses (always use latest traversal).
-      for (const [regionName, regionState] of result.regionStatuses) {
+      // Incorporate dungeon region statuses. This dungeon's latest traversal replaces its previous
+      // results; each room it touches then takes the best result over all dungeons reaching it.
+      const previousResults = ctx.dungeonRegionResults.get(dungeonId);
+      ctx.dungeonRegionResults.set(dungeonId, result.regionStatuses);
+      const touched = new Set(result.regionStatuses.keys());
+      if (previousResults) for (const regionName of previousResults.keys()) touched.add(regionName);
+      for (const regionName of touched) {
+        const best = this.bestDungeonRegionState(ctx, regionName);
+        if (!best) continue;
         const existing = ctx.reachable.get(regionName);
-        if (!existing || existing.status !== regionState.status) {
-          // If the region was previously only "unavailable" (e.g. from an earlier
-          // traversal seeded by a placeholder portal entry), its link state is a
-          // fiction — adopt the new one rather than combining, so a genuinely
-          // bunny-only dungeon region isn't wrongly upgraded to "link".
-          const staleUnavailable = !!existing && existing.status === "unavailable";
-          ctx.reachable.set(regionName, {
-            status: regionState.status,
-            // Combine link states when the region was already genuinely known;
-            // otherwise adopt the dungeon's.
-            linkState: existing && !staleUnavailable ? combineLinkStates(existing.linkState, regionState.linkState) : regionState.linkState,
-            crystalStates: regionState.crystalStates,
-            oolReasons: regionState.oolReasons,
-          });
+        if (!existing || existing.status !== best.status || existing.linkState !== best.linkState) {
+          ctx.reachable.set(regionName, best);
           madeProgress = true;
         }
       }
