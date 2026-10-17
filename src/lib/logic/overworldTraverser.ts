@@ -1202,10 +1202,18 @@ export class OverworldTraverser {
       // Chest keys are always shuffled; pot/drop keys only if their settings are enabled
       if (!isBigKey) {
         const dungeonData = DungeonsData[dungeonId]?.totalLocations;
-        const hasChestKeys = (dungeonData?.smallkeys ?? 0) > 0;
-        const hasPotteryKeys = isPotteryKeyShuffle(this.state.settings.pottery) && (dungeonData?.keypots ?? 0) > 0;
-        const hasDropKeys = this.state.settings.enemyDrop !== "none" && (dungeonData?.keydrops ?? 0) > 0;
-        if (!hasChestKeys && !hasPotteryKeys && !hasDropKeys) {
+        const chestKeys = dungeonData?.smallkeys ?? 0;
+        const potteryKeys = isPotteryKeyShuffle(this.state.settings.pottery) ? (dungeonData?.keypots ?? 0) : 0;
+        const dropKeys = this.state.settings.enemyDrop !== "none" ? (dungeonData?.keydrops ?? 0) : 0;
+        const shuffledKeys = chestKeys + potteryKeys + dropKeys;
+        if (shuffledKeys === 0) {
+          result.set(dungeonId, "available");
+          continue;
+        }
+        // Every shuffled key has been collected (same total as the key counter), so none can be
+        // waiting in an unreachable location or behind its own door
+        const dungeon = this.state.dungeons[dungeonId];
+        if ((dungeon?.smallKeys ?? 0) >= shuffledKeys + (dungeon?.manuallyChanged?.maxSmallKeys ?? 0)) {
           result.set(dungeonId, "available");
           continue;
         }

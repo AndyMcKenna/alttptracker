@@ -661,4 +661,36 @@ describe("Entrance Shuffle", () => {
       expect(result.regionStatuses.get("Desert Main Lobby")?.status).toBe("unavailable");
     });
   });
+
+  describe("Desert Palace South placed at a reachable entrance", () => {
+    const dpSouth = (wildSmallKeys: "inDungeon" | "universal", smallKeys = 0) =>
+      calculate(
+        gameState()
+          .withItems({ sword: 1 })
+          .withSettings({ entranceMode: "crossed", wildSmallKeys, wildBigKeys: true, wildMaps: true, wildCompasses: true })
+          .withDungeon("dp", { smallKeys })
+          .withEntranceLink("Links House", "Links House")
+          .withEntranceLink("Lake Hylia Fortune Teller", "Desert Palace Entrance (South)"),
+      );
+
+    it("universal keys open the east wing key door, so the chests behind it are available", () => {
+      const result = dpSouth("universal");
+      expect(result.locationsLogic["Desert Palace - Map Chest"]).toBe("available");
+      expect(result.locationsLogic["Desert Palace - Compass Chest"]).toBe("available");
+      expect(result.locationsLogic["Desert Palace - Big Key Chest"]).toBe("available");
+    });
+
+    it("in-dungeon keys leave them possible: the only chest key may be on the Torch, Big Chest or boss", () => {
+      const result = dpSouth("inDungeon");
+      expect(result.locationsLogic["Desert Palace - Map Chest"]).toBe("available");
+      expect(result.locationsLogic["Desert Palace - Compass Chest"]).toBe("possible");
+      expect(result.locationsLogic["Desert Palace - Big Key Chest"]).toBe("possible");
+    });
+
+    it("in-dungeon keys make them available once the dungeon's chest key is collected", () => {
+      const result = dpSouth("inDungeon", 1);
+      expect(result.locationsLogic["Desert Palace - Compass Chest"]).toBe("available");
+      expect(result.locationsLogic["Desert Palace - Big Key Chest"]).toBe("available");
+    });
+  });
 });

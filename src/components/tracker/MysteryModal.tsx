@@ -193,6 +193,13 @@ function MysteryModal() {
               <option value="random">Random</option>
             </select>
 
+            <label className="font-medium">Small Keys:</label>
+            <select className="border border-gray-400 rounded px-1 bg-white w-full max-w-50 disabled:text-gray-400" value={localSettings.wildSmallKeys} onChange={(e) => handleInputChange("wildSmallKeys", e.target.value)}>
+              <option value="inDungeon">In Dungeon</option>
+              <option value="wild">Randomized</option>
+              <option value="universal">Universal</option>
+            </select>
+
             <label className="font-medium self-start pt-1">Dungeon Items:</label>
             <div className="grid grid-cols-2 gap-x-2 gap-y-1">
               <label className="flex items-center space-x-1 cursor-pointer">
@@ -202,10 +209,6 @@ function MysteryModal() {
               <label className="flex items-center space-x-1 cursor-pointer">
                 <input type="checkbox" className="accent-red-600" checked={localSettings.wildCompasses} onChange={(e) => handleInputChange("wildCompasses", e.target.checked)} />
                 <span>Compasses</span>
-              </label>
-              <label className="flex items-center space-x-1 cursor-pointer">
-                <input type="checkbox" className="accent-red-600" checked={localSettings.wildSmallKeys === "wild"} onChange={(e) => handleInputChange("wildSmallKeys", e.target.checked ? "wild" : "inDungeon")} />
-                <span>Small Keys</span>
               </label>
               <label className="flex items-center space-x-1 cursor-pointer">
                 <input type="checkbox" className="accent-red-600" checked={localSettings.wildBigKeys} onChange={(e) => handleInputChange("wildBigKeys", e.target.checked)} />

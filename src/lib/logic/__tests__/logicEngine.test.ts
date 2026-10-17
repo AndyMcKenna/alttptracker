@@ -4,6 +4,10 @@ import { OverworldTraverser } from "../overworldTraverser";
 import { gameState } from "./testHelpers";
 import type { LogicStatus, RegionLogic } from "@/data/logic/logicTypes";
 import { buildEffectiveRegions } from "../regionsProvider";
+import { RequirementEvaluator } from "../requirementEvaluator";
+import { isBetterStatus } from "../logicHelpers";
+import { DungeonsData } from "@/data/dungeonData";
+import type { SettingsState } from "@/store/settingsSlice";
 
 describe("LogicEngine", () => {
   describe("Hyrule Castle Key Logic", () => {
@@ -1731,6 +1735,29 @@ describe("LogicEngine", () => {
       expect(result.locationsLogic["Eastern Palace - Big Chest"]).toBe("available");
     });
 
+    it("should not apply SK inference once every shuffled small key is collected", () => {
+      // DP has 1 chest key. Without boots the Torch is unreachable, but the key is already in hand
+      const state = gameState().withAllItems().withoutItems(["boots"]).withDungeon("dp", { smallKeys: 1 }).build();
+
+      const logicSet = getLogicSet("noglitches");
+      const traverser = new OverworldTraverser(state, logicSet);
+      const result = traverser.calculateAll();
+
+      expect(result.locationsLogic["Desert Palace - Compass Chest"]).toBe("available");
+      expect(result.locationsLogic["Desert Palace - Big Key Chest"]).toBe("available");
+    });
+
+    it("should keep SK inference while shuffled pot keys are still missing", () => {
+      // With pot keys shuffled DP has 4 keys in the pool, so 1 collected key does not settle it
+      const state = gameState().withAllItems().withoutItems(["boots"]).withSettings({ pottery: "keys" }).withDungeon("dp", { smallKeys: 1 }).build();
+
+      const logicSet = getLogicSet("noglitches");
+      const traverser = new OverworldTraverser(state, logicSet);
+      const result = traverser.calculateAll();
+
+      expect(result.locationsLogic["Desert Palace - Compass Chest"]).toBe("possible");
+    });
+
     it("should consider Big Chest as potential SK location in Desert Palace", () => {
       // DP has 1 chest key → always shuffled, could end up in Big Chest
       // Without boots: Torch (non-gated) is unreachable → SK inference returns "possible"
@@ -1901,6 +1928,59 @@ describe("LogicEngine", () => {
 
       expect(result.locationsLogic["Pyramid"]).toBe("available");
       expect(result.locationsLogic["Catfish"]).toBe("available");
+    });
+  });
+
+  // Universal small keys: the player is assumed to have as many small keys as they need, so small key
+  // doors and every small key requirement are always met.
+  describe("Universal Small Keys", () => {
+    const POT_KEY_MODES = ["keys", "cavekeys", "lottery", "dungeon"];
+    const run = (builder: ReturnType<typeof gameState>) => {
+      const state = builder.build();
+      const logicSet = getLogicSet("noglitches");
+      const { regions, metadata } = buildEffectiveRegions(logicSet.regions as Record<string, RegionLogic>, state);
+      const protection = state.settings.keyLogic === "dangerous" ? "dangerous" : "partial";
+      return new OverworldTraverser(state, { ...logicSet, regions }, metadata, protection).calculateAll();
+    };
+    /** Wild keys with every small key of every dungeon already collected */
+    const withEveryKey = (builder: ReturnType<typeof gameState>, settings: Partial<SettingsState>) => {
+      let result = builder.withSettings({ ...settings, wildSmallKeys: "wild" });
+      for (const [id, data] of Object.entries(DungeonsData)) {
+        const totals = data.totalLocations;
+        if (!totals) continue;
+        const keys = totals.smallkeys + (POT_KEY_MODES.includes(settings.pottery ?? "none") ? totals.keypots : 0) + ((settings.enemyDrop ?? "none") !== "none" ? totals.keydrops : 0);
+        result = result.withDungeon(id, { smallKeys: keys });
+      }
+      return result;
+    };
+
+    it.each([
+      ["partial", { keyLogic: "partial" }],
+      ["dangerous", { keyLogic: "dangerous" }],
+      ["static (falls back for universal keys)", { keyLogic: "static" }],
+      ["shuffled pot keys and key drops", { pottery: "keys", enemyDrop: "keys" }],
+    ] as [string, Partial<SettingsState>][])("is never worse than holding every small key (%s)", (_label, settings) => {
+      for (const items of [() => gameState().withAllItems().withAllPrizes(), () => gameState().withItems({ bomb: 1, lantern: 1, glove: 1, boots: 1, hookshot: 1, hammer: 1, flute: 2 })]) {
+        const universal = run(items().withSettings({ ...settings, wildSmallKeys: "universal" }));
+        const everyKey = run(withEveryKey(items(), settings));
+        for (const [location, status] of Object.entries(everyKey.locationsLogic)) {
+          expect(isBetterStatus(status, universal.locationsLogic[location]), location).toBe(false);
+        }
+      }
+    });
+
+    it("opens every small key door without any keys", () => {
+      const result = run(gameState().withAllItems().withAllPrizes().withSettings({ wildSmallKeys: "universal" }));
+      for (const location of ["Palace of Darkness - Dark Maze - Top", "Palace of Darkness - Boss", "Ganons Tower - Validation Chest", "Turtle Rock - Boss", "Hyrule Castle - Boomerang Chest"]) {
+        expect(result.locationsLogic[location], location).toBe("available");
+      }
+    });
+
+    it("meets static key logic requirements", () => {
+      const state = gameState().withSettings({ wildSmallKeys: "universal" }).build();
+      const evaluator = new RequirementEvaluator(state);
+      expect(evaluator.evaluateRequirement("keys|pod|6", {})).toBe("available");
+      expect(evaluator.evaluateRequirement("assume|smallKey|pod|Palace of Darkness - Big Key Chest", {})).toBe("available");
     });
   });
 

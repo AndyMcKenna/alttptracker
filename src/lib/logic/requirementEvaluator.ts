@@ -42,6 +42,11 @@ export class RequirementEvaluator {
     this.options = options;
   }
 
+  /** Universal small keys: the player is assumed to have as many small keys as they need. */
+  private hasUnlimitedSmallKeys(): boolean {
+    return this.state.settings.wildSmallKeys === "universal";
+  }
+
   /** Chest keys collected for a dungeon; static key logic never counts vanilla key drops or pot keys. */
   private collectedChestKeys(dungeonId: string): number {
     const collected = this.state.dungeons[dungeonId]?.smallKeys ?? 0;
@@ -451,7 +456,7 @@ export class RequirementEvaluator {
       case "blueSwitchDown":
         return this.boolToStatus(ctx.crystalStates?.has("blue") ?? false);
       case "smallkey":
-        // In Dungeon or universal small keys do not block access - logically assumed to have access to all of them
+        // Universal keys: unlimited. In dungeon keys: logically assumed to have access to all of them.
         if (this.state.settings.wildSmallKeys !== "wild") {
           return "available";
         }
@@ -742,7 +747,7 @@ export class RequirementEvaluator {
 
       // Static key logic: keys|<dungeonId>|<count> of collected chest keys
       case "keys": {
-        if (conditionParts.length < 3 || this.options.assumeAllStaticKeys) return "available";
+        if (conditionParts.length < 3 || this.options.assumeAllStaticKeys || this.hasUnlimitedSmallKeys()) return "available";
         const dungeonId = conditionParts[1];
         const needed = parseInt(conditionParts[2]);
         const collected = this.collectedChestKeys(dungeonId);
@@ -759,6 +764,8 @@ export class RequirementEvaluator {
       // only ever make something "possible", with the condition kept as the reason.
       case "assume": {
         if (this.options.assumeAllStaticKeys) return "available";
+        // With unlimited small keys, where a small key was placed no longer matters
+        if (conditionParts[1] === "smallKey" && this.hasUnlimitedSmallKeys()) return "available";
         ctx.reasons?.add(condition);
         return "possible";
       }
