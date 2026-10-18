@@ -1,3 +1,5 @@
+import { DungeonsData } from "@/data/dungeonData";
+
 /**
  * Human-readable labels for sequence break keys.
  * Used to display ool reasons in tooltips.
@@ -25,6 +27,7 @@ export const SEQUENCE_BREAK_LABELS: Record<string, string> = {
   canOWFairyRevive: "OW Fairy Revival",
   canMirrorSuperBunny: "Mirror Super Bunny",
   canSuperBunny: "Mirror Super Bunny",
+  canSuperBunnyCave: "Superbunny Cave Drop",
   canDungeonBunnyRevive: "Dungeon Bunny Revive",
   canWaterWalk: "Water Walk",
   canZoraSplashDelete: "Zora Splash Delete",
@@ -63,6 +66,13 @@ function staticKeyReasonLabel(key: string): string | undefined {
   }
   if (kind === "staticFindableKeys") {
     return `the missing Small Keys are in unchecked locations (${key.split("|")[2]} needed)`;
+  }
+  // Hybrid Major Glitches places Hera's and Swamp's keys without logic: hmgBigKeyUnplaced|<dungeonId>
+  if (kind === "hmgBigKeyUnplaced" || kind === "hmgSmallKeyUnplaced") {
+    const dungeon = DungeonsData[type]?.name ?? type;
+    return kind === "hmgBigKeyUnplaced"
+      ? `${dungeon}'s Big Key isn't behind its own door (Hybrid Major Glitches places it without logic)`
+      : `${dungeon}'s Small Keys aren't behind their own doors (Hybrid Major Glitches places them without logic)`;
   }
   return undefined;
 }

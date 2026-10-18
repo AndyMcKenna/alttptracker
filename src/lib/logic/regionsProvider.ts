@@ -27,7 +27,8 @@ import type { ExitLogic, GameState, LogicRequirement, LogicState, RegionLogic, S
 import { entranceLocations } from "@/data/locationsData";
 import { whirlpoolRegistry, parallelLinks } from "@/data/logic/owData";
 import { getEntranceGroup } from "@/lib/dropdowns";
-import { applyStaticKeyLogic, computeTRReachability, isStaticKeyLogicActive, selectTRVariant } from "./staticKeyLogic";
+import { andIntoWorld, applyStaticKeyLogic, computeTRReachability, isStaticKeyLogicActive, selectTRVariant } from "./staticKeyLogic";
+import { getLogicStateForWorld } from "./logicHelpers";
 
 // ─── Shared metadata computed once for all transforms ──────────────────
 
@@ -711,6 +712,7 @@ export function buildEffectiveRegions(
   regions = applyDoorRemaps(regions, effectiveState, metadata);
   regions = applyStandardLogicChanges(regions, effectiveState);
   regions = applyStandvertedPortalFixes(regions, effectiveState);
+  regions = applyHMGDungeonReentryRules(regions, effectiveState);
 
   // Static key logic goes last: its Turtle Rock variant depends on the final layout
   if (isStaticKeyLogicActive(effectiveState.settings)) {
@@ -949,5 +951,74 @@ function applyStandvertedPortalFixes(
     };
   }
 
+  return result;
+}
+
+// ─── HMG dungeon re-entry (OWR UnderworldGlitchRules.dungeon_reentry_rules) ──
+
+/** HMG clips that land inside another dungeon at its entrance portal. */
+const HMG_REENTRY_CLIPS = [
+  { region: "Spectacle Rock Cave (Bottom)", clip: "Kiki Skip", portal: "Palace of Darkness Portal" },
+  { region: "Thieves Attic", clip: "Thieves to Desert West Clip", portal: "Desert West Portal" },
+  { region: "Thieves Attic", clip: "Thieves to Desert South Clip", portal: "Desert South Portal" },
+  { region: "Thieves Attic", clip: "Thieves to Desert East Clip", portal: "Desert East Portal" },
+];
+/** Entrance modes that shuffle dungeons only among dungeon doors: a clipped-into dungeon can't be left unless it could be entered normally. */
+const REENTRY_EXIT_RESTRICTED_MODES = ["none", "simple", "restricted", "dungeonssimple"];
+/** Entrance modes with fixed dungeon exits but no fake-world fix: the clip also needs the entrance's own rule. */
+const REENTRY_ENTRY_RULE_MODES = ["full", "dungeonsfull"];
+const NEVER_WORLD: WorldLogic = { Open: "never", Inverted: "never", Inverted_1: "never" };
+const isEmptyRule = (rule: LogicRequirement) => typeof rule === "object" && Object.keys(rule).length === 0;
+
+/**
+ * After clipping into a dungeon (Kiki Skip into PoD, Thieves' Town into Desert), OWR only lets the
+ * player leave through that dungeon's door when they could also have come in through it. In modes
+ * where the clip links straight to the exterior (crossed, lean, lite, insanity) nothing changes.
+ */
+function applyHMGDungeonReentryRules(regions: Record<string, RegionLogic>, state: GameState): Record<string, RegionLogic> {
+  const { logicMode, entranceMode } = state.settings;
+  if (logicMode !== "hybridglitches") return regions;
+  const restrictExit = REENTRY_EXIT_RESTRICTED_MODES.includes(entranceMode) || REENTRY_ENTRY_RULE_MODES.includes(entranceMode);
+  if (!restrictExit) return regions;
+
+  const result = { ...regions };
+  const copied = new Set<string>();
+  const isOverworld = (regionName: string | undefined) => !!regionName && ["LightWorld", "DarkWorld"].includes(regions[regionName]?.type ?? "");
+
+  for (const { region, clip, portal } of HMG_REENTRY_CLIPS) {
+    const clipExit = regions[region]?.exits?.[clip];
+    const portalLogic = regions[portal];
+    if (!clipExit || !portalLogic?.exits) continue;
+
+    // The overworld door that leads into this portal (entrance shuffle has already rewired it)
+    let entry: { parent: string; name: string; rule: LogicRequirement } | undefined;
+    for (const [regionName, regionLogic] of Object.entries(regions)) {
+      if (!isOverworld(regionName)) continue;
+      for (const [exitName, exit] of Object.entries(regionLogic.exits ?? {})) {
+        if (exit?.to !== portal) continue;
+        const rule = getLogicStateForWorld(state, exit.requirements).always ?? {};
+        if (rule !== "never") entry = { parent: regionName, name: exitName, rule };
+      }
+    }
+
+    // Leaving: only through a door the player could have entered by
+    const portalExits = getOrCopyExits(result, portal, copied);
+    for (const [exitName, exit] of Object.entries(portalLogic.exits)) {
+      if (!isOverworld(exit?.to)) continue;
+      portalExits[exitName] = {
+        ...exit,
+        requirements: entry ? andIntoWorld(exit.requirements, isEmptyRule(entry.rule) ? `canReach|${entry.parent}` : { allOf: [`canReach|${entry.parent}`, entry.rule] }) : NEVER_WORLD,
+      };
+    }
+
+    // Entering: Skull Woods' back door only opens from inside; Mire and Agahnim's Tower need their own
+    // door rule; with fixed dungeon exits every clip needs the door rule (as Link, OWR's fake pearl)
+    const clipExits = getOrCopyExits(result, region, copied);
+    if (entry?.name === "Skull Woods Final Section") {
+      clipExits[clip] = { ...clipExit, requirements: NEVER_WORLD };
+    } else if (entry && !isEmptyRule(entry.rule) && (REENTRY_ENTRY_RULE_MODES.includes(entranceMode) || ["Misery Mire", "Agahnims Tower"].includes(entry.name))) {
+      clipExits[clip] = { ...clipExit, requirements: andIntoWorld(clipExit.requirements, entry.rule) };
+    }
+  }
   return result;
 }

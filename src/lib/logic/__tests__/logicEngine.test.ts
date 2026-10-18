@@ -1784,6 +1784,42 @@ describe("LogicEngine", () => {
       // meaning no small key is available, thus chomps should be "possible" instead of "available"
       expect(result.locationsLogic["Turtle Rock - Chain Chomps"]).toBe("possible");
     });
+
+    // Hyrule Castle's rooms ("Hyrule Castle …", "Hyrule Dungeon …", "Sanctuary") belong to the castle for key
+    // inference. Its chest key may be in Dark Cross or the Secret Room, so the rooms behind the Map Room
+    // and Armory key doors are only possible until those are reachable.
+    it("should mark Hyrule Castle's key-locked rooms possible while its key spots are unreachable", () => {
+      const result = new OverworldTraverser(gameState().withItems({ sword: 1 }).build(), getLogicSet("noglitches")).calculateAll();
+
+      expect(result.locationsLogic["Hyrule Castle - Map Chest"]).toBe("available");
+      expect(result.locationsLogic["Hyrule Castle - Boomerang Chest"]).toBe("possible");
+      expect(result.locationsLogic["Hyrule Castle - Big Key Drop"]).toBe("possible");
+      expect(result.locationsLogic["Hyrule Castle - Zelda's Chest"]).toBe("possible");
+    });
+
+    it("should mark Hyrule Castle available once every key spot is reachable", () => {
+      // Lamp for Dark Cross; boots and a glove reach the Secret Room through the Sanctuary grave drop
+      const result = new OverworldTraverser(gameState().withItems({ sword: 1, lantern: 1, bomb: 1, boots: 1, glove: 1 }).build(), getLogicSet("noglitches")).calculateAll();
+
+      expect(result.locationsLogic["Hyrule Castle - Boomerang Chest"]).toBe("available");
+      expect(result.locationsLogic["Hyrule Castle - Big Key Drop"]).toBe("available");
+      expect(result.locationsLogic["Hyrule Castle - Zelda's Chest"]).toBe("available");
+    });
+
+    it("should not cap Hyrule Castle in Standard, where the escape reaches Zelda", () => {
+      const result = new OverworldTraverser(gameState().withItems({ sword: 1 }).withSettings({ worldState: "standard" }).build(), getLogicSet("noglitches")).calculateAll();
+
+      expect(result.locationsLogic["Hyrule Castle - Boomerang Chest"]).toBe("available");
+      expect(result.locationsLogic["Hyrule Castle - Zelda's Chest"]).toBe("available");
+    });
+
+    it("should open Zelda's cell with the big key that drops in the castle, even when big keys are wild", () => {
+      // The guard always drops Hyrule Castle's big key while enemy drops aren't shuffled
+      const state = gameState().withAllItems().withSettings({ wildBigKeys: true, wildSmallKeys: "wild" }).withDungeon("hc", { smallKeys: 1, bigKey: false }).build();
+      const result = new OverworldTraverser(state, getLogicSet("noglitches")).calculateAll();
+
+      expect(result.locationsLogic["Hyrule Castle - Zelda's Chest"]).toBe("available");
+    });
   });
 
   describe("Dynamic Bunny State", () => {
@@ -1884,6 +1920,23 @@ describe("LogicEngine", () => {
   });
 
   describe("Sequence Breaks", () => {
+    // Dropping down Superbunny Cave's hole as a bunny and climbing back up gives superbunny state
+    describe("Superbunny Cave drop", () => {
+      const noPearl = () => gameState().withItems({ flute: 2, glove: 2, hookshot: 1 });
+
+      it("leaves the Superbunny Cave chests unavailable without the Moon Pearl by default", () => {
+        const result = new OverworldTraverser(noPearl().build(), getLogicSet("noglitches")).calculateAll();
+        expect(result.locationsLogic["Superbunny Cave - Top"]).toBe("unavailable");
+      });
+
+      it("makes them out of logic with the sequence break enabled", () => {
+        const result = new OverworldTraverser(noPearl().withSequenceBreaks({ canSuperBunnyCave: true }).build(), getLogicSet("noglitches")).calculateAll();
+        expect(result.locationsLogic["Superbunny Cave - Top"]).toBe("ool");
+        expect(result.locationsLogic["Superbunny Cave - Bottom"]).toBe("ool");
+        expect(result.locationReasons["Superbunny Cave - Top"]).toEqual(["canSuperBunnyCave"]);
+      });
+    });
+
     it("should cap dungeon locations at ool when entry requires dark room navigation", () => {
       const state = gameState().withItems({ glove: 1, mirror: 1, firerod: 1, sword: 1 }).withSequenceBreaks({ canNavigateDarkRooms: true }).build();
 

@@ -157,17 +157,27 @@ export class DungeonTraverser {
   private readonly actuallyHasBigKey: boolean;
   // Static key logic state shared with the overworld traverser (findable keys), if any
   private readonly staticKeyRuntime?: StaticKeyRuntime;
+  // Overworld canReachFrom for requirements evaluated inside the dungeon (e.g. rescuing the old man)
+  private readonly canReachFrom?: (sourceRegionName: string, targetRegionName: string) => LogicStatus;
   private readonly effectivelyHasBigKey: boolean;
   private readonly allEntranceRegions: Set<string>;
 
-  constructor(state: GameState, logicSet: LogicSet, dungeonId: string, protection: "partial" | "dangerous" = "partial", staticKeyRuntime?: StaticKeyRuntime) {
+  constructor(
+    state: GameState,
+    logicSet: LogicSet,
+    dungeonId: string,
+    protection: "partial" | "dangerous" = "partial",
+    staticKeyRuntime?: StaticKeyRuntime,
+    canReachFrom?: (sourceRegionName: string, targetRegionName: string) => LogicStatus,
+  ) {
     this.state = state;
     this.regions = logicSet.regions as Record<string, RegionLogic>;
     this.dungeonId = dungeonId;
     this.protection = protection;
     this.staticKeyRuntime = staticKeyRuntime;
+    this.canReachFrom = canReachFrom;
 
-    this.requirementEvaluator = new RequirementEvaluator(state, this.regions, { staticKeys: staticKeyRuntime });
+    this.requirementEvaluator = new RequirementEvaluator(state, this.regions, { staticKeys: staticKeyRuntime, canReachFrom });
 
     this.actuallyHasBigKey = !state.settings.wildBigKeys || !!state.dungeons[dungeonId]?.bigKey;
 
@@ -362,7 +372,7 @@ export class DungeonTraverser {
       staticKeys: this.staticKeyRuntime,
       assumeAllStaticKeys: this.protection === "partial",
     });
-    this.requirementEvaluator = new RequirementEvaluator(this.state, this.regions, { staticKeys: this.staticKeyRuntime });
+    this.requirementEvaluator = new RequirementEvaluator(this.state, this.regions, { staticKeys: this.staticKeyRuntime, canReachFrom: this.canReachFrom });
 
     if (this.state.settings.wildSmallKeys === "wild") {
       // Pass 1: Dijkstra with actual inventory, assuming big key for door discovery

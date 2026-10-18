@@ -2629,6 +2629,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Zora Waterfall Waterwalk": {
+                "to": "Zora Waterfall Entryway",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canWaterWalk"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canWaterWalk"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -2758,16 +2778,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|canWaterWalk"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|canWaterWalk"
                             ]
                         }
                     }
@@ -10853,8 +10879,9 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "canOpenGT"
+                            "anyOf": [
+                                "canOpenGT",
+                                "owg|canBootsClip"
                             ]
                         }
                     },
@@ -11475,6 +11502,26 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "EDDM DMD To Qirn Jump Clip": {
                 "to": "Qirn Jump Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "DW Floating Island Clip": {
+                "to": "Dark Death Mountain Floating Island",
                 "type": "DarkWorld",
                 "requirements": {
                     "Open": {
@@ -19385,7 +19432,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "hmg|can_bomb_clip",
+                                "hmg|canBombClip",
                                 "hmg|canReach|Spectacle Rock Cave (Bottom)"
                             ]
                         }
@@ -19393,7 +19440,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "hmg|can_bomb_clip",
+                                "hmg|canBombClip",
                                 "hmg|canReach|Spectacle Rock Cave (Bottom)"
                             ]
                         }
@@ -19474,7 +19521,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "hmg|can_bomb_clip",
+                                "hmg|canBombClip",
                                 "hmg|canReach|Spectacle Rock Cave (Peak)"
                             ]
                         }
@@ -19482,7 +19529,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "hmg|can_bomb_clip",
+                                "hmg|canBombClip",
                                 "hmg|canReach|Spectacle Rock Cave (Peak)"
                             ]
                         }
@@ -20042,7 +20089,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "anyOf": [
                                 "canHitRangedSwitch",
-                                "hmg|can_dash_clip"
+                                "hmg|canDashClip"
                             ]
                         }
                     },
@@ -20050,7 +20097,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "anyOf": [
                                 "canHitRangedSwitch",
-                                "hmg|can_dash_clip"
+                                "hmg|canDashClip"
                             ]
                         }
                     }
@@ -20062,7 +20109,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "anyOf": [
                                 "canHitRangedSwitch",
-                                "hmg|can_dash_clip"
+                                "hmg|canDashClip"
                             ]
                         }
                     },
@@ -20070,7 +20117,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "anyOf": [
                                 "canHitRangedSwitch",
-                                "hmg|can_dash_clip"
+                                "hmg|canDashClip"
                             ]
                         }
                     }
@@ -20084,7 +20131,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                 "canHitRangedSwitch",
                                 {
                                     "allOf": [
-                                        "hmg|can_dash_clip",
+                                        "hmg|canDashClip",
                                         "hmg|canHitSwitch"
                                     ]
                                 }
@@ -20097,7 +20144,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                 "canHitRangedSwitch",
                                 {
                                     "allOf": [
-                                        "hmg|can_dash_clip",
+                                        "hmg|canDashClip",
                                         "hmg|canHitSwitch"
                                     ]
                                 }
@@ -20114,7 +20161,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                 "canHitRangedSwitch",
                                 {
                                     "allOf": [
-                                        "hmg|can_dash_clip",
+                                        "hmg|canDashClip",
                                         "hmg|canHitSwitch"
                                     ]
                                 }
@@ -20127,7 +20174,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                 "canHitRangedSwitch",
                                 {
                                     "allOf": [
-                                        "hmg|can_dash_clip",
+                                        "hmg|canDashClip",
                                         "hmg|canHitSwitch"
                                     ]
                                 }
@@ -20142,7 +20189,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "anyOf": [
                                 "canHitRangedSwitch",
-                                "hmg|can_dash_clip"
+                                "hmg|canDashClip"
                             ]
                         }
                     },
@@ -20150,7 +20197,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "anyOf": [
                                 "canHitRangedSwitch",
-                                "hmg|can_dash_clip"
+                                "hmg|canDashClip"
                             ]
                         }
                     }
@@ -32515,15 +32562,49 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "bigkey"
+                            "anyOf": [
+                                "bigkey",
+                                {
+                                    "allOf": [
+                                        "hmg|otherBigKey|mm",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "bigkey"
+                            "anyOf": [
+                                "bigkey",
+                                {
+                                    "allOf": [
+                                        "hmg|otherBigKey|mm",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -33296,15 +33377,49 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "bigkey"
+                            "anyOf": [
+                                "bigkey",
+                                {
+                                    "allOf": [
+                                        "hmg|otherBigKey|mm",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "bigkey"
+                            "anyOf": [
+                                "bigkey",
+                                {
+                                    "allOf": [
+                                        "hmg|otherBigKey|mm",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -39445,17 +39560,27 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "canDrainDam"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "canDrainDam"
+                                    ]
+                                },
+                                "hmg|canHMGMirrorlessSwamp"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "canDrainDam"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "canDrainDam"
+                                    ]
+                                },
+                                "hmg|canHMGMirrorlessSwamp"
                             ]
                         }
                     }
@@ -39766,8 +39891,32 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "flippers",
-                                "canReach|Swamp Hammer Switch",
-                                "hammer"
+                                {
+                                    "anyOf": [
+                                        {
+                                            "allOf": [
+                                                "canReach|Swamp Hammer Switch",
+                                                "hammer"
+                                            ]
+                                        },
+                                        {
+                                            "allOf": [
+                                                "hmg|canReach|Mire Torches Top",
+                                                {
+                                                    "anyOf": [
+                                                        "hmg|canDashClip",
+                                                        {
+                                                            "allOf": [
+                                                                "hmg|canBombClip",
+                                                                "hmg|canLightFires"
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
                             ]
                         }
                     },
@@ -39775,8 +39924,32 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "flippers",
-                                "canReach|Swamp Hammer Switch",
-                                "hammer"
+                                {
+                                    "anyOf": [
+                                        {
+                                            "allOf": [
+                                                "canReach|Swamp Hammer Switch",
+                                                "hammer"
+                                            ]
+                                        },
+                                        {
+                                            "allOf": [
+                                                "hmg|canReach|Mire Torches Top",
+                                                {
+                                                    "anyOf": [
+                                                        "hmg|canDashClip",
+                                                        {
+                                                            "allOf": [
+                                                                "hmg|canBombClip",
+                                                                "hmg|canLightFires"
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -39965,8 +40138,32 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "flippers",
-                                "canReach|Swamp Hammer Switch",
-                                "hammer"
+                                {
+                                    "anyOf": [
+                                        {
+                                            "allOf": [
+                                                "canReach|Swamp Hammer Switch",
+                                                "hammer"
+                                            ]
+                                        },
+                                        {
+                                            "allOf": [
+                                                "hmg|canReach|Mire Torches Top",
+                                                {
+                                                    "anyOf": [
+                                                        "hmg|canDashClip",
+                                                        {
+                                                            "allOf": [
+                                                                "hmg|canBombClip",
+                                                                "hmg|canLightFires"
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
                             ]
                         }
                     },
@@ -39974,8 +40171,32 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "flippers",
-                                "canReach|Swamp Hammer Switch",
-                                "hammer"
+                                {
+                                    "anyOf": [
+                                        {
+                                            "allOf": [
+                                                "canReach|Swamp Hammer Switch",
+                                                "hammer"
+                                            ]
+                                        },
+                                        {
+                                            "allOf": [
+                                                "hmg|canReach|Mire Torches Top",
+                                                {
+                                                    "anyOf": [
+                                                        "hmg|canDashClip",
+                                                        {
+                                                            "allOf": [
+                                                                "hmg|canBombClip",
+                                                                "hmg|canLightFires"
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -40128,15 +40349,95 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "hammer"
+                            "anyOf": [
+                                "hammer",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "hmg|canBombClip",
+                                                "hmg|canDashClip"
+                                            ]
+                                        },
+                                        "hmg|flippers",
+                                        "hmg|canReach|Hera 4F",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "hammer"
+                            "anyOf": [
+                                "hammer",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "hmg|canBombClip",
+                                                "hmg|canDashClip"
+                                            ]
+                                        },
+                                        "hmg|flippers",
+                                        "hmg|canReach|Hera 4F",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -40253,15 +40554,61 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "bigkey"
+                            "anyOf": [
+                                "bigkey",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "hmg|otherBigKey|mm",
+                                                "hmg|otherBigKey|toh"
+                                            ]
+                                        },
+                                        "hmg|flippers",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "bigkey"
+                            "anyOf": [
+                                "bigkey",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "hmg|otherBigKey|mm",
+                                                "hmg|otherBigKey|toh"
+                                            ]
+                                        },
+                                        "hmg|flippers",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -46558,18 +46905,18 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "hmg|can_bomb_clip",
+                                "hmg|canBombClip",
                                 "hmg|canReach|Thieves Attic",
-                                "hmg|can_dash_clip"
+                                "hmg|canDashClip"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "hmg|can_bomb_clip",
+                                "hmg|canBombClip",
                                 "hmg|canReach|Thieves Attic",
-                                "hmg|can_dash_clip"
+                                "hmg|canDashClip"
                             ]
                         }
                     }
@@ -46582,18 +46929,18 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "hmg|can_bomb_clip",
+                                "hmg|canBombClip",
                                 "hmg|canReach|Thieves Attic",
-                                "hmg|can_dash_clip"
+                                "hmg|canDashClip"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "hmg|can_bomb_clip",
+                                "hmg|canBombClip",
                                 "hmg|canReach|Thieves Attic",
-                                "hmg|can_dash_clip"
+                                "hmg|canDashClip"
                             ]
                         }
                     }
@@ -46606,18 +46953,18 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "hmg|can_bomb_clip",
+                                "hmg|canBombClip",
                                 "hmg|canReach|Thieves Attic",
-                                "hmg|can_dash_clip"
+                                "hmg|canDashClip"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "hmg|can_bomb_clip",
+                                "hmg|canBombClip",
                                 "hmg|canReach|Thieves Attic",
-                                "hmg|can_dash_clip"
+                                "hmg|canDashClip"
                             ]
                         }
                     }
@@ -47508,13 +47855,13 @@ export const logic_regions: Record<string, RegionLogic> = {
                             "anyOf": [
                                 {
                                     "allOf": [
-                                        "hmg|can_bomb_clip",
+                                        "hmg|canBombClip",
                                         "hmg|canReach|Ice Lobby"
                                     ]
                                 },
                                 {
                                     "allOf": [
-                                        "hmg|can_dash_clip",
+                                        "hmg|canDashClip",
                                         "hmg|canReach|Ice Lobby"
                                     ]
                                 }
@@ -47526,13 +47873,13 @@ export const logic_regions: Record<string, RegionLogic> = {
                             "anyOf": [
                                 {
                                     "allOf": [
-                                        "hmg|can_bomb_clip",
+                                        "hmg|canBombClip",
                                         "hmg|canReach|Ice Lobby"
                                     ]
                                 },
                                 {
                                     "allOf": [
-                                        "hmg|can_dash_clip",
+                                        "hmg|canDashClip",
                                         "hmg|canReach|Ice Lobby"
                                     ]
                                 }
@@ -54470,10 +54817,10 @@ export const logic_regions: Record<string, RegionLogic> = {
                             "allOf": [
                                 {
                                     "anyOf": [
-                                        "hmg|can_dash_clip",
+                                        "hmg|canDashClip",
                                         {
                                             "allOf": [
-                                                "hmg|can_bomb_clip",
+                                                "hmg|canBombClip",
                                                 "hmg|canLightFires"
                                             ]
                                         }
@@ -54488,10 +54835,10 @@ export const logic_regions: Record<string, RegionLogic> = {
                             "allOf": [
                                 {
                                     "anyOf": [
-                                        "hmg|can_dash_clip",
+                                        "hmg|canDashClip",
                                         {
                                             "allOf": [
-                                                "hmg|can_bomb_clip",
+                                                "hmg|canBombClip",
                                                 "hmg|canLightFires"
                                             ]
                                         }
@@ -54513,10 +54860,10 @@ export const logic_regions: Record<string, RegionLogic> = {
                                 "hmg|flippers",
                                 {
                                     "anyOf": [
-                                        "hmg|can_dash_clip",
+                                        "hmg|canDashClip",
                                         {
                                             "allOf": [
-                                                "hmg|can_bomb_clip",
+                                                "hmg|canBombClip",
                                                 "hmg|canLightFires"
                                             ]
                                         }
@@ -54532,10 +54879,10 @@ export const logic_regions: Record<string, RegionLogic> = {
                                 "hmg|flippers",
                                 {
                                     "anyOf": [
-                                        "hmg|can_dash_clip",
+                                        "hmg|canDashClip",
                                         {
                                             "allOf": [
-                                                "hmg|can_bomb_clip",
+                                                "hmg|canBombClip",
                                                 "hmg|canLightFires"
                                             ]
                                         }

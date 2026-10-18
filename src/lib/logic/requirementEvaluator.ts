@@ -29,6 +29,8 @@ export interface RequirementEvaluatorOptions {
   staticKeys?: StaticKeyRuntime;
   /** All-items evaluators treat every static key requirement as met */
   assumeAllStaticKeys?: boolean;
+  /** canReachFrom for contexts that don't carry one (dungeon traversal), answered by the overworld traverser */
+  canReachFrom?: (sourceRegionName: string, targetRegionName: string) => LogicStatus;
 }
 
 export class RequirementEvaluator {
@@ -621,8 +623,6 @@ export class RequirementEvaluator {
       case "canHMGUnlockHeraLogic":
       case "canHMGUnlockSwampBreach":
       case "canHMGUnlockSwampLogic":
-      case "canHMGMirrorlessSwampBreach":
-      case "canHMGMirrorlessSwampLogic":
       case "never":
         return "unavailable";
 
@@ -631,6 +631,16 @@ export class RequirementEvaluator {
       case "canBootsClip":
         if (ctx.linkState === "bunny") return "unavailable";
         return this.boolToStatus(this.state.settings.logicMode !== "noglitches" && this.hasItem("boots"));
+      // OWR can_dash_clip / can_bomb_clip (HMG dungeon clips): not a bunny, boots (and bombs)
+      case "canDashClip":
+        if (ctx.linkState === "bunny") return "unavailable";
+        return this.boolToStatus(this.state.settings.logicMode !== "noglitches" && this.hasItem("boots"));
+      case "canBombClip":
+        return minimumStatus(this.resolveSimple("canDashClip", ctx), this.resolveSimple("bomb", ctx));
+      // OWR's HMG Swamp moat rule (UnderworldGlitchRules.py): swim the moat after reaching Swamp through
+      // the Mire clip, which needs Old Man S&Q and Hera or GT leading to the Mire or Hera portal
+      case "canHMGMirrorlessSwamp":
+        return this.canHMGMirrorlessSwamp(ctx);
 
       // The player is in superbunny state right now (this is decided by the
       // OverworldTraverser; we only mirror the decision here). In noglitches
@@ -676,6 +686,38 @@ export class RequirementEvaluator {
     }
   }
 
+  private canHMGMirrorlessSwamp(ctx: EvaluationContext): LogicStatus {
+    const { logicMode, entranceMode, worldState } = this.state.settings;
+    if (logicMode !== "hybridglitches" && logicMode !== "nologic") return "unavailable";
+    if (!["none", "dungeonssimple", "dungeonsfull"].includes(entranceMode)) return "unavailable";
+
+    const oldManSQ = this.regions?.["Menu"]?.exits?.["Old Man S&Q"];
+    const mireClip = minimumStatus(
+      this.resolveComplex("canReach|Mire Torches Top", ctx),
+      maximumStatus(this.resolveSimple("canDashClip", ctx), minimumStatus(this.resolveSimple("canBombClip", ctx), this.resolveSimple("canLightFires", ctx))),
+    );
+    // Which interior the Tower of Hera / Ganons Tower doors lead to (unlinked in dungeon ER: unknown)
+    const portalBehind = (entrance: string): LogicStatus => {
+      const to = this.state.entrances[entrance]?.to ?? (entranceMode === "none" ? entrance : null);
+      if (to === "Misery Mire") return this.resolveComplex("canReach|Mire Torches Top", ctx);
+      if (to === "Tower of Hera") {
+        return minimumStatus(this.resolveComplex("canReach|Hera Startile Corner", ctx), this.resolveSimple("bigkey", { ...ctx, dungeonId: "toh" }));
+      }
+      return "unavailable";
+    };
+    const invertedDM = worldState === "inverted" || worldState === "inverted_1";
+    const pearl = this.resolveSimple("moonpearl", ctx);
+    const heraRule = minimumStatus(invertedDM ? pearl : "available", portalBehind("Tower of Hera"));
+    const gtRule = minimumStatus(invertedDM ? "available" : pearl, portalBehind("Ganons Tower"));
+
+    return minimumStatus(
+      oldManSQ?.requirements ? this.evaluateWorldLogic(oldManSQ.requirements, ctx) : "unavailable",
+      this.resolveSimple("flippers", ctx),
+      maximumStatus(heraRule, gtRule),
+      mireClip,
+    );
+  }
+
   private checkMedallion(dungeonId: string): LogicStatus {
     const entrance = this.state.entrances[dungeonId === "tr" ? "Turtle Rock" : "Misery Mire"];
     const requiredMedallion = entrance?.medallion;
@@ -711,10 +753,11 @@ export class RequirementEvaluator {
       case "canReachFrom": {
         const sourceRegionName = conditionParts.length >= 3 ? conditionParts[1] : ctx.regionName;
         const targetRegionName = conditionParts.length >= 3 ? conditionParts[2] : conditionParts[1];
-        if (!sourceRegionName || !targetRegionName || !ctx.canReachFromRegion) {
+        const canReachFromRegion = ctx.canReachFromRegion ?? this.options.canReachFrom;
+        if (!sourceRegionName || !targetRegionName || !canReachFromRegion) {
           return "unavailable";
         }
-        const status = ctx.canReachFromRegion(sourceRegionName, targetRegionName);
+        const status = canReachFromRegion(sourceRegionName, targetRegionName);
         return status === "information" ? "available" : status;
       }
 
@@ -802,6 +845,16 @@ export class RequirementEvaluator {
       case "hearts": {
         return "available";
       }
+      // Another dungeon's keys used here (HMG clips: Mire keys open Swamp doors, the Mire/Hera big
+      // keys open Swamp's and Hera's big chests). Named apart from bigkey/smallkey so dungeon
+      // traversal doesn't treat these doors as this dungeon's own key doors.
+      case "otherBigKey":
+        if (!this.state.settings.wildBigKeys) return "available";
+        return this.boolToStatus(this.state.dungeons[conditionParts[1]]?.bigKey ?? false);
+      case "otherSmallKeys":
+        if (this.hasUnlimitedSmallKeys()) return "available";
+        return this.boolToStatus((this.state.dungeons[conditionParts[1]]?.smallKeys ?? 0) >= parseInt(conditionParts[2]));
+
       case "exception":
         return "unavailable";
 

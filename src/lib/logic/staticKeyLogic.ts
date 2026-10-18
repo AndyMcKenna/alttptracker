@@ -191,7 +191,7 @@ function replaceTokenInWorld(worldLogic: WorldLogic, token: string, replacement:
   });
 }
 
-function andIntoWorld(worldLogic: WorldLogic, extra: LogicRequirement): WorldLogic {
+export function andIntoWorld(worldLogic: WorldLogic, extra: LogicRequirement): WorldLogic {
   return mapWorldLogic(worldLogic, (state) => {
     if (state === "never") return state;
     // Add to the hard gate when there is one; adding a new "always" next to logical/required tiers

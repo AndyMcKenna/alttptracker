@@ -39,7 +39,7 @@
  * - dangerous: Uses actual inventory throughout (may miss key contention in unreachable areas)
  */
 
-import { type RegionReachability, type ExitLogic, type GameState, type LinkState, type RegionLogic, type LogicStatus } from "@/data/logic/logicTypes";
+import { type RegionReachability, type ExitLogic, type GameState, type LinkState, type RegionLogic, type LogicStatus, type LogicRequirement } from "@/data/logic/logicTypes";
 import type { LogicSet } from "./logicMapper";
 import { RequirementEvaluator, type EvaluationContext, type StaticKeyRuntime } from "./requirementEvaluator";
 import { staticKeyCandidates } from "./staticKeyLogic";
@@ -53,6 +53,7 @@ import {
   DOOR_PREFIX_TO_DUNGEON,
   PORTAL_TO_DUNGEON,
   SUPERBUNNY_BLOCKED_EXITS,
+  SUPERBUNNY_CAVE_CLIMB,
   isPotteryKeyShuffle,
 } from "./dungeonConstants";
 
@@ -88,10 +89,24 @@ const doorPrefixToDungeon = DOOR_PREFIX_TO_DUNGEON;
 // Hoisted: these are iterated in hot per-location loops.
 const DOOR_PREFIXES = Object.keys(DOOR_PREFIX_TO_DUNGEON);
 const PORTAL_PREFIX_ENTRIES = Object.entries(PORTAL_TO_DUNGEON);
+const HC_REGION_PREFIXES = ["Hyrule Castle ", "Hyrule Dungeon "];
+/** Dungeons whose keys hybrid glitches places without logic (OWR Fill.py). */
+const HMG_UNPLACED_KEY_DUNGEONS = ["toh", "sp"];
 
 /** Reasons are kept for statuses that need explaining: sequence breaks (ool) and static key assumptions (possible). */
 function keepsReasons(status: LogicStatus): boolean {
   return status === "ool" || status === "possible";
+}
+
+const otherBigKeyCache = new WeakMap<object, boolean>();
+/** Whether a rule has an alternative using another dungeon's big key (HMG: Mire's big key in Hera and Swamp). */
+function opensWithOtherBigKey(requirements: object): boolean {
+  let result = otherBigKeyCache.get(requirements);
+  if (result === undefined) {
+    result = JSON.stringify(requirements).includes("otherBigKey|");
+    otherBigKeyCache.set(requirements, result);
+  }
+  return result;
 }
 
 /**
@@ -480,6 +495,11 @@ export class OverworldTraverser {
         break;
       }
     }
+    // Hyrule Castle's rooms don't share a door prefix ("Hyrule Castle Lobby", "Hyrule Dungeon Cellblock",
+    // "Sanctuary"); match them on dungeon regions only, so "Hyrule Castle Area" etc. stay overworld
+    if (!result && this.regions[regionName]?.type === "Dungeon" && (HC_REGION_PREFIXES.some((p) => regionName.startsWith(p)) || regionName === "Sanctuary")) {
+      result = "hc";
+    }
     this.dungeonIdByRegion.set(regionName, result);
     return result;
   }
@@ -565,6 +585,12 @@ export class OverworldTraverser {
     if (exitType === "LightWorld") return bunnyIf(isInverted);
     if (exitType === "DarkWorld") return bunnyIf(!isInverted);
 
+    // Superbunny Cave: a bunny dropping down the cave's hole comes back up the climb as a superbunny and can
+    // open the chests (OWR bunny rules, owglitches / hybridglitches; a sequence break in noglitches)
+    if (currentLinkState === "bunny" && exitName === SUPERBUNNY_CAVE_CLIMB && this.canSuperBunnyCave()) {
+      return "superbunny";
+    }
+
     // Non-overworld destination (cave/dungeon entrance). If currently a bunny
     // with the Mirror, the player can mirror-cancel on the frame of entry to
     // become a superbunny inside the entrance.
@@ -589,6 +615,12 @@ export class OverworldTraverser {
     const mode = this.state.settings.logicMode;
     if (mode !== "noglitches") return true;
     return !!this.state.settings.sequenceBreaks?.canSuperBunny;
+  }
+
+  /** Superbunny through the Superbunny Cave drop: in logic for the glitched modes (OWR), a sequence break in noglitches. */
+  private canSuperBunnyCave(): boolean {
+    if (this.state.settings.logicMode !== "noglitches") return true;
+    return !!this.state.settings.sequenceBreaks?.canSuperBunnyCave;
   }
 
   /** Upgrade a region's reachability if the new values are better. Returns true if anything changed. */
@@ -819,7 +851,9 @@ export class OverworldTraverser {
       // Traverse the dungeon with a canReach callback for overworld regions.
       let dungeonTraverser = this.dungeonTraverserCache.get(dungeonId);
       if (!dungeonTraverser) {
-        dungeonTraverser = new DungeonTraverser(this.state, this.logicSet, dungeonId, this.protection, this.staticKeyRuntime);
+        dungeonTraverser = new DungeonTraverser(this.state, this.logicSet, dungeonId, this.protection, this.staticKeyRuntime, (source, target) =>
+          this.canReachFromRegion(source, target),
+        );
         this.dungeonTraverserCache.set(dungeonId, dungeonTraverser);
       }
       const canReachOverworldRegion = (regionName: string): LogicStatus => {
@@ -859,7 +893,13 @@ export class OverworldTraverser {
       // reachable from the overworld (not portals only reachable back out through the dungeon itself).
       if (result.smallKeyGatedRegions && !this.dungeonSmallKeyGatedRegions.has(dungeonId)) {
         this.dungeonSmallKeyGatedRegions.set(dungeonId, result.smallKeyGatedRegions);
-        this.dungeonSmallKeyAltAccessRegions.set(dungeonId, result.smallKeyAltAccessRegions);
+        this.dungeonSmallKeyAltAccessRegions.set(dungeonId, new Set(result.smallKeyAltAccessRegions));
+      } else if (result.smallKeyAltAccessRegions) {
+        // Later traversals may seed entries the first one lacked (e.g. Turtle Rock's front portal, seeded
+        // after the ledge entries). Rooms they reach without keys may hold the key, so add them.
+        const gated = this.dungeonSmallKeyGatedRegions.get(dungeonId);
+        const alt = this.dungeonSmallKeyAltAccessRegions.get(dungeonId);
+        if (gated && alt) for (const regionName of result.smallKeyAltAccessRegions) if (gated.has(regionName)) alt.add(regionName);
       }
 
       // Incorporate dungeon region statuses. This dungeon's latest traversal replaces its previous
@@ -992,7 +1032,8 @@ export class OverworldTraverser {
         }
 
         // Big Chests require the big key to open (when wildBigKeys is enabled)
-        if (locationName.includes("Big Chest") && this.state.settings.wildBigKeys) {
+        // (unless another dungeon's big key also opens it: HMG Mire big key in Hera / Swamp; its rule decides)
+        if (locationName.includes("Big Chest") && this.state.settings.wildBigKeys && !opensWithOtherBigKey(locationLogic.requirements)) {
           const dungeonId = this.getDungeonIdFromRegion(regionName);
           if (dungeonId && !this.state.dungeons[dungeonId]?.bigKey) {
             locationStatuses[locationName] = "unavailable";
@@ -1017,25 +1058,11 @@ export class OverworldTraverser {
         // In noglitches, superbunny is a sequence break — cap all accessible locations at ool.
         if (regionReachability.linkState === "superbunny" && this.state.settings.logicMode === "noglitches") {
           finalStatus = minimumStatus(finalStatus, "ool");
-          if (finalStatus === "ool") reasons.add("canMirrorSuperBunny");
+          if (finalStatus === "ool") reasons.add(regionName === "Superbunny Cave (Top)" ? "canSuperBunnyCave" : "canMirrorSuperBunny");
         }
         // Merge region-level reasons (e.g. from dungeon traversal: die-to-revive, hover, static key assumptions)
         if (keepsReasons(finalStatus) && regionReachability.oolReasons) {
           for (const r of regionReachability.oolReasons) reasons.add(r);
-        }
-        // The Hyrule Castle big key drops from a guard in a fixed, early spot.
-        // With vanilla doors and unshuffled enemy drops it is guaranteed to be
-        // there, so it must not be downgraded by small-key contention — if the
-        // room is reachable at all, the drop is obtainable.
-        // Static key logic has no contention, so the override is not needed (and would hide "possible").
-        if (
-          !this.staticKeyLogic &&
-          locationName === "Hyrule Castle - Big Key Drop" &&
-          this.state.settings.enemyDrop === "none" &&
-          this.state.settings.doors === "vanilla" &&
-          finalStatus !== "unavailable"
-        ) {
-          finalStatus = "available";
         }
         locationStatuses[locationName] = finalStatus;
         if (keepsReasons(finalStatus) && reasons.size > 0) {
@@ -1074,6 +1101,8 @@ export class OverworldTraverser {
     for (const pass of passes) {
       if (!pass.enabled) continue;
       const availabilityMap = this.computeDungeonKeyAvailability(locationStatuses, pass.keyType);
+      const availabilityReasons = new Map<string, string>();
+      this.applyHMGUnplacedKeys(pass.keyType, availabilityMap, availabilityReasons, reachable);
 
       for (const [regionName, regionLogic] of Object.entries(this.regions)) {
         if (!regionLogic.locations || regionLogic.type !== "Dungeon") continue;
@@ -1088,6 +1117,10 @@ export class OverworldTraverser {
             const current = locationStatuses[locationName];
             // Key uncertainty ("possible") must not hide that a location is out of logic (e.g. dark rooms)
             locationStatuses[locationName] = current === "ool" && availability === "possible" ? "ool" : minimumStatus(current, availability);
+            const reason = availabilityReasons.get(dungeonId);
+            if (reason && locationStatuses[locationName] === "possible") {
+              locationReasons[locationName] = [...new Set([...(locationReasons[locationName] ?? []), reason])];
+            }
           }
         }
       }
@@ -1151,6 +1184,72 @@ export class OverworldTraverser {
     return { entranceStatuses, entranceReasons };
   }
 
+  /** The Mire clip into Hera / Swamp (OWR mire_clip), at its current link state. */
+  private mireClipStatus(reachable: Map<string, RegionReachability>): LogicStatus {
+    const torches = reachable.get("Mire Torches Top");
+    if (!torches) return "unavailable";
+    const mireClip: LogicRequirement = { allOf: ["canReach|Mire Torches Top", { anyOf: ["canDashClip", { allOf: ["canBombClip", "canLightFires"] }] }] };
+    return this.requirementEvaluator.evaluateWorldLogic(
+      { Open: { always: mireClip }, Inverted: { always: mireClip } },
+      { regionName: "Mire Torches Top", linkState: torches.linkState, canReachRegion: (name) => reachable.get(name)?.status ?? "unavailable" },
+    );
+  }
+
+  /**
+   * Hybrid glitches places Tower of Hera's and Swamp Palace's small and big keys without logic (OWR Fill.py),
+   * so they may be locked behind their own doors. Rooms behind those doors are then only possible, unless the
+   * keys are in hand or another dungeon's keys open the doors after the Mire clip (Mire's big key in Hera;
+   * Mire's or Hera's big key, or 6 Mire small keys, in Swamp).
+   */
+  private applyHMGUnplacedKeys(
+    keyType: "bigKey" | "smallKey",
+    availability: Map<string, LogicStatus>,
+    reasons: Map<string, string>,
+    reachable: Map<string, RegionReachability>,
+  ): void {
+    if (this.state.settings.logicMode !== "hybridglitches") return;
+    const dungeons = this.state.dungeons;
+    let mireClip: LogicStatus | undefined;
+    const viaMireClip = (): boolean => (mireClip ??= this.mireClipStatus(reachable)) === "available";
+    const hasFlippers = this.state.items.flippers.amount > 0;
+
+    for (const dungeonId of HMG_UNPLACED_KEY_DUNGEONS) {
+      if (!availability.has(dungeonId)) continue;
+      let unlocked: boolean;
+      if (keyType === "bigKey") {
+        const mireBigKey = availability.get("mm") === "available";
+        unlocked =
+          !!dungeons[dungeonId]?.bigKey ||
+          (dungeonId === "toh" && mireBigKey && viaMireClip()) ||
+          (dungeonId === "sp" && (mireBigKey || !!dungeons["toh"]?.bigKey) && hasFlippers && viaMireClip());
+      } else {
+        unlocked =
+          this.allShuffledSmallKeysCollected(dungeonId) ||
+          (dungeonId === "sp" && (dungeons["mm"]?.smallKeys ?? 0) >= 6 && hasFlippers && viaMireClip());
+      }
+      if (unlocked) {
+        availability.set(dungeonId, "available");
+        continue;
+      }
+      availability.set(dungeonId, minimumStatus(availability.get(dungeonId)!, "possible"));
+      reasons.set(dungeonId, `${keyType === "bigKey" ? "hmgBigKeyUnplaced" : "hmgSmallKeyUnplaced"}|${dungeonId}`);
+    }
+  }
+
+  /** Small keys of a dungeon in the item pool (same total as the key counter). */
+  private shuffledSmallKeyCount(dungeonId: string): number {
+    const dungeonData = DungeonsData[dungeonId]?.totalLocations;
+    const chestKeys = dungeonData?.smallkeys ?? 0;
+    const potteryKeys = isPotteryKeyShuffle(this.state.settings.pottery) ? (dungeonData?.keypots ?? 0) : 0;
+    const dropKeys = this.state.settings.enemyDrop !== "none" ? (dungeonData?.keydrops ?? 0) : 0;
+    return chestKeys + potteryKeys + dropKeys;
+  }
+
+  private allShuffledSmallKeysCollected(dungeonId: string): boolean {
+    const dungeon = this.state.dungeons[dungeonId];
+    return (dungeon?.smallKeys ?? 0) >= this.shuffledSmallKeyCount(dungeonId) + (dungeon?.manuallyChanged?.maxSmallKeys ?? 0);
+  }
+
   /**
    * For each dungeon, determine if a key type (big or small) is accessible.
    * Returns a map of dungeonId -> LogicStatus indicating key availability.
@@ -1190,6 +1289,26 @@ export class OverworldTraverser {
         continue;
       }
 
+      // For BK: a big key that drops from an enemy (Hyrule Castle) stays on that enemy while enemy
+      // drops aren't shuffled, so it is exactly as reachable as the drop itself
+      const totals = DungeonsData[dungeonId]?.totalLocations;
+      if (isBigKey && totals?.bigkeydrops && !totals?.bigkey && this.state.settings.enemyDrop === "none") {
+        let dropStatus: LogicStatus | undefined;
+        for (const [regionName, regionLogic] of Object.entries(this.regions)) {
+          if (regionLogic.type !== "Dungeon" || this.getDungeonIdFromRegion(regionName) !== dungeonId) continue;
+          const drop = Object.keys(regionLogic.locations ?? {}).find((name) => name.endsWith("Big Key Drop"));
+          if (drop) dropStatus = locationStatuses[drop] ?? "unavailable";
+        }
+        result.set(dungeonId, dropStatus ?? "available");
+        continue;
+      }
+
+      // For SK: the Standard escape guarantees the way to Zelda, so Hyrule Castle's key can't strand it
+      if (!isBigKey && dungeonId === "hc" && this.state.settings.worldState === "standard") {
+        result.set(dungeonId, "available");
+        continue;
+      }
+
       const gatedRegions = primaryGatedRegions.get(dungeonId) ?? new Set<string>();
 
       // For SK: if no SK-gated regions exist, everything is freely accessible
@@ -1201,19 +1320,13 @@ export class OverworldTraverser {
       // For SK: if no keys are shuffled, all keys are in their fixed pot/drop locations
       // Chest keys are always shuffled; pot/drop keys only if their settings are enabled
       if (!isBigKey) {
-        const dungeonData = DungeonsData[dungeonId]?.totalLocations;
-        const chestKeys = dungeonData?.smallkeys ?? 0;
-        const potteryKeys = isPotteryKeyShuffle(this.state.settings.pottery) ? (dungeonData?.keypots ?? 0) : 0;
-        const dropKeys = this.state.settings.enemyDrop !== "none" ? (dungeonData?.keydrops ?? 0) : 0;
-        const shuffledKeys = chestKeys + potteryKeys + dropKeys;
-        if (shuffledKeys === 0) {
+        if (this.shuffledSmallKeyCount(dungeonId) === 0) {
           result.set(dungeonId, "available");
           continue;
         }
-        // Every shuffled key has been collected (same total as the key counter), so none can be
-        // waiting in an unreachable location or behind its own door
-        const dungeon = this.state.dungeons[dungeonId];
-        if ((dungeon?.smallKeys ?? 0) >= shuffledKeys + (dungeon?.manuallyChanged?.maxSmallKeys ?? 0)) {
+        // Every shuffled key has been collected, so none can be waiting in an unreachable location or
+        // behind its own door
+        if (this.allShuffledSmallKeysCollected(dungeonId)) {
           result.set(dungeonId, "available");
           continue;
         }
@@ -1424,11 +1537,11 @@ export class OverworldTraverser {
     }
 
     let madeProgress = true;
+    // Region count when dungeons were last re-queued; counts regions added by dungeon traversals too
+    let reachableAtRequeue = ctx.reachable.size;
 
     while (madeProgress) {
       madeProgress = false;
-
-      const reachableBefore = ctx.reachable.size;
 
       while (ctx.queue.length > 0) {
         const current = ctx.queue.shift()!;
@@ -1443,10 +1556,11 @@ export class OverworldTraverser {
         }
       }
 
-      // If new overworld regions were discovered in BFS (e.g. via dungeon
-      // external exits from the previous iteration), re-queue all known
-      // dungeons so their canReachOverworldRegion callbacks see the updated state.
-      if (ctx.reachable.size > reachableBefore && ctx.allDiscoveredPortals.size > 0) {
+      // If new regions were reached since the last re-queue (overworld BFS, or another dungeon's rooms,
+      // e.g. Mire's rooms for the HMG Swamp rules), re-queue all known dungeons so their canReach
+      // callbacks see the updated state.
+      if (ctx.reachable.size > reachableAtRequeue && ctx.allDiscoveredPortals.size > 0) {
+        reachableAtRequeue = ctx.reachable.size;
         for (const [dungeonId, portals] of ctx.allDiscoveredPortals) {
           if (!ctx.pendingDungeons.has(dungeonId)) {
             ctx.pendingDungeons.set(dungeonId, new Map(portals));

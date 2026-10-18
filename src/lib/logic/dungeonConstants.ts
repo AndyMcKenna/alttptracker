@@ -57,6 +57,9 @@ export const OVERWORLD_REGION_TYPES = new Set(["LightWorld", "DarkWorld"]);
  */
 export const SUPERBUNNY_BLOCKED_EXITS: Set<string> = new Set([]);
 
+/** Climbing back up Superbunny Cave after dropping down its hole leaves a bunny in superbunny state. */
+export const SUPERBUNNY_CAVE_CLIMB = "Superbunny Cave Climb";
+
 /**
  * Locations the player can interact with even while in bunny state. Most are
  * overworld pickups that don't require sword/items, plus shop slots and
