@@ -23,9 +23,12 @@
  * is never mutated. Transforms share a precomputed RegionMetadata context.
  */
 
-import type { ExitLogic, GameState, LogicRequirement, LogicState, RegionLogic, WorldLogic } from "@/data/logic/logicTypes";
+import type { ExitLogic, GameState, LogicRequirement, LogicState, RegionLogic, StaticTRVariant, WorldLogic } from "@/data/logic/logicTypes";
 import { entranceLocations } from "@/data/locationsData";
 import { whirlpoolRegistry, parallelLinks } from "@/data/logic/owData";
+import { getEntranceGroup } from "@/lib/dropdowns";
+import { andIntoWorld, applyStaticKeyLogic, computeTRReachability, isStaticKeyLogicActive, selectTRVariant } from "./staticKeyLogic";
+import { getLogicStateForWorld } from "./logicHelpers";
 
 // ─── Shared metadata computed once for all transforms ──────────────────
 
@@ -48,6 +51,10 @@ export interface RegionMetadata {
   fluteSpotExits: Map<string, number>;
   /** Set of whirlpool exit names */
   whirlpoolExitNames: Set<string>;
+  /** Turtle Rock rule variant chosen for static key logic (only set when it is active) */
+  staticTRVariant?: StaticTRVariant;
+  /** The graph before the static key logic overlay, used to show what is reachable outside static logic */
+  staticBaseRegions?: Record<string, RegionLogic>;
 }
 
 /**
@@ -226,7 +233,7 @@ function applyEntranceShuffleNoMap(
   const menuExits: Record<string, { to: string; type: string; requirements: typeof emptyRequirements }> = {};
 
   for (const [entranceName, locData] of Object.entries(entranceLocations)) {
-    const pool = locData.entrance_modes?.[entranceMode];
+    const pool = getEntranceGroup(entranceName, entranceMode, !!state.settings.zelgaWoods);
     if (!pool || pool === "vanilla") continue;
 
     const portalRegions = locData.entranceRegions;
@@ -286,6 +293,9 @@ function applyEntranceShuffle(
   // Feeders are limited to genuine two-way overworld adjacencies: drop exits
   // (ledge/water drops, e.g. "River Bend Water Drop") are one-directional — you
   // can't climb back up — so they are never used as a free egress target.
+  // Walking out of a pocket also keeps you on the pocket's own screen, so the
+  // feeder must share its owid; cross-screen links (offset mirrors, clips) never
+  // qualify.
   const OVERWORLD_TYPES = new Set(["LightWorld", "DarkWorld"]);
   const isDropExit = (exitName: string) => /\bDrop\b/i.test(exitName);
   const hasOverworldEgress = new Set<string>();
@@ -295,8 +305,9 @@ function applyEntranceShuffle(
     for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
       if (!exit?.to || !OVERWORLD_TYPES.has(exit.type)) continue;
       hasOverworldEgress.add(regionName);
-      // Only genuine (non-drop) overworld links qualify as a free egress feeder.
-      if (!isDropExit(exitName) && !pocketFeeder.has(exit.to)) {
+      // Only genuine (non-drop) same-screen overworld links qualify as a free egress feeder.
+      const sameScreen = regionLogic.owid != null && regions[exit.to]?.owid === regionLogic.owid;
+      if (!isDropExit(exitName) && sameScreen && !pocketFeeder.has(exit.to)) {
         pocketFeeder.set(exit.to, { source: regionName, type: exit.type });
       }
     }
@@ -326,8 +337,8 @@ function applyEntranceShuffle(
   const reverseLinks = new Map<string, string>(); // destination entrance → source entrance
   const genericConnectors = new Map<string, string[]>();
 
-  for (const [entranceName, locData] of Object.entries(entranceLocations)) {
-    const pool = locData.entrance_modes?.[entranceMode];
+  for (const entranceName of Object.keys(entranceLocations)) {
+    const pool = getEntranceGroup(entranceName, entranceMode, !!state.settings.zelgaWoods);
     if (!pool || pool === "vanilla") continue;
 
     if (!state.settings.shuffleLinks) {
@@ -370,7 +381,7 @@ function applyEntranceShuffle(
 
   // --- Reverse pass: remap interior return exits ---
   for (const [entranceName, locData] of Object.entries(entranceLocations)) {
-    const pool = locData.entrance_modes?.[entranceMode];
+    const pool = getEntranceGroup(entranceName, entranceMode, !!state.settings.zelgaWoods);
     if (!pool || pool === "vanilla") continue;
 
     // Skip entrances kept vanilla above
@@ -693,6 +704,7 @@ export function buildEffectiveRegions(
   let regions = baseRegions as Record<string, RegionLogic>;
 
   regions = applyEntranceShuffle(regions, effectiveState, metadata);
+  regions = applySkullWoodsFrontConnection(regions, effectiveState);
   regions = applyTileFlipRemaps(regions, effectiveState, metadata);
   regions = applyLayoutRemaps(regions, effectiveState, metadata);
   regions = applyWhirlpoolRemaps(regions, effectiveState, metadata);
@@ -700,9 +712,51 @@ export function buildEffectiveRegions(
   regions = applyDoorRemaps(regions, effectiveState, metadata);
   regions = applyStandardLogicChanges(regions, effectiveState);
   regions = applyStandvertedPortalFixes(regions, effectiveState);
+  regions = applyHMGDungeonReentryRules(regions, effectiveState);
 
+  // Static key logic goes last: its Turtle Rock variant depends on the final layout
+  if (isStaticKeyLogicActive(effectiveState.settings)) {
+    const staticTRVariant = selectTRVariant(computeTRReachability(regions, effectiveState));
+    const staticBaseRegions = regions;
+    regions = applyStaticKeyLogic(regions, effectiveState, staticTRVariant);
+    return { regions, metadata: { ...metadata, staticTRVariant, staticBaseRegions } };
+  }
 
   return { regions, metadata };
+}
+
+/**
+ * In entrance shuffle (any mode except insanity, with Zelga Woods disabled) the
+ * Skull Woods first section always physically links the east forest to the west
+ * forest. This function applies the necessary logic changes to reflect that.
+ */
+function applySkullWoodsFrontConnection(
+  regions: Record<string, RegionLogic>,
+  state: GameState,
+): Record<string, RegionLogic> {
+  const mode = state.settings.entranceMode;
+  if (mode === "none" || mode === "insanity" || state.settings.zelgaWoods) {
+    return regions;
+  }
+  const source = regions["Skull Woods Forest"];
+  if (!source || !regions["Skull Woods Forest (West)"]) return regions;
+
+  const result = { ...regions };
+  result["Skull Woods Forest"] = {
+    ...source,
+    exits: {
+      ...source.exits,
+      "Skull Woods First Section Pass Through": {
+        to: "Skull Woods Forest (West)",
+        type: "DarkWorld",
+        requirements: {
+          Open: {},
+          Inverted: {},
+        },
+      },
+    },
+  };
+  return result;
 }
 
 /** 
@@ -897,5 +951,74 @@ function applyStandvertedPortalFixes(
     };
   }
 
+  return result;
+}
+
+// ─── HMG dungeon re-entry (OWR UnderworldGlitchRules.dungeon_reentry_rules) ──
+
+/** HMG clips that land inside another dungeon at its entrance portal. */
+const HMG_REENTRY_CLIPS = [
+  { region: "Spectacle Rock Cave (Bottom)", clip: "Kiki Skip", portal: "Palace of Darkness Portal" },
+  { region: "Thieves Attic", clip: "Thieves to Desert West Clip", portal: "Desert West Portal" },
+  { region: "Thieves Attic", clip: "Thieves to Desert South Clip", portal: "Desert South Portal" },
+  { region: "Thieves Attic", clip: "Thieves to Desert East Clip", portal: "Desert East Portal" },
+];
+/** Entrance modes that shuffle dungeons only among dungeon doors: a clipped-into dungeon can't be left unless it could be entered normally. */
+const REENTRY_EXIT_RESTRICTED_MODES = ["none", "simple", "restricted", "dungeonssimple"];
+/** Entrance modes with fixed dungeon exits but no fake-world fix: the clip also needs the entrance's own rule. */
+const REENTRY_ENTRY_RULE_MODES = ["full", "dungeonsfull"];
+const NEVER_WORLD: WorldLogic = { Open: "never", Inverted: "never", Inverted_1: "never" };
+const isEmptyRule = (rule: LogicRequirement) => typeof rule === "object" && Object.keys(rule).length === 0;
+
+/**
+ * After clipping into a dungeon (Kiki Skip into PoD, Thieves' Town into Desert), OWR only lets the
+ * player leave through that dungeon's door when they could also have come in through it. In modes
+ * where the clip links straight to the exterior (crossed, lean, lite, insanity) nothing changes.
+ */
+function applyHMGDungeonReentryRules(regions: Record<string, RegionLogic>, state: GameState): Record<string, RegionLogic> {
+  const { logicMode, entranceMode } = state.settings;
+  if (logicMode !== "hybridglitches") return regions;
+  const restrictExit = REENTRY_EXIT_RESTRICTED_MODES.includes(entranceMode) || REENTRY_ENTRY_RULE_MODES.includes(entranceMode);
+  if (!restrictExit) return regions;
+
+  const result = { ...regions };
+  const copied = new Set<string>();
+  const isOverworld = (regionName: string | undefined) => !!regionName && ["LightWorld", "DarkWorld"].includes(regions[regionName]?.type ?? "");
+
+  for (const { region, clip, portal } of HMG_REENTRY_CLIPS) {
+    const clipExit = regions[region]?.exits?.[clip];
+    const portalLogic = regions[portal];
+    if (!clipExit || !portalLogic?.exits) continue;
+
+    // The overworld door that leads into this portal (entrance shuffle has already rewired it)
+    let entry: { parent: string; name: string; rule: LogicRequirement } | undefined;
+    for (const [regionName, regionLogic] of Object.entries(regions)) {
+      if (!isOverworld(regionName)) continue;
+      for (const [exitName, exit] of Object.entries(regionLogic.exits ?? {})) {
+        if (exit?.to !== portal) continue;
+        const rule = getLogicStateForWorld(state, exit.requirements).always ?? {};
+        if (rule !== "never") entry = { parent: regionName, name: exitName, rule };
+      }
+    }
+
+    // Leaving: only through a door the player could have entered by
+    const portalExits = getOrCopyExits(result, portal, copied);
+    for (const [exitName, exit] of Object.entries(portalLogic.exits)) {
+      if (!isOverworld(exit?.to)) continue;
+      portalExits[exitName] = {
+        ...exit,
+        requirements: entry ? andIntoWorld(exit.requirements, isEmptyRule(entry.rule) ? `canReach|${entry.parent}` : { allOf: [`canReach|${entry.parent}`, entry.rule] }) : NEVER_WORLD,
+      };
+    }
+
+    // Entering: Skull Woods' back door only opens from inside; Mire and Agahnim's Tower need their own
+    // door rule; with fixed dungeon exits every clip needs the door rule (as Link, OWR's fake pearl)
+    const clipExits = getOrCopyExits(result, region, copied);
+    if (entry?.name === "Skull Woods Final Section") {
+      clipExits[clip] = { ...clipExit, requirements: NEVER_WORLD };
+    } else if (entry && !isEmptyRule(entry.rule) && (REENTRY_ENTRY_RULE_MODES.includes(entranceMode) || ["Misery Mire", "Agahnims Tower"].includes(entry.name))) {
+      clipExits[clip] = { ...clipExit, requirements: andIntoWorld(clipExit.requirements, entry.rule) };
+    }
+  }
   return result;
 }

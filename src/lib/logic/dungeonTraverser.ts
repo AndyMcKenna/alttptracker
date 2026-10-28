@@ -38,13 +38,13 @@
  *   for the lifetime of this instance (state is immutable per traverse pass).
  */
 
-import { type CrystalSwitchState, type GameState, type LinkState, type LogicState, type LogicStatus, type RegionLogic } from "@/data/logic/logicTypes";
+import { type CrystalSwitchState, type ExitLogic, type GameState, type LinkState, type LogicState, type LogicStatus, type RegionLogic } from "@/data/logic/logicTypes";
 import type { LogicSet } from "./logicMapper";
-import { RequirementEvaluator, type EvaluationContext } from "./requirementEvaluator";
-import { getLogicStateForWorld, createAllItemsState, isBetterStatus, minimumStatus } from "./logicHelpers";
+import { RequirementEvaluator, type EvaluationContext, type StaticKeyRuntime } from "./requirementEvaluator";
+import { getLogicStateForWorld, createAllItemsState, isBetterStatus, minimumStatus, combineLinkStates } from "./logicHelpers";
 import { PriorityQueue } from "@datastructures-js/priority-queue";
 import { OVERWORLD_REGION_TYPES, isPotteryKeyShuffle, DOOR_PREFIX_TO_DUNGEON, PORTAL_TO_DUNGEON } from "./dungeonConstants";
-import { bunnyRevivableEntrances, superbunnyRevivableEntrances, swordSuperbunnyRevivableEntrances } from "@/data/logic/superbunnyLogic";
+import { bunnyImpassableDoors, bunnyRevivableEntrances, superbunnyRevivableEntrances, swordSuperbunnyRevivableEntrances } from "@/data/logic/superbunnyLogic";
 
 export interface DungeonRegionState {
   status: LogicStatus;
@@ -58,12 +58,16 @@ export interface DungeonTraversalResult {
   regionStatuses: Map<string, DungeonRegionState>; // Internal region statuses
   externalExits: Map<string, { to: string; status: LogicStatus; linkState: LinkState; keysUsedToReach: number }>; // Dungeon -> Overworld exits
   bigKeyGatedRegions: Set<string>; // Regions only reachable via big key doors
-  smallKeyGatedRegions: Set<string>; // Regions only reachable via small key doors
+  smallKeyGatedRegions: Set<string>; // Regions only reachable via small key doors (from usable entries)
+  /** Small-key-gated regions that another, not yet usable, entry reaches without small keys: a key may be inside */
+  smallKeyAltAccessRegions: Set<string>;
 }
 
 interface DungeonContext {
   reachable: Map<string, DungeonRegionState>;
   pendingKeyDoors: string[];
+  /** Same contents as pendingKeyDoors — O(1) membership for the Dijkstra hot loop. */
+  pendingKeyDoorSet: Set<string>;
   regionMaxKeysUsed: Map<string, number>;
   regionMinKeysUsed: Map<string, number>;
   regionMinKeysUsedNoBK: Map<string, number>;
@@ -93,7 +97,43 @@ interface ExitMeta {
   isPairedWithBK: boolean;   // SK door whose reverse side is a BK door (auto-opens)
   isBidirectional: boolean;  // SK door with a matching SK door on the reverse side
   isOverworld: boolean;      // exit leads to an overworld region
+  isBunnyImpassable: boolean; // blocked for a bunny, e.g. pots or blocks must be lifted/pushed (OWR bunny_impassible_doors)
 }
+
+/**
+ * Exit metadata shared across DungeonTraverser instances. The metadata is a
+ * per-exit property of the (immutable) regions graph plus the world state —
+ * it is identical for all 13 dungeons, so building it once per graph+worldState
+ * saves 13 full-graph scans (with requirement-tree walks) per logic recompute.
+ * WeakMap keyed on the regions object: the entry dies with the graph.
+ */
+interface SharedExitMeta {
+  exitMeta: Map<string, ExitMeta>;
+  exitToSourceRegion: Map<string, string>;
+  /** Region name → its exits with metadata, built lazily (see getRegionExits) */
+  regionExits: Map<string, RegionExit[]>;
+}
+
+/** An exit together with its metadata, so hot loops avoid Object.entries and string-keyed lookups. */
+interface RegionExit {
+  name: string;
+  exit: ExitLogic[string];
+  meta: ExitMeta;
+}
+
+const DEFAULT_EXIT_META: ExitMeta = { isSKDoor: false, isBKDoor: false, isPairedWithBK: false, isBidirectional: false, isOverworld: false, isBunnyImpassable: false };
+
+// One shared single-state set per crystal state, for evaluation contexts (which only read them).
+// Never mutate these; region state that collects crystal states uses its own sets.
+const SINGLE_CRYSTAL_STATE: Record<CrystalSwitchState, Set<CrystalSwitchState>> = {
+  orange: new Set(["orange"]),
+  blue: new Set(["blue"]),
+  unknown: new Set(["unknown"]),
+};
+const sharedExitMetaCache = new WeakMap<object, Map<string, SharedExitMeta>>();
+
+/** Per-graph cache of computeAllEntranceRegions results, keyed "dungeonId|entranceActive". */
+const sharedEntranceRegionsCache = new WeakMap<object, Map<string, Set<string>>>();
 
 export class DungeonTraverser {
   private state: GameState;
@@ -107,27 +147,76 @@ export class DungeonTraverser {
   private exitMeta: Map<string, ExitMeta> = new Map();
   // Cache for exit name → source region mapping
   private exitToSourceRegion: Map<string, string> = new Map();
+  // Region name → exits with metadata (shared per graph + world state)
+  private regionExits: Map<string, RegionExit[]> = new Map();
   // Cache for small keys per region (populated lazily, cleared never — state is immutable)
   private smallKeysCache: Map<string, string[]> = new Map();
   // Memo for findCanReachTargets: requirements object identity → resolved targets list.
   private canReachTargetsCache: WeakMap<object, string[]> = new WeakMap();
 
   private readonly actuallyHasBigKey: boolean;
+  // Static key logic state shared with the overworld traverser (findable keys), if any
+  private readonly staticKeyRuntime?: StaticKeyRuntime;
+  // Overworld canReachFrom for requirements evaluated inside the dungeon (e.g. rescuing the old man)
+  private readonly canReachFrom?: (sourceRegionName: string, targetRegionName: string) => LogicStatus;
   private readonly effectivelyHasBigKey: boolean;
   private readonly allEntranceRegions: Set<string>;
 
-  constructor(state: GameState, logicSet: LogicSet, dungeonId: string, protection: "partial" | "dangerous" = "partial") {
+  constructor(
+    state: GameState,
+    logicSet: LogicSet,
+    dungeonId: string,
+    protection: "partial" | "dangerous" = "partial",
+    staticKeyRuntime?: StaticKeyRuntime,
+    canReachFrom?: (sourceRegionName: string, targetRegionName: string) => LogicStatus,
+  ) {
     this.state = state;
     this.regions = logicSet.regions as Record<string, RegionLogic>;
     this.dungeonId = dungeonId;
     this.protection = protection;
+    this.staticKeyRuntime = staticKeyRuntime;
+    this.canReachFrom = canReachFrom;
 
-    this.requirementEvaluator = new RequirementEvaluator(state, this.regions);
+    this.requirementEvaluator = new RequirementEvaluator(state, this.regions, { staticKeys: staticKeyRuntime, canReachFrom });
 
     this.actuallyHasBigKey = !state.settings.wildBigKeys || !!state.dungeons[dungeonId]?.bigKey;
-    this.buildExitMetadata();
+
+    // Exit metadata depends only on the graph + worldState — share across
+    // instances (all dungeons, and across recomputes while the graph object
+    // is unchanged, e.g. item-only changes).
+    let byMode = sharedExitMetaCache.get(this.regions);
+    if (!byMode) {
+      byMode = new Map();
+      sharedExitMetaCache.set(this.regions, byMode);
+    }
+    const modeKey = state.settings.worldState;
+    let shared = byMode.get(modeKey);
+    if (!shared) {
+      this.buildExitMetadata();
+      shared = { exitMeta: this.exitMeta, exitToSourceRegion: this.exitToSourceRegion, regionExits: this.regionExits };
+      byMode.set(modeKey, shared);
+    } else {
+      this.exitMeta = shared.exitMeta;
+      this.exitToSourceRegion = shared.exitToSourceRegion;
+      this.regionExits = shared.regionExits;
+    }
+
     this.effectivelyHasBigKey = protection === "partial" || this.actuallyHasBigKey;
-    this.allEntranceRegions = this.computeAllEntranceRegions();
+
+    // Entrance regions depend only on the graph + dungeonId + whether
+    // entrance shuffle is active.
+    let entranceCache = sharedEntranceRegionsCache.get(this.regions);
+    if (!entranceCache) {
+      entranceCache = new Map();
+      sharedEntranceRegionsCache.set(this.regions, entranceCache);
+    }
+    const entranceKey = `${dungeonId}|${state.settings.entranceMode !== "none"}`;
+    let entranceRegions = entranceCache.get(entranceKey);
+    if (!entranceRegions) {
+      entranceRegions = this.computeAllEntranceRegions();
+      entranceCache.set(entranceKey, entranceRegions);
+    }
+    this.allEntranceRegions = entranceRegions;
   }
 
   /** Find every region this dungeon's entrances lead to (regardless of overworld link state). */
@@ -190,7 +279,14 @@ export class DungeonTraverser {
         // Single tree-walk to detect both key types.
         const { isSK, isBK } = this.detectKeyTypes(reqs);
         const isOW = OVERWORLD_REGION_TYPES.has(this.regions[exit.to]?.type || "");
-        this.exitMeta.set(`${regionName}|${exitName}`, { isSKDoor: isSK, isBKDoor: isBK, isPairedWithBK: false, isBidirectional: false, isOverworld: isOW });
+        this.exitMeta.set(`${regionName}|${exitName}`, {
+          isSKDoor: isSK,
+          isBKDoor: isBK,
+          isPairedWithBK: false,
+          isBidirectional: false,
+          isOverworld: isOW,
+          isBunnyImpassable: bunnyImpassableDoors.has(exitName),
+        });
       }
     }
     // Second pass: compute paired/bidirectional using the flags from pass 1
@@ -214,7 +310,17 @@ export class DungeonTraverser {
 
   /** Get cached exit metadata. Falls back to safe defaults for unknown exits. */
   private getExitMeta(regionName: string, exitName: string): ExitMeta {
-    return this.exitMeta.get(`${regionName}|${exitName}`) ?? { isSKDoor: false, isBKDoor: false, isPairedWithBK: false, isBidirectional: false, isOverworld: false };
+    return this.exitMeta.get(`${regionName}|${exitName}`) ?? DEFAULT_EXIT_META;
+  }
+
+  /** A region's exits with their metadata (cached; the graph is never mutated after it is built). */
+  private getRegionExits(regionName: string): RegionExit[] {
+    let list = this.regionExits.get(regionName);
+    if (!list) {
+      list = Object.entries(this.regions[regionName]?.exits ?? {}).map(([name, exit]) => ({ name, exit, meta: this.getExitMeta(regionName, name) }));
+      this.regionExits.set(regionName, list);
+    }
+    return list;
   }
 
   /**
@@ -262,8 +368,11 @@ export class DungeonTraverser {
 
     // Key counting uses all-items (partial) or actual inventory (dangerous)
     const keyCountingState = this.protection === "partial" ? createAllItemsState(this.state) : this.state;
-    const keyCountingEvaluator = new RequirementEvaluator(keyCountingState, this.regions);
-    this.requirementEvaluator = new RequirementEvaluator(this.state, this.regions);
+    const keyCountingEvaluator = new RequirementEvaluator(keyCountingState, this.regions, {
+      staticKeys: this.staticKeyRuntime,
+      assumeAllStaticKeys: this.protection === "partial",
+    });
+    this.requirementEvaluator = new RequirementEvaluator(this.state, this.regions, { staticKeys: this.staticKeyRuntime, canReachFrom: this.canReachFrom });
 
     if (this.state.settings.wildSmallKeys === "wild") {
       // Pass 1: Dijkstra with actual inventory, assuming big key for door discovery
@@ -336,9 +445,8 @@ export class DungeonTraverser {
       const regionLogic = this.regions[regionName];
       const minKeysForRegion = ctx.regionMinKeysUsed.get(regionName) ?? 0;
       if (regionLogic?.exits) {
-        for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+        for (const { name: exitName, exit, meta } of this.getRegionExits(regionName)) {
           if (!exit.to) continue;
-          const meta = this.getExitMeta(regionName, exitName);
           if (!meta.isOverworld) continue;
           const exitStatus = this.requirementEvaluator.evaluateWorldLogic(exit.requirements, {
             regionName,
@@ -361,13 +469,14 @@ export class DungeonTraverser {
       }
     }
 
-    const { bigKeyGated, smallKeyGated } = this.computeKeyGatedRegions(ctx, entryRegions);
+    const { bigKeyGated, smallKeyGated, smallKeyAltAccess } = this.computeKeyGatedRegions(ctx, entryRegions, entryStatus);
 
     return {
       regionStatuses: ctx.reachable,
       externalExits,
       bigKeyGatedRegions: bigKeyGated,
       smallKeyGatedRegions: smallKeyGated,
+      smallKeyAltAccessRegions: smallKeyAltAccess,
     };
   }
 
@@ -378,13 +487,15 @@ export class DungeonTraverser {
   private computeKeyGatedRegions(
     ctx: DungeonContext,
     entryRegions: Map<string, { linkState: LinkState }>,
-  ): { bigKeyGated: Set<string>; smallKeyGated: Set<string> } {
+    entryStatus: Map<string, LogicStatus>,
+  ): { bigKeyGated: Set<string>; smallKeyGated: Set<string>; smallKeyAltAccess: Set<string> } {
     // BFS from entry regions that refuses to traverse the given key-door type;
     // any reachable region NOT visited is gated behind that key type.
-    const bfsSkippingDoorType = (skipBKDoors: boolean): Set<string> => {
+    const bfsSkippingDoorType = (skipBKDoors: boolean, usableEntriesOnly = false): Set<string> => {
       const reached = new Set<string>();
       const queue: string[] = [];
       for (const [regionName] of entryRegions) {
+        if (usableEntriesOnly && entryStatus.get(regionName) === "unavailable") continue;
         if (ctx.reachable.has(regionName)) {
           reached.add(regionName);
           queue.push(regionName);
@@ -394,9 +505,8 @@ export class DungeonTraverser {
         const current = queue.shift()!;
         const regionLogic = this.regions[current];
         if (!regionLogic?.exits) continue;
-        for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+        for (const { exit, meta } of this.getRegionExits(current)) {
           if (!exit.to) continue;
-          const meta = this.getExitMeta(current, exitName);
           if (meta.isOverworld || !ctx.reachable.has(exit.to) || reached.has(exit.to)) continue;
           if (skipBKDoors ? meta.isBKDoor : meta.isSKDoor) continue;
           reached.add(exit.to);
@@ -407,15 +517,23 @@ export class DungeonTraverser {
     };
 
     const reachableNoBK = bfsSkippingDoorType(true);
-    const reachableNoSK = bfsSkippingDoorType(false);
+    // Small keys: gated relative to the entries the player can use now. A region that only an
+    // unusable entry reaches without keys (e.g. HC Secret Room via the Sanctuary Grave drop without a
+    // glove) is still behind a key door for the player, and may hold the very key that opens it.
+    const reachableNoSKAnyEntry = bfsSkippingDoorType(false);
+    const reachableNoSK = bfsSkippingDoorType(false, true);
 
     const bigKeyGated = new Set<string>();
     const smallKeyGated = new Set<string>();
+    const smallKeyAltAccess = new Set<string>();
     for (const regionName of ctx.reachable.keys()) {
       if (!reachableNoBK.has(regionName)) bigKeyGated.add(regionName);
-      if (!reachableNoSK.has(regionName)) smallKeyGated.add(regionName);
+      if (!reachableNoSK.has(regionName)) {
+        smallKeyGated.add(regionName);
+        if (reachableNoSKAnyEntry.has(regionName)) smallKeyAltAccess.add(regionName);
+      }
     }
-    return { bigKeyGated, smallKeyGated };
+    return { bigKeyGated, smallKeyGated, smallKeyAltAccess };
   }
 
   private dijkstraMinKeys(ctx: DungeonContext, entryRegions: Map<string, { linkState: LinkState }>, entryKeyCost: Map<string, number>, evaluator: RequirementEvaluator, assumeBigKey: boolean = true, targetMap?: Map<string, number>, collectPendingDoors: boolean = true) {
@@ -465,9 +583,8 @@ export class DungeonTraverser {
         }
 
         if (regionLogic.exits) {
-          for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+          for (const { name: exitName, exit, meta } of this.getRegionExits(region)) {
             if (!exit.to) continue;
-            const meta = this.getExitMeta(region, exitName);
             if (meta.isOverworld) continue;
 
             // For bidirectional SK doors, check if already opened from other side.
@@ -475,7 +592,8 @@ export class DungeonTraverser {
             const countsAsKeyDoor = meta.isSKDoor && !meta.isPairedWithBK && !doorAlreadyOpened;
 
             // Collect pending doors for BFS (first pass only, real key-consuming doors)
-            if (collectPendingDoors && assumeBigKey && meta.isSKDoor && !meta.isPairedWithBK && !ctx.pendingKeyDoors.includes(exitName)) {
+            if (collectPendingDoors && assumeBigKey && meta.isSKDoor && !meta.isPairedWithBK && !ctx.pendingKeyDoorSet.has(exitName)) {
+              ctx.pendingKeyDoorSet.add(exitName);
               ctx.pendingKeyDoors.push(exitName);
             }
 
@@ -485,7 +603,7 @@ export class DungeonTraverser {
             const status = evaluator.evaluateWorldLogic(exit.requirements, {
               regionName: region,
               dungeonId: this.dungeonId,
-              crystalStates: new Set([crystalState]),
+              crystalStates: SINGLE_CRYSTAL_STATE[crystalState],
               linkState: regionState?.linkState ?? "link",
               assumeSmallKey: meta.isSKDoor,
               assumeBigKey: hasBigKey,
@@ -520,7 +638,7 @@ export class DungeonTraverser {
             this.canHitCrystalSwitch(region, {
               regionName: region,
               dungeonId: this.dungeonId,
-              crystalStates: new Set([crystalState]),
+              crystalStates: SINGLE_CRYSTAL_STATE[crystalState],
               linkState: regionState?.linkState ?? "link",
             })
           ) {
@@ -630,9 +748,8 @@ export class DungeonTraverser {
           }
 
           if (regionLogic.exits) {
-            for (const [nextExitName, exit] of Object.entries(regionLogic.exits)) {
+            for (const { name: nextExitName, exit, meta } of this.getRegionExits(region)) {
               if (!exit.to) continue;
-              const meta = this.getExitMeta(region, nextExitName);
               if (meta.isOverworld) continue;
               const countsAsKeyDoor = meta.isSKDoor && !meta.isPairedWithBK;
 
@@ -641,7 +758,7 @@ export class DungeonTraverser {
               const status = evaluator.evaluateWorldLogic(exit.requirements, {
                 regionName: region,
                 dungeonId: this.dungeonId,
-                crystalStates: new Set([crystalState]),
+                crystalStates: SINGLE_CRYSTAL_STATE[crystalState],
                 linkState: regionState?.linkState ?? "link",
                 assumeSmallKey: meta.isSKDoor,
                 assumeBigKey: this.effectivelyHasBigKey,
@@ -687,7 +804,7 @@ export class DungeonTraverser {
               this.canHitCrystalSwitch(region, {
                 regionName: region,
                 dungeonId: this.dungeonId,
-                crystalStates: new Set([crystalState]),
+                crystalStates: SINGLE_CRYSTAL_STATE[crystalState],
                 linkState: regionState?.linkState ?? "link",
               })
             ) {
@@ -760,6 +877,27 @@ export class DungeonTraverser {
     // Best entry status per "region|crystalState" (prevents cross-crystal-state borrowing).
     const regionEntryStatus = new Map<string, LogicStatus>();
 
+    // A region's link state belongs to the path that gives it its best status. Without this, a link
+    // state from one path (e.g. an unusable entrance seeded as Link) would be paired with the status
+    // of another (a bunny walking in from a usable entrance), letting the bunny act as Link.
+    // Returns true when the region's link state changed (its exits must then be re-evaluated).
+    const regionLinkStatus = new Map<string, LogicStatus>();
+    const recordLinkState = (region: string, status: LogicStatus, linkState: LinkState): boolean => {
+      const state = ctx.reachable.get(region);
+      if (!state) return false;
+      const previous = regionLinkStatus.get(region);
+      let next = state.linkState;
+      if (previous === undefined || isBetterStatus(status, previous)) {
+        regionLinkStatus.set(region, status);
+        next = linkState;
+      } else if (status === previous) {
+        next = combineLinkStates(state.linkState, linkState);
+      }
+      if (next === state.linkState) return false;
+      state.linkState = next;
+      return true;
+    };
+
     // Track whether entry regions have been upgraded to Link via die-to-revive.
     // When any deep room triggers die-to-revive, we re-queue entry regions as Link
     // (player respawns at entry and can re-traverse as Link).
@@ -770,14 +908,17 @@ export class DungeonTraverser {
       queue.push({ region: regionName, crystalState: "orange", fromEntryStatus: thisEntryStatus });
       // Apply die-to-revive for entry regions.
       const { linkState: effectiveLinkState } = this.getDieReviveState(regionName, linkState);
-      ctx.reachable.set(regionName, {
-        status: "available", // Placeholder, will be updated in Phase 3
-        linkState: effectiveLinkState,
-        crystalStates: new Set(["orange"]),
-      });
+      if (!regionLinkStatus.has(regionName)) {
+        ctx.reachable.set(regionName, {
+          status: "available", // Placeholder, will be updated in Phase 3
+          linkState: effectiveLinkState,
+          crystalStates: new Set(["orange"]),
+        });
+      }
+      recordLinkState(regionName, thisEntryStatus, effectiveLinkState);
       // Seed entry ool reasons from portal (e.g. dark room navigation to reach dungeon)
       const portalReasons = entryOolReasons?.get(regionName);
-      if (thisEntryStatus === "ool" && portalReasons?.length) {
+      if ((thisEntryStatus === "ool" || thisEntryStatus === "possible") && portalReasons?.length) {
         this.addEntryOolReasons(ctx, regionName, portalReasons);
       }
       // Use the best status if this region is also another entry portal
@@ -794,11 +935,13 @@ export class DungeonTraverser {
       // Use current entry status (not stale queued value) for correct propagation.
       const currentRegionEntryStatus = regionEntryStatus.get(`${region}|${crystalState}`) ?? queuedEntryStatus;
 
-      const visitKey = `${region}|${crystalState}|${currentRegionEntryStatus}`;
+      const regionState = ctx.reachable.get(region);
+      // Link state is part of the visit key: a region re-reached with a different link state must be
+      // re-processed, since its exits evaluate differently for Link and a bunny.
+      const visitKey = `${region}|${crystalState}|${currentRegionEntryStatus}|${regionState?.linkState}`;
       if (visited.has(visitKey)) continue;
       visited.add(visitKey);
 
-      const regionState = ctx.reachable.get(region);
       const regionLogic = this.regions[region];
       if (!regionLogic) continue;
 
@@ -825,7 +968,9 @@ export class DungeonTraverser {
             // Clear visited so re-processing happens with the link state.
             for (const crystalState2 of (ctx.reachable.get(entryName)?.crystalStates ?? ["orange"])) {
               for (const st of ["available", "ool", "possible", "unavailable"] as LogicStatus[]) {
-                visited.delete(`${entryName}|${crystalState2}|${st}`);
+                for (const ls of ["link", "superbunny", "bunny"] as LinkState[]) {
+                  visited.delete(`${entryName}|${crystalState2}|${st}|${ls}`);
+                }
               }
             }
             queue.push({ region: entryName, crystalState: "orange", fromEntryStatus: entryStatus2 });
@@ -840,10 +985,13 @@ export class DungeonTraverser {
       }
 
       if (regionLogic.exits) {
-        for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+        for (const { exit, meta } of this.getRegionExits(region)) {
           if (!exit.to) continue;
-          const meta = this.getExitMeta(region, exitName);
           if (meta.isOverworld) continue;
+          // A bunny cannot lift the pots or push the blocks in the way. The extracted graph only has
+          // these as Moon Pearl rules where OWR's vanilla layout makes the room a bunny region, so with
+          // entrance shuffle (a dungeon entered from the other world) they are enforced here.
+          if (meta.isBunnyImpassable && effectiveLinkState === "bunny") continue;
 
           // Discovery: evaluate with keyCountingEvaluator + assumeBigKey.
           // Track canReach targets to detect alternate-path divergence with actual evaluator.
@@ -851,7 +999,7 @@ export class DungeonTraverser {
           const requirementStatus = keyCountingEvaluator.evaluateWorldLogic(exit.requirements, {
             regionName: region,
             dungeonId: this.dungeonId,
-            crystalStates: new Set([crystalState]),
+            crystalStates: SINGLE_CRYSTAL_STATE[crystalState],
             linkState: effectiveLinkState,
             assumeSmallKey: meta.isSKDoor,
             assumeBigKey: this.effectivelyHasBigKey,
@@ -871,7 +1019,7 @@ export class DungeonTraverser {
           const actualStatus = this.requirementEvaluator.evaluateWorldLogic(exit.requirements, {
             regionName: region,
             dungeonId: this.dungeonId,
-            crystalStates: new Set([crystalState]),
+            crystalStates: SINGLE_CRYSTAL_STATE[crystalState],
             linkState: effectiveLinkState,
             assumeSmallKey: meta.isSKDoor,
             assumeBigKey: this.actuallyHasBigKey,
@@ -913,8 +1061,8 @@ export class DungeonTraverser {
           if (reviveCap === "ool" && cappedRegionEntryStatus === "ool") {
             this.addEntryOolReasons(ctx, exit.to, ["canDungeonBunnyRevive"]);
           }
-          // If entry status (from portal) is ool, propagate those reasons to children too
-          if (cappedRegionEntryStatus === "ool") {
+          // If entry status (from portal) is ool/possible, propagate those reasons to children too
+          if (cappedRegionEntryStatus === "ool" || cappedRegionEntryStatus === "possible") {
             const regionEntryReasons = ctx.regionEntryOolReasons.get(region);
             if (regionEntryReasons?.size) {
               this.addEntryOolReasons(ctx, exit.to, regionEntryReasons);
@@ -929,9 +1077,17 @@ export class DungeonTraverser {
               linkState,
               crystalStates: new Set([crystalState]),
             });
+            regionLinkStatus.set(exit.to, effectiveEntryStatus);
             regionEntryStatus.set(`${exit.to}|${crystalState}`, effectiveEntryStatus);
             queue.push({ region: exit.to, crystalState, fromEntryStatus: effectiveEntryStatus });
           } else {
+            // A better (or equally good) path can change who the player is in this region
+            if (recordLinkState(exit.to, effectiveEntryStatus, effectiveLinkState)) {
+              for (const reachedCrystalState of ctx.reachable.get(exit.to)!.crystalStates) {
+                const reachedStatus = regionEntryStatus.get(`${exit.to}|${reachedCrystalState}`) ?? effectiveEntryStatus;
+                queue.push({ region: exit.to, crystalState: reachedCrystalState, fromEntryStatus: reachedStatus });
+              }
+            }
             // Update crystal states if we've reached from a different crystal state
             const existing = ctx.reachable.get(exit.to)!;
             if (!existing.crystalStates.has(crystalState)) {
@@ -964,7 +1120,7 @@ export class DungeonTraverser {
           this.canHitCrystalSwitch(region, {
             regionName: region,
             dungeonId: this.dungeonId,
-            crystalStates: new Set([crystalState]),
+            crystalStates: SINGLE_CRYSTAL_STATE[crystalState],
             linkState: effectiveLinkState,
           })
         ) {
@@ -1222,7 +1378,12 @@ export class DungeonTraverser {
               if (keyRegion) {
                 const keyMinKeys = effectiveMinKeysMap.get(keyRegion) ?? 0;
 
-                // Downstream: need >= maxKeysUsed to reach key, or gated without backtrack
+                // Downstream: need >= maxKeysUsed to reach key, or only reachable
+                // through the target region itself. A key gated by the target can
+                // never help open the way TO the target — even if the player could
+                // backtrack with it afterwards, obtaining it requires the target
+                // to already be reached (e.g. HC boomerang guard's drop must not
+                // make the boomerang door "affordable").
                 const isDownstreamByThreshold = keyMinKeys >= effectiveMaxKeys;
                 let isGatedByTarget = false;
                 if (!isDownstreamByThreshold) {
@@ -1230,12 +1391,7 @@ export class DungeonTraverser {
                   if (!gatedByCache.has(gateKey)) {
                     gatedByCache.set(gateKey, this.isRegionGatedBy(keyRegion, regionName, ctx));
                   }
-                  if (gatedByCache.get(gateKey)!) {
-                    if (!backtrackCache.has(keyRegion)) {
-                      backtrackCache.set(keyRegion, this.canReachEntryFromRegion(keyRegion, ctx));
-                    }
-                    isGatedByTarget = !backtrackCache.get(keyRegion)!;
-                  }
+                  isGatedByTarget = gatedByCache.get(gateKey)!;
                 }
                 const isDownstream = isDownstreamByThreshold || isGatedByTarget;
 
@@ -1305,8 +1461,8 @@ export class DungeonTraverser {
       // Final status is the combination of entry status and key status
       regionState.status = minimumStatus(entryRegionStatus, keyStatus);
 
-      // Populate ool reasons for this region
-      if (regionState.status === "ool") {
+      // Populate reasons for this region (sequence breaks for ool, static key assumptions for possible)
+      if (regionState.status === "ool" || regionState.status === "possible") {
         const reasons = new Set<string>();
         // Reasons from entry traversal (exit requirements that returned ool, e.g. hover)
         const entryReasons = ctx.regionEntryOolReasons.get(regionName);
@@ -1341,6 +1497,7 @@ export class DungeonTraverser {
     const ctx: DungeonContext = {
       reachable: new Map<string, DungeonRegionState>(),
       pendingKeyDoors: [],
+      pendingKeyDoorSet: new Set<string>(),
       regionMaxKeysUsed: new Map<string, number>(),
       regionMinKeysUsed: new Map<string, number>(),
       regionMinKeysUsedNoBK: new Map<string, number>(),
@@ -1549,9 +1706,8 @@ export class DungeonTraverser {
       const regionLogic = this.regions[region];
       if (!regionLogic?.exits) continue;
 
-      for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+      for (const { exit, meta } of this.getRegionExits(region)) {
         if (!exit.to) continue;
-        const meta = this.getExitMeta(region, exitName);
         if (meta.isOverworld || reachable.has(exit.to)) continue;
         if (meta.isSKDoor) continue;
 
@@ -1607,9 +1763,8 @@ export class DungeonTraverser {
         if (!adj.has(region)) adj.set(region, []);
         const regionAdj = adj.get(region)!;
 
-        for (const [exitName, exit] of Object.entries(regionLogic.exits)) {
+        for (const { name: exitName, exit, meta } of this.getRegionExits(region)) {
           if (!exit.to) continue;
-          const meta = this.getExitMeta(region, exitName);
           if (meta.isOverworld) continue;
           if (regionAdj.some((e) => e.exitName === exitName)) continue;
 

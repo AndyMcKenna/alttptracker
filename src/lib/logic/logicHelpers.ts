@@ -1,4 +1,4 @@
-import type { GameState, LinkState, LogicRequirement, LogicState, LogicStatus, WorldLogic } from "@/data/logic/logicTypes";
+import type { ExitLogic, GameState, LinkState, LogicRequirement, LogicState, LogicStatus, RegionLogic, WorldLogic } from "@/data/logic/logicTypes";
 
 /** Status ordering from worst to best. Numeric lookup for O(1) comparisons. */
 const STATUS_RANK: Record<string, number> = { unavailable: 0, information: 1, possible: 2, ool: 3, available: 4 };
@@ -122,4 +122,44 @@ export function getLogicStateForWorld(state: GameState, worldLogic: WorldLogic, 
   }
 
   return requirements as LogicState;
+}
+const GLITCH_PREFIXES = ["owg|", "hmg|"];
+
+/** Whether a requirement has at least one alternative that needs no glitch (owg|/hmg|) token. */
+function requirementWithoutGlitches(req: LogicRequirement | LogicState | undefined): boolean {
+  if (req === undefined) return true;
+  if (typeof req === "string") return req !== "never" && !GLITCH_PREFIXES.some((p) => req.startsWith(p));
+  if ("allOf" in req && req.allOf && !req.allOf.every((r) => requirementWithoutGlitches(r))) return false;
+  if ("anyOf" in req && req.anyOf && req.anyOf.length > 0 && !req.anyOf.some((r) => requirementWithoutGlitches(r))) return false;
+  if ("always" in req || "logical" in req || "required" in req) {
+    const state = req as LogicState;
+    return [state.always, state.logical, state.required].every((r) => requirementWithoutGlitches(r));
+  }
+  return true;
+}
+
+/**
+ * Whether an exit or location can be used without glitches in some world state. Glitch-only edges
+ * (e.g. the HMG clips between dungeons) must not change which dungeon or cave a location belongs to.
+ */
+export function hasNonGlitchedPath(worldLogic: WorldLogic): boolean {
+  return (["Open", "Inverted", "Inverted_1", "Standard"] as const).some(
+    (key) => worldLogic[key] !== undefined && requirementWithoutGlitches(worldLogic[key]),
+  );
+}
+
+// Exit lists per exits object. Object.entries allocates a new array on every call, which adds up in the
+// traversal loops; region graphs are never mutated in place (transforms copy), so caching by identity is safe.
+const exitEntriesCache = new WeakMap<object, [string, ExitLogic[string]][]>();
+
+/** Cached `Object.entries(region.exits)`. */
+export function exitEntries(region: RegionLogic): [string, ExitLogic[string]][] {
+  const exits = region.exits;
+  if (!exits) return [];
+  let entries = exitEntriesCache.get(exits);
+  if (!entries) {
+    entries = Object.entries(exits);
+    exitEntriesCache.set(exits, entries);
+  }
+  return entries;
 }

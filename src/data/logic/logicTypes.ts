@@ -84,6 +84,42 @@ export interface GameState {
 }
 
 
+/**
+ * OWR "static" key logic overlay (generated into staticKeyLogic.ts). Turtle Rock rules depend on
+ * which TR entrances are reachable with all items, so those entries carry one rule per variant.
+ */
+export type StaticTRVariant = "back" | "frontMiddle" | "front" | "bigChest" | "none";
+export type StaticRule = LogicRequirement | { tr: Record<StaticTRVariant, LogicRequirement> };
+
+export interface StaticDoorRule {
+  region: string;
+  dungeon: string;
+  rule: StaticRule;
+}
+
+export interface StaticLocationRule {
+  region: string;
+  dungeon: string;
+  op: "and" | "replace";
+  modes?: ("standard" | "nonstandard")[];
+  rule: StaticRule;
+}
+
+export interface StaticKeyCandidates {
+  /** Locations that may hold this dungeon's small key */
+  all: string[];
+  /** Of those, the ones that may not hold it outside standard mode */
+  nonStandardExclude: string[];
+}
+
+export interface StaticTRProbe {
+  back: string;
+  front: string;
+  middle: string;
+  bigChest: string;
+  keyDoorExits: string[];
+}
+
 export type LogicData = Record<string, LogicState>;
 export type WorldLogicData = Record<string, WorldLogic>;
 export type DungeonLogicData = Record<string, LogicData>;

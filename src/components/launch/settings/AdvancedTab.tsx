@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import type { SettingsState } from "@/store/settingsSlice";
 import { SettingSelect, SettingSwitch } from "../SettingControls";
+import { isStaticKeyLogicSupported } from "@/lib/logic/staticKeyLogic";
 
 interface AdvancedTabProps {
   settings: SettingsState;
@@ -31,6 +32,21 @@ export function AdvancedTab({ settings, updateSetting }: AdvancedTabProps) {
                     { value: "universal", label: "Universal" },
                   ]}
                 />
+                <SettingSelect
+                  label="Key Logic"
+                  value={settings.keyLogic}
+                  onChange={(v) => updateSetting("keyLogic", v as SettingsState["keyLogic"])}
+                  options={[
+                    { value: "partial", label: "Partial" },
+                    { value: "dangerous", label: "Dangerous" },
+                    { value: "static", label: "Static" },
+                  ]}
+                />
+                {settings.keyLogic === "static" && !isStaticKeyLogicSupported(settings) && (
+                  <p className="text-xs text-muted-foreground">
+                    Static key logic needs vanilla doors, unshuffled key drops and pot keys, and non-universal small keys. Partial is used instead.
+                  </p>
+                )}
                 <SettingSelect
                   label="Prize Shuffle"
                   value={settings.prizeShuffle}

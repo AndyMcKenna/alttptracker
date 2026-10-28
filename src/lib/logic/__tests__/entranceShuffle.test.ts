@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { getLogicSet } from "../logicMapper";
 import { OverworldTraverser } from "../overworldTraverser";
+import { DungeonTraverser } from "../dungeonTraverser";
 import { buildEffectiveRegions } from "../regionsProvider";
 import { gameState } from "./testHelpers";
 import type { RegionLogic } from "@/data/logic/logicTypes";
@@ -475,6 +476,27 @@ describe("Entrance Shuffle", () => {
       expect(result.entrancesLogic["Mire Hint"]).toBe("available");
       expect(result.locationsLogic["Swamp Palace - Entrance"]).toBe("available");
     });   
+
+    it("cannot traverse through DP front without moonpearl starting in DW", () => {
+      const state = gameState()
+        .withSettings({ entranceMode: "crossed", shuffleLinks: false })
+        .withEntranceLink("Links House", "Links House")
+        .withEntranceLink("Lake Hylia Fortune Teller", "Two Brothers House (East)")
+        .withEntranceLink("Bumper Cave (Top)", "Two Brothers House (West)")
+        .withEntranceLink("Fortune Teller (Dark)", "Desert Palace Entrance (West)")
+        .withEntranceLink("Tower of Hera", "Desert Palace Entrance (South)")
+        .build();
+
+      const logicSet = getLogicSet("noglitches");
+      const { regions, metadata } = buildEffectiveRegions(logicSet.regions as Record<string, RegionLogic>, state);
+      const traverser = new OverworldTraverser(state, { ...logicSet, regions }, metadata);
+      const result = traverser.calculateAll();
+
+      // Traversing through desert palace requires lifting pots in the dungeon, which is only possible if the player is link, not a bunny.
+      // Since the player can get to the DW without moonpearl and enter DP West, they would be a bunny in the dungeon and unable to lift pots, making reaching the south entrance impossible.
+      // As the south entrance is not reachable, the player cannot exit onto the mountain and therefore cannot reach Spectable Rock Cave Peak.
+      expect(result.entrancesLogic["Spectacle Rock Cave Peak"]).toBe("unavailable");
+    });
     
     
     it("cannot open chests in swamp palace in entrance modes without moonpearl", () => {
@@ -518,5 +540,157 @@ describe("Entrance Shuffle", () => {
       expect(result.locationsLogic["Turtle Rock - Crystaroller Room"]).toBe("available");
     }); 
 
+  });
+
+  describe("Entrance ool reasons", () => {
+    it("surfaces the canReachHCMain ool reason on the HC south entrance", () => {
+      // Open world, no mirror, Agahnim (CT) still alive: reaching HC main relies
+      // on the canReachHCMain sequence break, so the entrance resolves to "ool"
+      // and must carry that reason for the tooltip to explain why.
+      const result = calculate(
+        gameState()
+          .withAllItems()
+          .withoutItems(["mirror"])
+          .withSettings({ entranceMode: "crossed" })
+      );
+
+      expect(result.entrancesLogic["Hyrule Castle Entrance (South)"]).toBe("ool");
+      expect(result.entranceReasons["Hyrule Castle Entrance (South)"]).toContain("canReachHCMain");
+    });
+  });
+
+  describe("Skull Woods front connection (entrance mode)", () => {
+    const buildRegions = (builder: ReturnType<typeof gameState>) => {
+      const state = builder.build();
+      const logicSet = getLogicSet("noglitches");
+      return buildEffectiveRegions(logicSet.regions as Record<string, RegionLogic>, state).regions;
+    };
+
+    it("adds the east→west pass-through edge in non-insanity, non-zelga entrance modes", () => {
+      const regions = buildRegions(gameState().withAllItems().withSettings({ entranceMode: "crossed" }));
+      const edge = regions["Skull Woods Forest"].exits["Skull Woods First Section Pass Through"];
+      expect(edge?.to).toBe("Skull Woods Forest (West)");
+    });
+
+    it("does not add the edge in insanity, with zelga woods, or outside entrance mode", () => {
+      const insanity = buildRegions(gameState().withAllItems().withSettings({ entranceMode: "insanity" }));
+      expect(insanity["Skull Woods Forest"].exits["Skull Woods First Section Pass Through"]).toBeUndefined();
+
+      const zelga = buildRegions(gameState().withAllItems().withSettings({ entranceMode: "crossed", zelgaWoods: true }));
+      expect(zelga["Skull Woods Forest"].exits["Skull Woods First Section Pass Through"]).toBeUndefined();
+
+      const none = buildRegions(gameState().withAllItems().withSettings({ entranceMode: "none" }));
+      expect(none["Skull Woods Forest"].exits["Skull Woods First Section Pass Through"]).toBeUndefined();
+    });
+
+    it("makes the west forest reachable without placing entrances", () => {
+      const noFire = calculate(
+        gameState().withAllItems().withSettings({ entranceMode: "crossed" })
+      );
+      expect(noFire.entrancesLogic["Skull Woods Second Section Door (West)"]).toBe("available");
+    });
+  });
+
+  describe("Assume old man access on item collect", () => {
+    const oldManHouse = (assumeOldManOnCollect: boolean, checks: string[]) => {
+      const state = gameState()
+        .withSettings({ entranceMode: "crossed", shuffleLinks: true, assumeOldManOnCollect })
+        .withEntranceLink("Links House", "Links House")
+        .withChecks(checks)
+        .build();
+      const logicSet = getLogicSet("noglitches");
+      const { regions, metadata } = buildEffectiveRegions(logicSet.regions as Record<string, RegionLogic>, state);
+      return new OverworldTraverser(state, { ...logicSet, regions }, metadata).traverse().get("Old Man House")?.status;
+    };
+
+    it("reaches the Old Man S&Q spot once the Old Man item is collected", () => {
+      expect(oldManHouse(true, ["Old Man"])).toBe("available");
+    });
+
+    it("needs the Old Man item to be collected", () => {
+      expect(oldManHouse(true, [])).toBeUndefined();
+    });
+
+    it("does nothing when disabled", () => {
+      expect(oldManHouse(false, ["Old Man"])).toBeUndefined();
+    });
+  });
+
+  // A bunny cannot lift pots or push blocks. The graph only carries these as Moon Pearl rules where the
+  // vanilla layout makes a room a bunny room, so with entrance shuffle the traverser enforces them.
+  describe("Bunny inside dungeons", () => {
+    // Desert Palace West is placed in the Dark World and Desert Palace South leads out onto Death Mountain
+    const desertThroughDarkWorld = (items: Record<string, number>) =>
+      calculate(
+        gameState()
+          .withItems(items)
+          .withSettings({ entranceMode: "crossed", shuffleLinks: false })
+          .withEntranceLink("Links House", "Links House")
+          .withEntranceLink("Lake Hylia Fortune Teller", "Two Brothers House (East)")
+          .withEntranceLink("Bumper Cave (Top)", "Two Brothers House (West)")
+          .withEntranceLink("Fortune Teller (Dark)", "Desert Palace Entrance (West)")
+          .withEntranceLink("Tower of Hera", "Desert Palace Entrance (South)"),
+      );
+
+    it("cannot pass Desert Palace's pot-blocked doors as a bunny", () => {
+      // Bombs open Two Brothers House, so the Dark World (and Desert Palace West) is reached as a bunny
+      expect(desertThroughDarkWorld({ bomb: 1 }).entrancesLogic["Spectacle Rock Cave Peak"]).toBe("unavailable");
+    });
+
+    it("can pass them as Link", () => {
+      expect(desertThroughDarkWorld({ bomb: 1, moonpearl: 1 }).entrancesLogic["Spectacle Rock Cave Peak"]).toBe("available");
+    });
+
+    it("does not let a bunny borrow Link's state from an entrance it cannot use", () => {
+      // The unusable south entrance is seeded as Link; rooms the bunny reaches from the west must stay bunny
+      const state = gameState().withItems({ bomb: 1 }).build();
+      const traverser = new DungeonTraverser(state, getLogicSet("noglitches"), "dp");
+      const result = traverser.traverse(
+        new Map([
+          ["Desert South Portal", { linkState: "link" as const }],
+          ["Desert West Portal", { linkState: "bunny" as const }],
+        ]),
+        new Map([
+          ["Desert South Portal", "unavailable" as const],
+          ["Desert West Portal", "available" as const],
+        ]),
+        0,
+      );
+
+      expect(result.regionStatuses.get("Desert North Hall")).toMatchObject({ status: "available", linkState: "bunny" });
+      expect(result.regionStatuses.get("Desert Main Lobby")?.status).toBe("unavailable");
+    });
+  });
+
+  describe("Desert Palace South placed at a reachable entrance", () => {
+    const dpSouth = (wildSmallKeys: "inDungeon" | "universal", smallKeys = 0) =>
+      calculate(
+        gameState()
+          .withItems({ sword: 1 })
+          .withSettings({ entranceMode: "crossed", wildSmallKeys, wildBigKeys: true, wildMaps: true, wildCompasses: true })
+          .withDungeon("dp", { smallKeys })
+          .withEntranceLink("Links House", "Links House")
+          .withEntranceLink("Lake Hylia Fortune Teller", "Desert Palace Entrance (South)"),
+      );
+
+    it("universal keys open the east wing key door, so the chests behind it are available", () => {
+      const result = dpSouth("universal");
+      expect(result.locationsLogic["Desert Palace - Map Chest"]).toBe("available");
+      expect(result.locationsLogic["Desert Palace - Compass Chest"]).toBe("available");
+      expect(result.locationsLogic["Desert Palace - Big Key Chest"]).toBe("available");
+    });
+
+    it("in-dungeon keys leave them possible: the only chest key may be on the Torch, Big Chest or boss", () => {
+      const result = dpSouth("inDungeon");
+      expect(result.locationsLogic["Desert Palace - Map Chest"]).toBe("available");
+      expect(result.locationsLogic["Desert Palace - Compass Chest"]).toBe("possible");
+      expect(result.locationsLogic["Desert Palace - Big Key Chest"]).toBe("possible");
+    });
+
+    it("in-dungeon keys make them available once the dungeon's chest key is collected", () => {
+      const result = dpSouth("inDungeon", 1);
+      expect(result.locationsLogic["Desert Palace - Compass Chest"]).toBe("available");
+      expect(result.locationsLogic["Desert Palace - Big Key Chest"]).toBe("available");
+    });
   });
 });

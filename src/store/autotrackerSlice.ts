@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { loadAutotrackPrefs } from "@/lib/launchHelpers";
 
 export interface AutotrackerState {
   isConnected: boolean;
@@ -12,15 +13,17 @@ export interface AutotrackerState {
   romName?: string | null;
 }
 
+const savedAutotrackPrefs = loadAutotrackPrefs();
+
 const initialState: AutotrackerState = {
   isConnected: false,
   deviceList: [],
   selectedDevice: null,
   status: "disconnected",
-  connectionType: "sni",
+  connectionType: savedAutotrackPrefs.protocol,
   error: null,
-  host: "localhost",
-  port: 8190,
+  host: savedAutotrackPrefs.host,
+  port: savedAutotrackPrefs.port,
   romName: null,
 };
 
@@ -33,8 +36,12 @@ export const autotrackerSlice = createSlice({
     },
     setAutotrackingSettings: (state, action: { payload: Partial<AutotrackerState> }) => {
       const newState = { ...state, ...action.payload };
-      // reset connection status if host or port changes
-      if (action.payload.host !== undefined || action.payload.port !== undefined) {
+      // Reset connection status only if host or port actually CHANGES.
+      // Payloads that mirror the whole state (e.g. from settings modals) must
+      // not drop an active connection when host/port are unchanged.
+      const hostChanged = action.payload.host !== undefined && action.payload.host !== state.host;
+      const portChanged = action.payload.port !== undefined && action.payload.port !== state.port;
+      if (hostChanged || portChanged) {
         newState.isConnected = false;
         newState.status = "disconnected";
         newState.selectedDevice = null;

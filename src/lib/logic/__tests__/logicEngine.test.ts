@@ -4,6 +4,10 @@ import { OverworldTraverser } from "../overworldTraverser";
 import { gameState } from "./testHelpers";
 import type { LogicStatus, RegionLogic } from "@/data/logic/logicTypes";
 import { buildEffectiveRegions } from "../regionsProvider";
+import { RequirementEvaluator } from "../requirementEvaluator";
+import { isBetterStatus } from "../logicHelpers";
+import { DungeonsData } from "@/data/dungeonData";
+import type { SettingsState } from "@/store/settingsSlice";
 
 describe("LogicEngine", () => {
   describe("Hyrule Castle Key Logic", () => {
@@ -95,6 +99,65 @@ describe("LogicEngine", () => {
       expect(result.locationsLogic["Hyrule Castle - Key Rat Key Drop"]).toBe("available");
       // Can now reach big key drop if keys used correctly
       expect(result.locationsLogic["Hyrule Castle - Big Key Drop"]).toBe("available");
+    });
+
+    it("[SK] marks Boomerang Chest and Zelda's Chest  as possible with 0 wild small keys", () => {
+      const state = gameState().withAllItems().withSettings({ wildSmallKeys: "wild" }).withDungeon("hc", { smallKeys: 0 }).build();
+      const traverser = new OverworldTraverser(state, getLogicSet("noglitches"));
+      const result = traverser.calculateAll();
+
+
+      expect(result.locationsLogic["Hyrule Castle - Map Chest"]).toBe("available");
+      expect(result.locationsLogic["Hyrule Castle - Boomerang Chest"]).toBe("possible");
+      expect(result.locationsLogic["Hyrule Castle - Zelda's Chest"]).toBe("possible");
+    });
+
+    it("[SK] marks Boomerang Chest and Zelda's Chest as available with 1 wild small key", () => {
+      const state = gameState().withAllItems().withSettings({ wildSmallKeys: "wild" }).withDungeon("hc", { smallKeys: 1 }).build();
+      const traverser = new OverworldTraverser(state, getLogicSet("noglitches"));
+      const result = traverser.calculateAll();
+
+      expect(result.locationsLogic["Hyrule Castle - Boomerang Chest"]).toBe("available");
+      expect(result.locationsLogic["Hyrule Castle - Zelda's Chest"]).toBe("available");
+    });
+
+    it("[SK BK Crossed] marks Boomerang Chest and Zelda's Chest as available with 1 wild small key", () => {
+      // Same setup but WITH lantern — entry is "available", locations should be "available"
+      const state = gameState().withAllItems().withSettings({ wildSmallKeys: "wild", wildBigKeys: true, entranceMode: "crossed" }).withDungeon("hc", { smallKeys: 1 })
+        .withEntranceLink("Dam", "Hyrule Castle Entrance (South)")
+        .build();
+
+      const logicSet = getLogicSet("noglitches");
+      const { regions, metadata } = buildEffectiveRegions(logicSet.regions as Record<string, RegionLogic>, state);
+      const traverser = new OverworldTraverser(state, { ...logicSet, regions }, metadata);
+      const result = traverser.calculateAll();
+
+      expect(result.locationsLogic["Hyrule Castle - Boomerang Chest"]).toBe("available");
+      // Without keydrop, the big key for HC is in its vanilla location so we should not track it separately
+      expect(result.locationsLogic["Hyrule Castle - Zelda's Chest"]).toBe("available");
+    });
+  });
+
+  describe("Hyrule Castle Secret Room", () => {
+    // HC's chest key may be in the Secret Room, which the glove (Sanctuary Grave drop) reaches
+    // without keys; from the front (lamp) it is behind a key door.
+    const secretRoom = "Sewers - Secret Room - Left";
+
+    it("is possible with only the lamp", () => {
+      const state = gameState().withItems({ lantern: 1, bomb: 1 }).build();
+      expect(new OverworldTraverser(state, getLogicSet("noglitches")).calculateAll().locationsLogic[secretRoom]).toBe("possible");
+    });
+
+    it("does not let key uncertainty hide dark room navigation (stays ool)", () => {
+      const state = gameState().withSequenceBreaks({ canNavigateDarkRooms: true }).build();
+      const result = new OverworldTraverser(state, getLogicSet("noglitches")).calculateAll();
+      expect(result.locationsLogic["Hyrule Castle - Key Rat Key Drop"]).toBe("ool");
+      expect(result.locationReasons["Hyrule Castle - Key Rat Key Drop"]).toContain("canNavigateDarkRooms");
+    });
+
+    it("is available with the glove", () => {
+      const state = gameState().withItems({ lantern: 1, bomb: 1, glove: 1 }).build();
+      expect(new OverworldTraverser(state, getLogicSet("noglitches")).calculateAll().locationsLogic[secretRoom]).toBe("available");
     });
   });
 
@@ -1390,6 +1453,45 @@ describe("LogicEngine", () => {
       expect(result.locationsLogic["Mire Shed - Left"]).toBe("available");
     });
 
+    it("Inverted 2.0 - PoD is open with only the flute (Kiki needs no Moon Pearl in the Dark World)", () => {
+      const state = gameState().withItems({ flute: 1 }).withSettings({ worldState: "inverted" }).build();
+
+      const result = new OverworldTraverser(state, getLogicSet("noglitches")).calculateAll();
+
+      expect(result.entrancesLogic["Palace of Darkness"]).toBe("available");
+      expect(result.locationsLogic["Palace of Darkness - Shooter Room"]).toBe("available");
+    });
+
+    it("Inverted - a Light World bunny cannot get through Desert Palace's pot-blocked doors", () => {
+      // Without the Moon Pearl the player is a bunny in the Light World, so the Desert Ledge (reached by
+      // walking through Desert Palace from the south entrance) is out of reach.
+      const calculate = (withPearl: boolean) => {
+        const builder = gameState().withAllItems().withSettings({ worldState: "inverted" });
+        const state = (withPearl ? builder : builder.withoutItems(["moonpearl"])).build();
+        return new OverworldTraverser(state, getLogicSet("noglitches")).calculateAll();
+      };
+
+      expect(calculate(false).locationsLogic["Desert Ledge"]).toBe("unavailable");
+      expect(calculate(true).locationsLogic["Desert Ledge"]).toBe("available");
+    });
+
+    it("Open - PoD needs the Moon Pearl to bring Kiki", () => {
+      const withoutPearl = gameState().withAllItems().withoutItems(["moonpearl"]).withDungeon("ct", { bossDefeated: true }).build();
+      const result = new OverworldTraverser(withoutPearl, getLogicSet("noglitches")).calculateAll();
+
+      expect(result.locationsLogic["Palace of Darkness - Shooter Room"]).toBe("unavailable");
+    });
+
+    it("Sick Kid and Sahasrahla need no Moon Pearl (bunny can collect them)", () => {
+      for (const worldState of ["inverted", "inverted_1"] as const) {
+        const state = gameState().withAllItems().withoutItems(["moonpearl"]).withSettings({ worldState })
+          .withDungeon("ep", { prize: "greenPendant", prizeCollected: true }).build();
+        const result = new OverworldTraverser(state, getLogicSet("noglitches")).calculateAll();
+        expect(result.locationsLogic["Sick Kid"]).toBe("available");
+        expect(result.locationsLogic["Sahasrahla"]).toBe("available");
+      }
+    });
+
     it("Inverted 1.0 - Flute is not active without access to kak", () => {
       const state = gameState().withItems({ flute: 1 }).withSettings({ worldState: "inverted_1" }).build();
 
@@ -1633,6 +1735,29 @@ describe("LogicEngine", () => {
       expect(result.locationsLogic["Eastern Palace - Big Chest"]).toBe("available");
     });
 
+    it("should not apply SK inference once every shuffled small key is collected", () => {
+      // DP has 1 chest key. Without boots the Torch is unreachable, but the key is already in hand
+      const state = gameState().withAllItems().withoutItems(["boots"]).withDungeon("dp", { smallKeys: 1 }).build();
+
+      const logicSet = getLogicSet("noglitches");
+      const traverser = new OverworldTraverser(state, logicSet);
+      const result = traverser.calculateAll();
+
+      expect(result.locationsLogic["Desert Palace - Compass Chest"]).toBe("available");
+      expect(result.locationsLogic["Desert Palace - Big Key Chest"]).toBe("available");
+    });
+
+    it("should keep SK inference while shuffled pot keys are still missing", () => {
+      // With pot keys shuffled DP has 4 keys in the pool, so 1 collected key does not settle it
+      const state = gameState().withAllItems().withoutItems(["boots"]).withSettings({ pottery: "keys" }).withDungeon("dp", { smallKeys: 1 }).build();
+
+      const logicSet = getLogicSet("noglitches");
+      const traverser = new OverworldTraverser(state, logicSet);
+      const result = traverser.calculateAll();
+
+      expect(result.locationsLogic["Desert Palace - Compass Chest"]).toBe("possible");
+    });
+
     it("should consider Big Chest as potential SK location in Desert Palace", () => {
       // DP has 1 chest key → always shuffled, could end up in Big Chest
       // Without boots: Torch (non-gated) is unreachable → SK inference returns "possible"
@@ -1658,6 +1783,42 @@ describe("LogicEngine", () => {
       // Chomps ia behind one small key, with no fire rod, only compass chest is available, which _could_ be the big key
       // meaning no small key is available, thus chomps should be "possible" instead of "available"
       expect(result.locationsLogic["Turtle Rock - Chain Chomps"]).toBe("possible");
+    });
+
+    // Hyrule Castle's rooms ("Hyrule Castle …", "Hyrule Dungeon …", "Sanctuary") belong to the castle for key
+    // inference. Its chest key may be in Dark Cross or the Secret Room, so the rooms behind the Map Room
+    // and Armory key doors are only possible until those are reachable.
+    it("should mark Hyrule Castle's key-locked rooms possible while its key spots are unreachable", () => {
+      const result = new OverworldTraverser(gameState().withItems({ sword: 1 }).build(), getLogicSet("noglitches")).calculateAll();
+
+      expect(result.locationsLogic["Hyrule Castle - Map Chest"]).toBe("available");
+      expect(result.locationsLogic["Hyrule Castle - Boomerang Chest"]).toBe("possible");
+      expect(result.locationsLogic["Hyrule Castle - Big Key Drop"]).toBe("possible");
+      expect(result.locationsLogic["Hyrule Castle - Zelda's Chest"]).toBe("possible");
+    });
+
+    it("should mark Hyrule Castle available once every key spot is reachable", () => {
+      // Lamp for Dark Cross; boots and a glove reach the Secret Room through the Sanctuary grave drop
+      const result = new OverworldTraverser(gameState().withItems({ sword: 1, lantern: 1, bomb: 1, boots: 1, glove: 1 }).build(), getLogicSet("noglitches")).calculateAll();
+
+      expect(result.locationsLogic["Hyrule Castle - Boomerang Chest"]).toBe("available");
+      expect(result.locationsLogic["Hyrule Castle - Big Key Drop"]).toBe("available");
+      expect(result.locationsLogic["Hyrule Castle - Zelda's Chest"]).toBe("available");
+    });
+
+    it("should not cap Hyrule Castle in Standard, where the escape reaches Zelda", () => {
+      const result = new OverworldTraverser(gameState().withItems({ sword: 1 }).withSettings({ worldState: "standard" }).build(), getLogicSet("noglitches")).calculateAll();
+
+      expect(result.locationsLogic["Hyrule Castle - Boomerang Chest"]).toBe("available");
+      expect(result.locationsLogic["Hyrule Castle - Zelda's Chest"]).toBe("available");
+    });
+
+    it("should open Zelda's cell with the big key that drops in the castle, even when big keys are wild", () => {
+      // The guard always drops Hyrule Castle's big key while enemy drops aren't shuffled
+      const state = gameState().withAllItems().withSettings({ wildBigKeys: true, wildSmallKeys: "wild" }).withDungeon("hc", { smallKeys: 1, bigKey: false }).build();
+      const result = new OverworldTraverser(state, getLogicSet("noglitches")).calculateAll();
+
+      expect(result.locationsLogic["Hyrule Castle - Zelda's Chest"]).toBe("available");
     });
   });
 
@@ -1759,6 +1920,23 @@ describe("LogicEngine", () => {
   });
 
   describe("Sequence Breaks", () => {
+    // Dropping down Superbunny Cave's hole as a bunny and climbing back up gives superbunny state
+    describe("Superbunny Cave drop", () => {
+      const noPearl = () => gameState().withItems({ flute: 2, glove: 2, hookshot: 1 });
+
+      it("leaves the Superbunny Cave chests unavailable without the Moon Pearl by default", () => {
+        const result = new OverworldTraverser(noPearl().build(), getLogicSet("noglitches")).calculateAll();
+        expect(result.locationsLogic["Superbunny Cave - Top"]).toBe("unavailable");
+      });
+
+      it("makes them out of logic with the sequence break enabled", () => {
+        const result = new OverworldTraverser(noPearl().withSequenceBreaks({ canSuperBunnyCave: true }).build(), getLogicSet("noglitches")).calculateAll();
+        expect(result.locationsLogic["Superbunny Cave - Top"]).toBe("ool");
+        expect(result.locationsLogic["Superbunny Cave - Bottom"]).toBe("ool");
+        expect(result.locationReasons["Superbunny Cave - Top"]).toEqual(["canSuperBunnyCave"]);
+      });
+    });
+
     it("should cap dungeon locations at ool when entry requires dark room navigation", () => {
       const state = gameState().withItems({ glove: 1, mirror: 1, firerod: 1, sword: 1 }).withSequenceBreaks({ canNavigateDarkRooms: true }).build();
 
@@ -1784,6 +1962,102 @@ describe("LogicEngine", () => {
       expect(result.locationsLogic["Tower of Hera - Map Chest"]).toBe("available");
       expect(result.locationsLogic["Tower of Hera - Basement Cage"]).toBe("available");
       expect(result.locationsLogic["Tower of Hera - Big Key Chest"]).toBe("available");
+    });
+
+    it("should not downgrade a location that is already available", () => {
+      // Same setup but WITH lantern — entry is "available", locations should be "available"
+      const state = gameState()
+        .withItems({ glove: 1, mirror: 1, hammer: 1, moonpearl: 1})
+        .withSequenceBreaks({ canNavigateDarkRooms: true })
+        .withSettings({ entranceMode: "crossed" })
+        .withEntranceLink("Dam", "Old Man Cave (West)")
+        .withEntranceLink("Pyramid Fairy", "Old Man Cave (East)")
+        .build();
+
+      const logicSet = getLogicSet("noglitches");
+      const { regions, metadata } = buildEffectiveRegions(logicSet.regions as Record<string, RegionLogic>, state);
+      const traverser = new OverworldTraverser(state, { ...logicSet, regions }, metadata);
+      const result = traverser.calculateAll();
+
+      expect(result.locationsLogic["Pyramid"]).toBe("available");
+      expect(result.locationsLogic["Catfish"]).toBe("available");
+    });
+  });
+
+  // Universal small keys: the player is assumed to have as many small keys as they need, so small key
+  // doors and every small key requirement are always met.
+  describe("Universal Small Keys", () => {
+    const POT_KEY_MODES = ["keys", "cavekeys", "lottery", "dungeon"];
+    const run = (builder: ReturnType<typeof gameState>) => {
+      const state = builder.build();
+      const logicSet = getLogicSet("noglitches");
+      const { regions, metadata } = buildEffectiveRegions(logicSet.regions as Record<string, RegionLogic>, state);
+      const protection = state.settings.keyLogic === "dangerous" ? "dangerous" : "partial";
+      return new OverworldTraverser(state, { ...logicSet, regions }, metadata, protection).calculateAll();
+    };
+    /** Wild keys with every small key of every dungeon already collected */
+    const withEveryKey = (builder: ReturnType<typeof gameState>, settings: Partial<SettingsState>) => {
+      let result = builder.withSettings({ ...settings, wildSmallKeys: "wild" });
+      for (const [id, data] of Object.entries(DungeonsData)) {
+        const totals = data.totalLocations;
+        if (!totals) continue;
+        const keys = totals.smallkeys + (POT_KEY_MODES.includes(settings.pottery ?? "none") ? totals.keypots : 0) + ((settings.enemyDrop ?? "none") !== "none" ? totals.keydrops : 0);
+        result = result.withDungeon(id, { smallKeys: keys });
+      }
+      return result;
+    };
+
+    it.each([
+      ["partial", { keyLogic: "partial" }],
+      ["dangerous", { keyLogic: "dangerous" }],
+      ["static (falls back for universal keys)", { keyLogic: "static" }],
+      ["shuffled pot keys and key drops", { pottery: "keys", enemyDrop: "keys" }],
+    ] as [string, Partial<SettingsState>][])("is never worse than holding every small key (%s)", (_label, settings) => {
+      for (const items of [() => gameState().withAllItems().withAllPrizes(), () => gameState().withItems({ bomb: 1, lantern: 1, glove: 1, boots: 1, hookshot: 1, hammer: 1, flute: 2 })]) {
+        const universal = run(items().withSettings({ ...settings, wildSmallKeys: "universal" }));
+        const everyKey = run(withEveryKey(items(), settings));
+        for (const [location, status] of Object.entries(everyKey.locationsLogic)) {
+          expect(isBetterStatus(status, universal.locationsLogic[location]), location).toBe(false);
+        }
+      }
+    });
+
+    it("opens every small key door without any keys", () => {
+      const result = run(gameState().withAllItems().withAllPrizes().withSettings({ wildSmallKeys: "universal" }));
+      for (const location of ["Palace of Darkness - Dark Maze - Top", "Palace of Darkness - Boss", "Ganons Tower - Validation Chest", "Turtle Rock - Boss", "Hyrule Castle - Boomerang Chest"]) {
+        expect(result.locationsLogic[location], location).toBe("available");
+      }
+    });
+
+    it("meets static key logic requirements", () => {
+      const state = gameState().withSettings({ wildSmallKeys: "universal" }).build();
+      const evaluator = new RequirementEvaluator(state);
+      expect(evaluator.evaluateRequirement("keys|pod|6", {})).toBe("available");
+      expect(evaluator.evaluateRequirement("assume|smallKey|pod|Palace of Darkness - Big Key Chest", {})).toBe("available");
+    });
+  });
+
+  // Glitched-mode rules that are unconditional in OWR (TRUE) must stay gated on
+  // the glitch mode (owg|true / hmg|true) rather than leaking into noglitches.
+  // The glitched-mode side of these is tested in glitchedLogic.test.ts.
+  describe("Unconditional Glitch Rules", () => {
+    const calculate = (state: ReturnType<ReturnType<typeof gameState>["build"]>) => {
+      const logicSet = getLogicSet(state.settings.logicMode);
+      return new OverworldTraverser(state, logicSet).calculateAll();
+    };
+
+    it("should require flippers for water drops in noglitches", () => {
+      const result = calculate(gameState().withItems({ bomb: 1 }).build());
+
+      expect(result.locationsLogic["Hobo"]).toBe("unavailable");
+      expect(result.locationsLogic["King Zora"]).toBe("unavailable");
+    });
+
+    it("should not allow the Ice Lobby clip in noglitches", () => {
+      const state = gameState().withAllItems().withSettings({ wildSmallKeys: "wild", pottery: "keys", enemyDrop: "keys", wildBigKeys: true }).withDungeon("ip", { smallKeys: 0 }).build();
+
+      // Conveyor Key Drop is only reachable without keys via Ice Lobby → Ice Bomb Drop - Top
+      expect(calculate(state).locationsLogic["Ice Palace - Conveyor Key Drop"]).toBe("unavailable");
     });
   });
 });

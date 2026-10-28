@@ -80,8 +80,23 @@ export const entrancesSlice = createSlice({
     },
     setEntranceLink: (state, action: PayloadAction<{ entrance: string; to: string | null; zelgaWoods?: boolean; entranceMode?: string }>) => {
       const { entrance, to, zelgaWoods = false, entranceMode } = action.payload;
+      const previous = state[entrance].to;
       state[entrance].to = to;
       state[entrance].checked = to !== null;
+
+      // Leaving a generic connector: drop the group, and clear a lone remaining member so it isn't
+      // left as an orphan "Generic Connector N" with nothing to connect to.
+      const previousGroup = state[entrance].connectorGroup;
+      if (previousGroup !== null && previous?.startsWith("Generic Connector") && to !== previous) {
+        state[entrance].connectorGroup = null;
+        const remaining = Object.keys(state).filter((key) => state[key].connectorGroup === previousGroup);
+        if (remaining.length === 1) {
+          const lone = state[remaining[0]];
+          lone.to = null;
+          lone.checked = false;
+          lone.connectorGroup = null;
+        }
+      }
 
       // Forced dropdown pairing: a dropdown (hole) and its associated entrance
       // (door) move together in every mode except insanity. Linking one side

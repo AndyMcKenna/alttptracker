@@ -21,7 +21,7 @@ describe("tracker sizing", () => {
 
   it("caps attached event log sizing to three rows", () => {
     expect(EVENT_LOG_HEIGHT).toBe(144);
-    expect(getTrackerWindowSizeForEventLogMode("normal", "attached")).toEqual({ width: TILE * 3, height: TILE + EVENT_LOG_LAYOUT_HEIGHT });
-    expect(getTrackerWindowSizeForEventLogMode("normal", "popout")).toEqual({ width: TILE * 3, height: TILE });
+    expect(getTrackerWindowSizeForEventLogMode("normal", "attached")).toEqual({ width: TILE * 3, height: TILE + EVENT_LOG_LAYOUT_HEIGHT + 2 });
+    expect(getTrackerWindowSizeForEventLogMode("normal", "popout")).toEqual({ width: TILE * 3, height: TILE + 1 });
   });
 });

@@ -88,6 +88,7 @@ export const defaultUserSequenceBreaks = {
   canMirrorWrap: false,
   
   canSuperBunny: false,
+  canSuperBunnyCave: false,
 };
 
 // Type allows boolean values for all sequence break keys
@@ -108,6 +109,8 @@ export interface SettingsState {
   ganonVulnerable: ganonVulnerableTypes;
   wildSmallKeys: "inDungeon" | "wild" | "universal";
   wildBigKeys: boolean;
+  /** Small key logic algorithm. "static" (OWR's entrance randomizer rules) needs vanilla doors and unshuffled key drops/pots. */
+  keyLogic: "partial" | "dangerous" | "static";
   wildMaps: boolean;
   wildCompasses: boolean;
   pottery: "none" | "keys" | "cave" | "cavekeys" | "reduced" | "clustered" | "nonempty" | "dungeon" | "lottery";
@@ -128,6 +131,8 @@ export interface SettingsState {
   followerShuffle: boolean;
   tavernShuffle: boolean;
   zelgaWoods: boolean;
+  /** Once the Old Man item is collected, treat the Old Man S&Q spot as reachable without placing the rescue caves */
+  assumeOldManOnCollect: boolean;
 
   // DR Stuff
   doors: "vanilla" | "basic" | "partitioned" | "crossed"
@@ -155,6 +160,8 @@ export interface SettingsState {
   showChestTooltips: boolean;
   entranceLabelsMode: "off" | "labels" | "labels_lines";
   showInsetBossSquare: boolean;
+  /** Entrance modes: draw placed dungeons as a plain square in their label colour (no logic colouring) */
+  useOldStyleDungeonSquares: boolean;
   alwaysShowHCCTCounts: boolean;
   alwaysShowBigKeys: boolean;
   alwaysShowSmallKeys: boolean;
@@ -180,6 +187,7 @@ export const initialState: SettingsState = {
   ganonVulnerable: "7",
   wildSmallKeys: "inDungeon",
   wildBigKeys: false,
+  keyLogic: "partial",
   wildMaps: false,
   wildCompasses: false,
   pottery: "none",
@@ -200,6 +208,7 @@ export const initialState: SettingsState = {
   followerShuffle: false,
   tavernShuffle: false,
   zelgaWoods: false,
+  assumeOldManOnCollect: false,
 
   // DR Stuff
   doors: "vanilla",
@@ -227,6 +236,7 @@ export const initialState: SettingsState = {
   showChestTooltips: true,
   entranceLabelsMode: "labels_lines",
   showInsetBossSquare: true,
+  useOldStyleDungeonSquares: false,
   alwaysShowHCCTCounts: false,
   alwaysShowBigKeys: false,
   alwaysShowSmallKeys: false,

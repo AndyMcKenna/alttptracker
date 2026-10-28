@@ -25,6 +25,7 @@ export const REMEMBERED_SETTINGS = [
   "spriteName",
   "entranceLabelsMode",
   "showInsetBossSquare",
+  "useOldStyleDungeonSquares",
   "alwaysShowHCCTCounts",
   "alwaysShowBigKeys",
   "alwaysShowSmallKeys",
@@ -43,6 +44,7 @@ export const REMEMBERED_SETTINGS = [
   // Gameplay
   "autotracking",
   "sequenceBreaks",
+  "assumeOldManOnCollect",
 ] as const satisfies readonly (keyof SettingsState)[];
 
 export type RememberedSettingsKey = (typeof REMEMBERED_SETTINGS)[number];

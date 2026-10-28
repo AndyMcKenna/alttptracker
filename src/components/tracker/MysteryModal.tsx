@@ -19,6 +19,7 @@ import { getSessionInstanceId } from "@/lib/sessionHelper";
 import { buildPresetIDBState } from "@/lib/launchHelpers";
 import { getPresetById } from "@/data/launcherPresets";
 import { cn } from "@/lib/utils";
+import { ModalBackdrop } from "./ModalBackdrop";
 
 function MysteryModal() {
   const dispatch = useDispatch();
@@ -131,7 +132,9 @@ function MysteryModal() {
   const eventLogOptionsDisabled = localSettings.eventLogMode === "off";
 
   return (
-    <div className="w-100 h-100 bg-white m-6 border-gray-800 border-4 text-black grid grid-rows-7">
+    <>
+    <ModalBackdrop onClose={() => dispatch(setModalClose())} />
+    <div className="relative z-50 w-100 h-100 bg-white m-6 border-gray-800 border-4 text-black grid grid-rows-7">
       <div className="row-span-1 flex flex-row justify-between items-center mx-3">
         <h2 className="font-bold font-roboto">Change Flags</h2>
         <div className="flex flex-row">
@@ -190,6 +193,13 @@ function MysteryModal() {
               <option value="random">Random</option>
             </select>
 
+            <label className="font-medium">Small Keys:</label>
+            <select className="border border-gray-400 rounded px-1 bg-white w-full max-w-50 disabled:text-gray-400" value={localSettings.wildSmallKeys} onChange={(e) => handleInputChange("wildSmallKeys", e.target.value)}>
+              <option value="inDungeon">In Dungeon</option>
+              <option value="wild">Randomized</option>
+              <option value="universal">Universal</option>
+            </select>
+
             <label className="font-medium self-start pt-1">Dungeon Items:</label>
             <div className="grid grid-cols-2 gap-x-2 gap-y-1">
               <label className="flex items-center space-x-1 cursor-pointer">
@@ -199,10 +209,6 @@ function MysteryModal() {
               <label className="flex items-center space-x-1 cursor-pointer">
                 <input type="checkbox" className="accent-red-600" checked={localSettings.wildCompasses} onChange={(e) => handleInputChange("wildCompasses", e.target.checked)} />
                 <span>Compasses</span>
-              </label>
-              <label className="flex items-center space-x-1 cursor-pointer">
-                <input type="checkbox" className="accent-red-600" checked={localSettings.wildSmallKeys === "wild"} onChange={(e) => handleInputChange("wildSmallKeys", e.target.checked ? "wild" : "inDungeon")} />
-                <span>Small Keys</span>
               </label>
               <label className="flex items-center space-x-1 cursor-pointer">
                 <input type="checkbox" className="accent-red-600" checked={localSettings.wildBigKeys} onChange={(e) => handleInputChange("wildBigKeys", e.target.checked)} />
@@ -344,6 +350,7 @@ function MysteryModal() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

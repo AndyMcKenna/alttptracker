@@ -41,6 +41,7 @@ const OVERWORLD_LOGIC: LogicBreak[] = [
   // { id: "canQirnJump", label: "Qirn Jump", tooltip: "Get to East Dark World without the hammer, flippers or killing Aga 1" },
   // { id: "canMirrorSuperBunny", label: "Mirror Super Bunny", tooltip: "Get superbunny state by using the mirror on the same frame as entering a cave" },
   { id: "canSuperBunny", label: "Mirror Super Bunny", tooltip: "Enter caves/dungeons as superbunny by mirror-canceling on the frame of entry. Sequence break in No Glitches; in logic for glitched modes." },
+  { id: "canSuperBunnyCave", label: "Superbunny Cave Drop", tooltip: "Get the Superbunny Cave chests without the Moon Pearl by dropping down its hole as a bunny. Sequence break in No Glitches; automatically in logic for glitched modes." },
   // { id: "canDungeonBunnyRevive", label: "Dungeon Bunny Revive", tooltip: "Die in a dungeon as a bunny to become link" },
   // { id: "canFakePowder", label: "Fake Powder", tooltip: "Use somaria with no magic and the mushroom to use powder" },
   // { id: "canWaterWalk", label: "Water Walk", tooltip: "Walk on water using precise movement" },

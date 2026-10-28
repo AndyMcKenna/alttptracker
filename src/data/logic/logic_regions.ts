@@ -690,6 +690,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Lumberjack DMA Clip": {
+                "to": "West Death Mountain (Bottom)",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -751,6 +771,66 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Spectacle Rock Ledge Clip": {
+                "to": "Spectacle Rock Ledge",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Lumberjack DMD Clip": {
+                "to": "Lumberjack Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "WDM to EDM Top Clip": {
+                "to": "East Death Mountain (Top West)",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -938,6 +1018,138 @@ export const logic_regions: Record<string, RegionLogic> = {
                     }
                 }
             },
+            "Hera Ascent Clip": {
+                "to": "West Death Mountain (Top)",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "DM Glitched Bridge Clip": {
+                "to": "East Death Mountain (Top East)",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Sanctuary DMD Clip": {
+                "to": "Sanctuary Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Graveyard Ledge DMD Clip": {
+                "to": "Graveyard Ledge",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Kings Grave DMD Clip": {
+                "to": "Kings Grave Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "DM Offset Mirror": {
+                "to": "Hyrule Castle Courtyard Northeast",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|mirror",
+                                "owg|canBootsClip",
+                                "owg|canReach|Pyramid Area"
+                            ]
+                        }
+                    }
+                }
+            },
+            "DM To HC Ledge Offset Mirror": {
+                "to": "Hyrule Castle Ledge",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|mirror",
+                                "owg|canBootsClip",
+                                "owg|canReach|Pyramid Area"
+                            ]
+                        }
+                    }
+                }
+            },
             "Old Man Cave (East Inverted_1)": {
                 "to": "Death Mountain Return Cave (left)",
                 "type": "Cave",
@@ -1070,6 +1282,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "EDM Hammer Bypass Teleport": {
+                "to": "East Death Mountain (Top East)",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "EDM to WDM Top Clip": {
+                "to": "West Death Mountain (Top)",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -1172,6 +1424,66 @@ export const logic_regions: Record<string, RegionLogic> = {
                     }
                 }
             },
+            "Floating Island Clip": {
+                "to": "Death Mountain Floating Island",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "EDM East Dropdown Clip": {
+                "to": "East Death Mountain (Bottom Left)",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "EDM To TR Pegs Clip": {
+                "to": "Death Mountain TR Pegs Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
             "Mimic Cave Drop (Inverted_1)": {
                 "to": "Mimic Cave Ledge",
                 "type": "LightWorld",
@@ -1231,6 +1543,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Floating Island Return Clip": {
+                "to": "East Death Mountain (Top East)",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -1536,6 +1868,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "WDM To EDM Bottom Clip": {
+                "to": "East Death Mountain (Bottom)",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "WDM DMD To River Bend Clip": {
+                "to": "River Bend Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -1648,6 +2020,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "EDM DMD FAWT Clip": {
+                "to": "Potion Shop Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "EDM DMD To River Bend Clip": {
+                "to": "River Bend Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -1701,6 +2113,66 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "TR Pegs Ledge Clip": {
+                "to": "Death Mountain TR Pegs Ledge",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "TR Pegs To EDM Clip": {
+                "to": "East Death Mountain (Top East)",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Zora DMD Clip": {
+                "to": "Zora Waterfall Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -1773,6 +2245,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "TR Pegs Ledge Descent Clip": {
+                "to": "Death Mountain TR Pegs Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -1830,6 +2322,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Mountain Pass To Ledge Clip": {
+                "to": "Mountain Pass Ledge",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Mountain Pass To Pond Clip": {
+                "to": "Kakariko Pond Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -1910,6 +2442,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Mountain Ledge Drop Clip": {
+                "to": "Mountain Pass Entry",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -2057,6 +2609,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Zora Waterfall Ledge Clip": {
+                "to": "Zora Approach Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Zora Waterfall Waterwalk": {
+                "to": "Zora Waterfall Entryway",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canWaterWalk"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canWaterWalk"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -2186,16 +2778,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|canWaterWalk"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|canWaterWalk"
                             ]
                         }
                     }
@@ -2666,6 +3264,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Pond To Mountain Pass Clip": {
+                "to": "Mountain Pass Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Pond To Bonk Rocks Clip": {
+                "to": "Bonk Rock Ledge",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -3101,16 +3739,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     }
@@ -3186,16 +3830,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     }
@@ -3234,6 +3884,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "River Bend To Potion Shop Clip": {
+                "to": "Potion Shop Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "River Bend To Wooden Bridge Clip": {
+                "to": "Wooden Bridge Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -3343,16 +4033,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     }
@@ -3408,6 +4104,66 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Potion Shop Northbound Rock Bypass Clip": {
+                "to": "Potion Shop Northeast",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Potion Shop To EP Clip": {
+                "to": "Eastern Palace Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Potion Shop To River Bend Clip": {
+                "to": "River Bend East Bank",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -3426,16 +4182,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     }
@@ -3479,6 +4241,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Potion Shop Southbound Rock Bypass Clip": {
+                "to": "Potion Shop Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Potion Shop To Zora Approach Clip": {
+                "to": "Zora Approach Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -3571,16 +4373,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     }
@@ -3603,6 +4411,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Zora Approach To Potion Shop Clip": {
+                "to": "Potion Shop Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -4024,6 +4852,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Kakariko Bomb Hut Clip": {
+                "to": "Maze Race Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -4116,6 +4964,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Forgotten Forest To Blacksmith Clip": {
+                "to": "Hyrule Castle Water",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -4237,8 +5105,9 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "mirror"
+                            "anyOf": [
+                                "mirror",
+                                "canReachHCMain"
                             ]
                         }
                     },
@@ -4298,6 +5167,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Hyrule Castle To Water Clip": {
+                "to": "Hyrule Castle Water",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -4519,7 +5408,8 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "anyOf": [
                                 "cape",
-                                "swordbeams"
+                                "swordbeams",
+                                "agahnim"
                             ]
                         }
                     },
@@ -4564,27 +5454,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                     }
                 }
             },
-            "Inverted Pyramid Entrance": {
-                "to": "Bottom of Pyramid",
-                "type": "Cave",
-                "requirements": {
-                    "Open": "never",
-                    "Inverted": {}
-                }
-            },
-            "Inverted Pyramid Hole": {
+            "Pyramid Hole": {
                 "to": "Pyramid",
                 "type": "Cave",
                 "requirements": {
                     "Open": "never",
                     "Inverted": {
                         "always": {
-                            "anyOf": [
-                                "isPyramidOpen",
+                            "allOf": [
                                 "agahnim2"
                             ]
                         }
                     }
+                }
+            },
+            "Pyramid Entrance": {
+                "to": "Bottom of Pyramid",
+                "type": "Cave",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {}
                 }
             },
             "Mirror From Hyrule Castle Ledge": {
@@ -4606,8 +5495,8 @@ export const logic_regions: Record<string, RegionLogic> = {
             "Hyrule Castle Entrance (West)",
             "Agahnims Tower",
             "Hyrule Castle Entrance (East)",
-            "Inverted Pyramid Entrance",
-            "Inverted Pyramid Hole",
+            "Pyramid Hole",
+            "Pyramid Entrance",
             "Mirror From Hyrule Castle Ledge"
         ],
         "type": "LightWorld",
@@ -4668,7 +5557,28 @@ export const logic_regions: Record<string, RegionLogic> = {
         "owid": 27
     },
     "Hyrule Castle Water": {
-        "exits": {},
+        "exits": {
+            "HC Water To Blacksmith Clip": {
+                "to": "Blacksmith Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "entrances": [],
         "type": "LightWorld",
         "locations": {},
@@ -4750,6 +5660,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Wooden Bridge To Dunes Clip": {
+                "to": "Sand Dunes Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -4935,6 +5865,74 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Eastern Palace To Zora Approach Clip": {
+                "to": "Zora Approach Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Eastern Palace To Nook Clip": {
+                "to": "Eastern Nook Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Eastern Palace To Cliff Clip": {
+                "to": "Eastern Cliff",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Eastern Palace To Cliff Clip (Inverted)": {
+                "to": "Darkness Cliff",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -5221,6 +6219,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Sand Dunes To Cliff Clip": {
+                "to": "Eastern Cliff",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Sand Dunes To Cliff Clip (Inverted)": {
+                "to": "Darkness Cliff",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -5249,6 +6275,66 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Maze Race Item Get Ledge Clip": {
+                "to": "Maze Race Prize",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Maze Race To Desert Ledge Clip": {
+                "to": "Desert Ledge",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Maze Race To Desert Boss Clip": {
+                "to": "Desert Ledge Keep",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -5425,6 +6511,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Suburb To Cliff Clip": {
+                "to": "Desert Northern Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Suburb To Cliff Clip (Inverted)": {
+                "to": "Mire Northern Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -5653,6 +6767,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Central Bonk Rocks To Cliff Clip": {
+                "to": "Central Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Central Bonk Rocks To Cliff Clip (Inverted)": {
+                "to": "Dark Central Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -5751,6 +6893,54 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Links House To Cliff Clip": {
+                "to": "Central Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Links To Bridge FAWT Clip": {
+                "to": "Stone Bridge North Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Links House To Cliff Clip (Inverted)": {
+                "to": "Dark Central Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -5881,6 +7071,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Stone Bridge To Cliff Clip": {
+                "to": "Central Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Stone Bridge To Cliff Clip (Inverted)": {
+                "to": "Dark Central Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -5928,7 +7146,9 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "mirror"
+                                "mirror",
+                                "flippers",
+                                "moonpearl"
                             ]
                         }
                     }
@@ -6214,6 +7434,28 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Tree Line Water Clip": {
+                "to": "Tree Line Water",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip",
+                                "owg|flippers"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip",
+                                "owg|flippers"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -6350,6 +7592,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Eastern Nook To Eastern Clip": {
+                "to": "Eastern Palace Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Eastern Nook To Ice Cave FAWT Clip": {
+                "to": "Ice Cave Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -6439,6 +7721,74 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Desert To Teleporter Clip": {
+                "to": "Desert Teleporter Ledge",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Desert To Bombos Tablet Clip": {
+                "to": "Bombos Tablet Ledge",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Desert To Cliff Clip": {
+                "to": "Desert Northern Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Desert To Cliff Clip (Inverted)": {
+                "to": "Mire Northern Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -6498,6 +7848,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Desert To Maze Race Clip": {
+                "to": "Maze Race Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -6919,6 +8289,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Flute Boy To Cliff Clip": {
+                "to": "Desert Northern Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Flute Boy To Cliff Clip (Inverted)": {
+                "to": "Mire Northern Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -7065,6 +8463,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Cave 45 To Cliff Clip": {
+                "to": "Desert Northern Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Cave 45 To Cliff Clip (Inverted)": {
+                "to": "Mire Northern Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -7126,16 +8552,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     }
@@ -7174,6 +8606,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "C Whirlpool To Cliff Clip": {
+                "to": "Central Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "C Whirlpool To Cliff Clip (Inverted)": {
+                "to": "Dark Central Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -7222,6 +8682,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     },
                     "Inverted": "never"
+                }
+            },
+            "C Whirlpool Portal Bomb Clip": {
+                "to": "Central Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "C Whirlpool Portal Bomb Clip (Inverted)": {
+                "to": "Dark Central Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -7320,6 +8808,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "C Whirlpool Outer To Cliff Clip": {
+                "to": "Central Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "C Whirlpool Outer To Cliff Clip (Inverted)": {
+                "to": "Dark Central Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -7358,16 +8874,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     }
@@ -7414,6 +8936,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Statues To Cliff Clip": {
+                "to": "Central Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Statues To Cliff Clip (Inverted)": {
+                "to": "Dark Central Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -7518,6 +9068,66 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Lake Hylia To Shore Clip": {
+                "to": "Lake Hylia South Shore",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Lake Hylia To Statues Clip": {
+                "to": "Statues Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Lake Hylia To South Pass Clip": {
+                "to": "South Pass Area",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -7611,16 +9221,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     }
@@ -8174,6 +9790,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Desert Pass To Cliff Clip": {
+                "to": "Desert Northern Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Desert Pass To Cliff Clip (Inverted)": {
+                "to": "Mire Northern Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -8284,6 +9928,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Desert Pass Southeast To Cliff Clip": {
+                "to": "Desert Northern Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Desert Pass Southeast To Cliff Clip (Inverted)": {
+                "to": "Mire Northern Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -8401,6 +10073,54 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Dam To Cliff Clip": {
+                "to": "Desert Northern Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Dam To Desert Pass Southeast Clip": {
+                "to": "Desert Pass Southeast",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Dam To Cliff Clip (Inverted)": {
+                "to": "Mire Northern Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -8469,6 +10189,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "South Pass To Lake Hylia Clip": {
+                "to": "Lake Hylia Northwest Bank",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "South Pass To Shore Clip": {
+                "to": "Lake Hylia South Shore",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -8486,16 +10246,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     }
@@ -9004,6 +10770,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Dark Lumberjack DMA Clip": {
+                "to": "West Dark Death Mountain (Bottom)",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -9093,8 +10879,9 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "canOpenGT"
+                            "anyOf": [
+                                "canOpenGT",
+                                "owg|canBootsClip"
                             ]
                         }
                     },
@@ -9107,9 +10894,8 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "anyOf": [
-                                "canOpenGT",
-                                "world.shuffle[] in (restricted, full, lite, lean, district, swapped, crossed, insanity"
+                            "allOf": [
+                                "canOpenGT"
                             ]
                         }
                     },
@@ -9179,6 +10965,138 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": "never",
                     "Inverted": {}
+                }
+            },
+            "WDDM Bomb Clip": {
+                "to": "West Dark Death Mountain (Top)",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Ganons Tower Screen Wrap Clip": {
+                "to": "GT Stairs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "DDM Glitched Bridge Clip": {
+                "to": "East Dark Death Mountain (Top)",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Chapel DMD Clip": {
+                "to": "Dark Chapel Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Dark Graveyard DMD Clip": {
+                "to": "Dark Graveyard North",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "DDM Offset Mirror": {
+                "to": "Pyramid Crack",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|mirror",
+                                "owg|canBootsClip",
+                                "owg|canReach|Hyrule Castle Courtyard"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "DDM To Pyramid Offset Mirror": {
+                "to": "Pyramid Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|mirror",
+                                "owg|canBootsClip",
+                                "owg|canReach|Hyrule Castle Area"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
                 }
             },
             "West Dark Death Mountain Ladder (Inverted_1)": {
@@ -9286,6 +11204,80 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mirror"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "EDDM West Dropdown Clip": {
+                "to": "East Dark Death Mountain (Bottom Left)",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "TR Bridge Clip": {
+                "to": "Dark Death Mountain Ledge",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "EDDM To WDDM Clip": {
+                "to": "West Dark Death Mountain (Top)",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "EDDM Mirror Clip": {
+                "to": "Dark Death Mountain Ledge",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|mirror"
                             ]
                         }
                     },
@@ -9460,6 +11452,20 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {}
                 }
             },
+            "Mirror From East Dark Death Mountain (Bottom)": {
+                "to": "East Death Mountain (Bottom)",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "mirror"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
             "East Dark Death Mountain Teleporter": {
                 "to": "East Death Mountain (Bottom)",
                 "type": "LightWorld",
@@ -9469,6 +11475,66 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "mitts"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Dark Witch DMD FAWT Clip": {
+                "to": "Dark Witch Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "EDDM DMD To Qirn Jump Clip": {
+                "to": "Qirn Jump Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "DW Floating Island Clip": {
+                "to": "Dark Death Mountain Floating Island",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -9542,6 +11608,74 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "WDDM To EDDM Bottom Clip": {
+                "to": "East Dark Death Mountain (Bottom)",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "WDDM DMD To Qirn Jump Clip": {
+                "to": "Qirn Jump Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "EDDM Bridge Mirror Clip": {
+                "to": "East Dark Death Mountain (Bottom)",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|mirror"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Qirn Jump Bunny DMD Clip": {
+                "to": "Qirn Jump Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|mirror"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
             }
         },
         "entrances": [],
@@ -9599,6 +11733,66 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": "never",
                     "Inverted": {}
+                }
+            },
+            "Turtle Rock Ledge Clip": {
+                "to": "Turtle Rock Ledge",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "TR To EDDM Clip": {
+                "to": "East Dark Death Mountain (Top)",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Catfish DMD Clip": {
+                "to": "Catfish Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -9716,6 +11910,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Bumper Cave Ledge Clip": {
+                "to": "Bumper Cave Ledge",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Bumper Cave To Pond Clip": {
+                "to": "Outcast Pond Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -9772,6 +12006,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     },
                     "Inverted": "never"
+                }
+            },
+            "Bumper Cave Ledge Drop Clip": {
+                "to": "Bumper Cave Entry",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
                 }
             },
             "Bumper Cave (Top Inverted_1)": {
@@ -9891,6 +12145,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     },
                     "Inverted": "never"
+                }
+            },
+            "Catfish Ledge Clip": {
+                "to": "Catfish Approach Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -10358,6 +12632,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Pond To Bumper Cave Clip": {
+                "to": "Bumper Cave Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Pond To Chapel Clip": {
+                "to": "Dark Chapel Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -10624,16 +12938,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     }
@@ -10722,16 +13042,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     }
@@ -10773,6 +13099,66 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     },
                     "Inverted": "never"
+                }
+            },
+            "Qirn Jump To Dark Witch Clip": {
+                "to": "Dark Witch Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Qirn Jump To Broken Bridge North Clip": {
+                "to": "Broken Bridge Northeast",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Qirn Jump To Broken Bridge Clip": {
+                "to": "Broken Bridge Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -10869,16 +13255,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     }
@@ -10934,6 +13326,66 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Dark Witch Northbound Rock Bypass Clip": {
+                "to": "Dark Witch Northeast",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Dark Witch To PoD Clip": {
+                "to": "Palace of Darkness Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Dark Witch To Qirn Jump Clip": {
+                "to": "Qirn Jump East Bank",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -10971,16 +13423,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     }
@@ -11027,6 +13485,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     },
                     "Inverted": "never"
+                }
+            },
+            "Dark Witch Southbound Rock Bypass Clip": {
+                "to": "Dark Witch Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Dark Witch To Catfish Approach Clip": {
+                "to": "Catfish Approach Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -11114,16 +13612,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     }
@@ -11149,6 +13653,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     },
                     "Inverted": "never"
+                }
+            },
+            "Catfish Approach To Dark Witch Clip": {
+                "to": "Dark Witch Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Catfish Approach To PoD Clip": {
+                "to": "Palace of Darkness Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -11371,6 +13915,48 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "VoO To Dig Game Clip": {
+                "to": "Dig Game Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "VoO To Dig Game Hook Clip": {
+                "to": "Dig Game Ledge",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip",
+                                "owg|hookshot"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip",
+                                "owg|hookshot"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -11563,8 +14149,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "anyOf": [
-                                "isPyramidOpen",
+                            "allOf": [
                                 "agahnim2"
                             ]
                         }
@@ -11821,7 +14406,48 @@ export const logic_regions: Record<string, RegionLogic> = {
         "owid": 91
     },
     "Pyramid Water": {
-        "exits": {},
+        "exits": {
+            "Pyramid Water To Hammerpegs Clip": {
+                "to": "Hammer Pegs Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Pyramid Water To Bomb Shop Clip": {
+                "to": "Big Bomb Shop Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "entrances": [],
         "type": "DarkWorld",
         "locations": {},
@@ -12048,6 +14674,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Broken Bridge To Dunes Clip": {
+                "to": "Dark Dunes Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Broken Bridge To Water Clip": {
+                "to": "Pyramid Water",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -12143,6 +14809,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     },
                     "Inverted": "never"
+                }
+            },
+            "PoD To Cliff Clip": {
+                "to": "Darkness Cliff",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "PoD To Cliff Clip (Inverted)": {
+                "to": "Eastern Cliff",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -12473,6 +15167,54 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Dark Dunes To Cliff Clip": {
+                "to": "Darkness Cliff",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Dark Dunes To Water Clip": {
+                "to": "Pyramid Water",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Dark Dunes To Cliff Clip (Inverted)": {
+                "to": "Eastern Cliff",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -12523,6 +15265,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     },
                     "Inverted": "never"
+                }
+            },
+            "Dig Game To Mire Clip": {
+                "to": "Mire Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -12772,6 +15534,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Archery Game To Cliff Clip": {
+                "to": "Mire Northern Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Archery Game To Cliff Clip (Inverted)": {
+                "to": "Desert Northern Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -12932,6 +15722,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Dark Bonk Rocks To Cliff Clip": {
+                "to": "Dark Central Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Dark Bonk Rocks To Cliff Clip (Inverted)": {
+                "to": "Central Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -13012,6 +15830,54 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     },
                     "Inverted": "never"
+                }
+            },
+            "Bomb Shop To Cliff Clip": {
+                "to": "Dark Central Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Bomb Shop To Hammer Bridge FAWT Clip": {
+                "to": "Hammer Bridge North Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Bomb Shop To Cliff Clip (Inverted)": {
+                "to": "Central Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
                 }
             },
             "Links House": {
@@ -13104,6 +15970,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Hammer Bridge To Water Clip": {
+                "to": "Pyramid Water",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -13163,6 +16049,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Hammer Bridge To Cliff Clip": {
+                "to": "Dark Central Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Hammer Bridge To Cliff Clip (Inverted)": {
+                "to": "Central Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -13201,7 +16115,9 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "mirror"
+                                "mirror",
+                                "flippers",
+                                "moonpearl"
                             ]
                         }
                     },
@@ -13451,6 +16367,28 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Dark Tree Line Water Clip": {
+                "to": "Dark Tree Line Water",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip",
+                                "owg|flippers"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip",
+                                "owg|flippers"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -13601,6 +16539,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "PoD Nook To Shopping Mall FAWT Clip": {
+                "to": "Shopping Mall Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -13745,6 +16703,68 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     },
                     "Inverted": "never"
+                }
+            },
+            "Mire To Teleporter Clip": {
+                "to": "Mire Teleporter Ledge",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Mire To Cliff Clip": {
+                "to": "Mire Northern Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Desert East Mirror Clip": {
+                "to": "Desert Mouth",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|mirror"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Mire To Cliff Clip (Inverted)": {
+                "to": "Desert Northern Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -13963,6 +16983,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Stumpy To Cliff Clip": {
+                "to": "Mire Northern Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Stumpy To Cliff Clip (Inverted)": {
+                "to": "Desert Northern Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -14064,16 +17112,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     }
@@ -14116,6 +17170,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Dark C Whirlpool To Cliff Clip": {
+                "to": "Dark Central Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Dark C Whirlpool To Cliff Clip (Inverted)": {
+                "to": "Central Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -14155,6 +17237,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "glove"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Dark C Whirlpool Portal Bomb Clip": {
+                "to": "Dark Central Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Dark C Whirlpool Portal Bomb Clip (Inverted)": {
+                "to": "Central Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
                             ]
                         }
                     }
@@ -14250,6 +17360,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Dark C Whirlpool Outer To Cliff Clip": {
+                "to": "Dark Central Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Dark C Whirlpool Outer To Cliff Clip (Inverted)": {
+                "to": "Central Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -14286,16 +17424,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     }
@@ -14345,6 +17489,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     },
                     "Inverted": "never"
+                }
+            },
+            "Hype To Cliff Clip": {
+                "to": "Dark Central Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Hype To Cliff Clip (Inverted)": {
+                "to": "Central Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -14456,6 +17628,66 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     },
                     "Inverted": "never"
+                }
+            },
+            "Ice Lake To Shore Clip": {
+                "to": "Ice Lake Southwest Ledge",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Ice Lake To Hype Clip": {
+                "to": "Hype Cave Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Ice Lake To South Pass Clip": {
+                "to": "Dark South Pass Area",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -14596,16 +17828,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     }
@@ -14684,7 +17922,9 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "mirror"
+                                "mirror",
+                                "flippers",
+                                "moonpearl"
                             ]
                         }
                     },
@@ -14774,7 +18014,9 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "mirror"
+                                "mirror",
+                                "flippers",
+                                "moonpearl"
                             ]
                         }
                     },
@@ -15074,6 +18316,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Swamp Nook To Cliff Clip": {
+                "to": "Mire Northern Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Swamp Nook To Cliff Clip (Inverted)": {
+                "to": "Desert Northern Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -15156,6 +18426,34 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "Swamp To Cliff Clip": {
+                "to": "Mire Northern Cliffs",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": "never"
+                }
+            },
+            "Swamp To Cliff Clip (Inverted)": {
+                "to": "Desert Northern Cliffs",
+                "type": "LightWorld",
+                "requirements": {
+                    "Open": "never",
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [
@@ -15204,6 +18502,46 @@ export const logic_regions: Record<string, RegionLogic> = {
                     },
                     "Inverted": "never"
                 }
+            },
+            "South Pass To Ice Lake Clip": {
+                "to": "Ice Lake Northwest Bank",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "South Pass To Dark Shore Clip": {
+                "to": "Ice Lake Southwest Ledge",
+                "type": "DarkWorld",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "owg|canBootsClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -15239,16 +18577,22 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "moonpearl"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "moonpearl"
+                                    ]
+                                },
+                                "owg|moonpearl"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers"
+                            "anyOf": [
+                                "flippers",
+                                "owg|true"
                             ]
                         }
                     }
@@ -16080,6 +19424,28 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {},
                     "Inverted": {}
                 }
+            },
+            "Kiki Skip": {
+                "to": "Palace of Darkness Portal",
+                "type": "Dungeon",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hmg|canBombClip",
+                                "hmg|canReach|Spectacle Rock Cave (Bottom)"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hmg|canBombClip",
+                                "hmg|canReach|Spectacle Rock Cave (Bottom)"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -16146,6 +19512,28 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {},
                     "Inverted": {}
+                }
+            },
+            "Spec Rock Clip": {
+                "to": "Spectacle Rock Cave (Top)",
+                "type": "Cave",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hmg|canBombClip",
+                                "hmg|canReach|Spectacle Rock Cave (Peak)"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hmg|canBombClip",
+                                "hmg|canReach|Spectacle Rock Cave (Peak)"
+                            ]
+                        }
+                    }
                 }
             },
             "Spec Rock Hover": {
@@ -16312,6 +19700,23 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "hammer",
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|40"
+                                            ]
+                                        }
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -16320,6 +19725,23 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "hammer",
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|40"
+                                            ]
+                                        }
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -16328,22 +19750,58 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Mimic Cave Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    }
                 },
                 "type": "GreenEyegore"
             },
             "Mimic Cave Enemy #6": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "boomerang"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "boomerang"
+                            ]
+                        }
+                    }
                 },
                 "type": "GreenEyegore"
             },
             "Mimic Cave Enemy #7": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "boomerang"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "boomerang"
+                            ]
+                        }
+                    }
                 },
                 "type": "GreenEyegore"
             },
@@ -16538,6 +19996,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Paradox Front Teleport": {
+                "to": "Paradox Cave Chest Area",
+                "type": "Cave",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hmg|true"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hmg|true"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -16609,15 +20087,17 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "canHitRangedSwitch"
+                            "anyOf": [
+                                "canHitRangedSwitch",
+                                "hmg|canDashClip"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "canHitRangedSwitch"
+                            "anyOf": [
+                                "canHitRangedSwitch",
+                                "hmg|canDashClip"
                             ]
                         }
                     }
@@ -16627,15 +20107,17 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "canHitRangedSwitch"
+                            "anyOf": [
+                                "canHitRangedSwitch",
+                                "hmg|canDashClip"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "canHitRangedSwitch"
+                            "anyOf": [
+                                "canHitRangedSwitch",
+                                "hmg|canDashClip"
                             ]
                         }
                     }
@@ -16645,15 +20127,27 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "canHitRangedSwitch"
+                            "anyOf": [
+                                "canHitRangedSwitch",
+                                {
+                                    "allOf": [
+                                        "hmg|canDashClip",
+                                        "hmg|canHitSwitch"
+                                    ]
+                                }
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "canHitRangedSwitch"
+                            "anyOf": [
+                                "canHitRangedSwitch",
+                                {
+                                    "allOf": [
+                                        "hmg|canDashClip",
+                                        "hmg|canHitSwitch"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -16663,15 +20157,27 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "canHitRangedSwitch"
+                            "anyOf": [
+                                "canHitRangedSwitch",
+                                {
+                                    "allOf": [
+                                        "hmg|canDashClip",
+                                        "hmg|canHitSwitch"
+                                    ]
+                                }
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "canHitRangedSwitch"
+                            "anyOf": [
+                                "canHitRangedSwitch",
+                                {
+                                    "allOf": [
+                                        "hmg|canDashClip",
+                                        "hmg|canHitSwitch"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -16681,15 +20187,17 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "canHitRangedSwitch"
+                            "anyOf": [
+                                "canHitRangedSwitch",
+                                "hmg|canDashClip"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "canHitRangedSwitch"
+                            "anyOf": [
+                                "canHitRangedSwitch",
+                                "hmg|canDashClip"
                             ]
                         }
                     }
@@ -17657,7 +21165,20 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "anyOf": [
                                 "bomb",
-                                "boots"
+                                "boots",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "owg|bomb",
+                                                "owg|boots"
+                                            ]
+                                        },
+                                        "owg|canReach|Sahasrahlas Hut",
+                                        "owg|mirror",
+                                        "owg|boots"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -17677,7 +21198,20 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "anyOf": [
                                 "bomb",
-                                "boots"
+                                "boots",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "owg|bomb",
+                                                "owg|boots"
+                                            ]
+                                        },
+                                        "owg|canReach|Sahasrahlas Hut",
+                                        "owg|mirror",
+                                        "owg|boots"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -17697,7 +21231,20 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "anyOf": [
                                 "bomb",
-                                "boots"
+                                "boots",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "owg|bomb",
+                                                "owg|boots"
+                                            ]
+                                        },
+                                        "owg|canReach|Sahasrahlas Hut",
+                                        "owg|mirror",
+                                        "owg|boots"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -19453,11 +23000,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "anyOf": [
-                                {
-                                    "allOf": [
-                                        "hookshot"
-                                    ]
-                                },
+                                "hookshot",
                                 "canHover"
                             ]
                         }
@@ -19465,11 +23008,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "anyOf": [
-                                {
-                                    "allOf": [
-                                        "hookshot"
-                                    ]
-                                },
+                                "hookshot",
                                 "canHover"
                             ]
                         }
@@ -19575,8 +23114,54 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Hookshot Cave (Hook Islands) Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
@@ -19795,29 +23380,213 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Superbunny Cave (Bottom) Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Superbunny Cave (Bottom) Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Superbunny Cave (Bottom) Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Superbunny Cave (Bottom) Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -19924,15 +23693,107 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Bumper Cave (bottom) Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Bumper Cave (bottom) Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -20176,15 +24037,11 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                "swordbeams",
+                                "canLightFires",
                                 {
                                     "anyOf": [
-                                        {
-                                            "allOf": [
-                                                "swordbeams",
-                                                "canLightFires",
-                                                "temperedSword"
-                                            ]
-                                        },
+                                        "temperedSword",
                                         "goldSword",
                                         {
                                             "allOf": [
@@ -20204,15 +24061,11 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                "swordbeams",
+                                "canLightFires",
                                 {
                                     "anyOf": [
-                                        {
-                                            "allOf": [
-                                                "swordbeams",
-                                                "canLightFires",
-                                                "temperedSword"
-                                            ]
-                                        },
+                                        "temperedSword",
                                         "goldSword",
                                         {
                                             "allOf": [
@@ -24466,8 +28319,20 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Eastern Palace - Big Chest": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    }
                 }
             },
             "Eastern Courtyard Pot #1": {
@@ -25436,6 +29301,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -25443,6 +29309,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -25467,8 +29334,20 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Eastern Single Eyegore Enemy #9": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    }
                 },
                 "type": "RedEyegore"
             },
@@ -25506,6 +29385,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -25513,6 +29393,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -25561,15 +29442,39 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Eastern Duo Eyegores Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    }
                 },
                 "type": "RedEyegore"
             },
             "Eastern Duo Eyegores Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    }
                 },
                 "type": "RedEyegore"
             },
@@ -26603,8 +30508,20 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Desert Palace - Big Chest": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -27209,8 +31126,20 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Desert Wall Slide Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    }
                 },
                 "type": "RedEyegore"
             }
@@ -27480,11 +31409,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "icerod"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "blueSwitchDown"
-                                    ]
-                                }
+                                "blueSwitchDown"
                             ]
                         }
                     },
@@ -27501,11 +31426,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "icerod"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "blueSwitchDown"
-                                    ]
-                                }
+                                "blueSwitchDown"
                             ]
                         }
                     }
@@ -27825,15 +31746,91 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Hera Back Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "somaria",
+                                        "byrna",
+                                        "bow",
+                                        "firerod"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "somaria",
+                                        "byrna",
+                                        "bow",
+                                        "firerod"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    }
                 },
                 "type": "Kodongo"
             },
             "Hera Back Enemy #6": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "somaria",
+                                        "byrna",
+                                        "bow",
+                                        "firerod"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "somaria",
+                                        "byrna",
+                                        "bow",
+                                        "firerod"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    }
                 },
                 "type": "Kodongo"
             }
@@ -28280,6 +32277,28 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        {
+                                            "allOf": [
+                                                "bow",
+                                                "canUseSilverArrows"
+                                            ]
+                                        },
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|56"
+                                            ]
+                                        }
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -28287,6 +32306,28 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        {
+                                            "allOf": [
+                                                "bow",
+                                                "canUseSilverArrows"
+                                            ]
+                                        },
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|56"
+                                            ]
+                                        }
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -28327,22 +32368,160 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Hera Beetles Enemy #8": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Hera Beetles Enemy #9": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Hera Beetles Enemy #11": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
@@ -28383,15 +32562,49 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "bigkey"
+                            "anyOf": [
+                                "bigkey",
+                                {
+                                    "allOf": [
+                                        "hmg|otherBigKey|mm",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "bigkey"
+                            "anyOf": [
+                                "bigkey",
+                                {
+                                    "allOf": [
+                                        "hmg|otherBigKey|mm",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -28419,22 +32632,160 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Hera Startile Corner Enemy #7": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Hera Startile Corner Enemy #10": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Hera Startile Corner Enemy #12": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -28505,29 +32856,213 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Hera Startile Wide Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Hera Startile Wide Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Hera Startile Wide Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Hera Startile Wide Enemy #6": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -28745,15 +33280,71 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Hera 4F Enemy #6": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Kodongo"
             },
             "Hera 4F Enemy #7": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Kodongo"
             }
@@ -28784,8 +33375,54 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Tower of Hera - Big Chest": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "bigkey",
+                                {
+                                    "allOf": [
+                                        "hmg|otherBigKey|mm",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "bigkey",
+                                {
+                                    "allOf": [
+                                        "hmg|otherBigKey|mm",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -28859,36 +33496,266 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Hera 5F Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Hera 5F Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Hera 5F Enemy #7": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Hera 5F Enemy #8": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Hera 5F Enemy #9": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -30774,15 +35641,39 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "PoD Pit Room Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    }
                 },
                 "type": "Terrorpin"
             },
             "PoD Pit Room Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    }
                 },
                 "type": "Terrorpin"
             },
@@ -30886,11 +35777,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "somaria"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "orangeSwitchDown"
-                                    ]
-                                }
+                                "orangeSwitchDown"
                             ]
                         }
                     },
@@ -30903,11 +35790,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "somaria"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "orangeSwitchDown"
-                                    ]
-                                }
+                                "orangeSwitchDown"
                             ]
                         }
                     }
@@ -30926,11 +35809,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "somaria"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "orangeSwitchDown"
-                                    ]
-                                }
+                                "orangeSwitchDown"
                             ]
                         }
                     },
@@ -30943,11 +35822,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "somaria"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "orangeSwitchDown"
-                                    ]
-                                }
+                                "orangeSwitchDown"
                             ]
                         }
                     }
@@ -30971,36 +35846,266 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "PoD Arena Main Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "PoD Arena Main Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "PoD Arena Main Enemy #6": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "PoD Arena Main Enemy #7": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "PoD Arena Main Enemy #8": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -31098,8 +36203,54 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "PoD Arena North Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -31682,22 +36833,136 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "PoD Map Balcony Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
             "PoD Map Balcony Enemy #6": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
             "PoD Map Balcony Enemy #7": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             }
@@ -31779,8 +37044,46 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "PoD Conveyor Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
@@ -31810,6 +37113,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -31817,6 +37121,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -31863,8 +37168,20 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "PoD Mimics 1 Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    }
                 },
                 "type": "RedEyegore"
             },
@@ -32067,15 +37384,39 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "PoD Stalfos Basement Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    }
                 },
                 "type": "Terrorpin"
             },
             "PoD Stalfos Basement Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    }
                 },
                 "type": "Terrorpin"
             }
@@ -32398,14 +37739,40 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "somaria",
+                                        "byrna",
+                                        "bow",
+                                        "firerod"
+                                    ]
+                                }
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "somaria",
+                                        "byrna",
+                                        "bow",
+                                        "firerod"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -32417,14 +37784,40 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "somaria",
+                                        "byrna",
+                                        "bow",
+                                        "firerod"
+                                    ]
+                                }
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "somaria",
+                                        "byrna",
+                                        "bow",
+                                        "firerod"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -32436,14 +37829,40 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "somaria",
+                                        "byrna",
+                                        "bow",
+                                        "firerod"
+                                    ]
+                                }
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "somaria",
+                                        "byrna",
+                                        "bow",
+                                        "firerod"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -32455,14 +37874,40 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "somaria",
+                                        "byrna",
+                                        "bow",
+                                        "firerod"
+                                    ]
+                                }
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "somaria",
+                                        "byrna",
+                                        "bow",
+                                        "firerod"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -32500,8 +37945,20 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Palace of Darkness - Big Chest": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -32565,29 +38022,77 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "PoD Compass Room Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    }
                 },
                 "type": "Terrorpin"
             },
             "PoD Compass Room Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    }
                 },
                 "type": "Terrorpin"
             },
             "PoD Compass Room Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    }
                 },
                 "type": "Terrorpin"
             },
             "PoD Compass Room Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    }
                 },
                 "type": "Terrorpin"
             }
@@ -32751,6 +38256,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -32758,6 +38264,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -32782,8 +38289,20 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "PoD Mimics 2 Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    }
                 },
                 "type": "RedEyegore"
             },
@@ -32851,11 +38370,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "firerod"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "blueSwitchDown"
-                                    ]
-                                }
+                                "blueSwitchDown"
                             ]
                         }
                     },
@@ -32872,11 +38387,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "firerod"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "blueSwitchDown"
-                                    ]
-                                }
+                                "blueSwitchDown"
                             ]
                         }
                     }
@@ -33188,8 +38699,20 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "PoD Dark Pegs Right Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    }
                 },
                 "type": "Terrorpin"
             }
@@ -33298,8 +38821,20 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "PoD Dark Pegs Middle Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hammer"
+                            ]
+                        }
+                    }
                 },
                 "type": "Terrorpin"
             }
@@ -33591,14 +39126,16 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     }
@@ -33667,14 +39204,16 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     }
@@ -33686,14 +39225,16 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     }
@@ -33705,14 +39246,16 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     }
@@ -33724,14 +39267,16 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     }
@@ -33743,14 +39288,16 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     }
@@ -33762,14 +39309,16 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     }
@@ -33788,16 +39337,16 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern",
-                                "bigkey"
+                                "bigkey",
+                                "lantern"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern",
-                                "bigkey"
+                                "bigkey",
+                                "lantern"
                             ]
                         }
                     }
@@ -33812,14 +39361,16 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     }
@@ -33831,14 +39382,16 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     }
@@ -33850,14 +39403,16 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     }
@@ -33869,14 +39424,16 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "lantern"
+                                "lantern",
+                                "hammer"
                             ]
                         }
                     }
@@ -34003,17 +39560,27 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "canDrainDam"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "canDrainDam"
+                                    ]
+                                },
+                                "hmg|canHMGMirrorlessSwamp"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "flippers",
-                                "canDrainDam"
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "flippers",
+                                        "canDrainDam"
+                                    ]
+                                },
+                                "hmg|canHMGMirrorlessSwamp"
                             ]
                         }
                     }
@@ -34324,8 +39891,32 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "flippers",
-                                "canReach|Swamp Hammer Switch",
-                                "hammer"
+                                {
+                                    "anyOf": [
+                                        {
+                                            "allOf": [
+                                                "canReach|Swamp Hammer Switch",
+                                                "hammer"
+                                            ]
+                                        },
+                                        {
+                                            "allOf": [
+                                                "hmg|canReach|Mire Torches Top",
+                                                {
+                                                    "anyOf": [
+                                                        "hmg|canDashClip",
+                                                        {
+                                                            "allOf": [
+                                                                "hmg|canBombClip",
+                                                                "hmg|canLightFires"
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
                             ]
                         }
                     },
@@ -34333,8 +39924,32 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "flippers",
-                                "canReach|Swamp Hammer Switch",
-                                "hammer"
+                                {
+                                    "anyOf": [
+                                        {
+                                            "allOf": [
+                                                "canReach|Swamp Hammer Switch",
+                                                "hammer"
+                                            ]
+                                        },
+                                        {
+                                            "allOf": [
+                                                "hmg|canReach|Mire Torches Top",
+                                                {
+                                                    "anyOf": [
+                                                        "hmg|canDashClip",
+                                                        {
+                                                            "allOf": [
+                                                                "hmg|canBombClip",
+                                                                "hmg|canLightFires"
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -34360,8 +39975,46 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Swamp Trench 1 Approach Enemy #10": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             }
@@ -34485,8 +40138,32 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "flippers",
-                                "canReach|Swamp Hammer Switch",
-                                "hammer"
+                                {
+                                    "anyOf": [
+                                        {
+                                            "allOf": [
+                                                "canReach|Swamp Hammer Switch",
+                                                "hammer"
+                                            ]
+                                        },
+                                        {
+                                            "allOf": [
+                                                "hmg|canReach|Mire Torches Top",
+                                                {
+                                                    "anyOf": [
+                                                        "hmg|canDashClip",
+                                                        {
+                                                            "allOf": [
+                                                                "hmg|canBombClip",
+                                                                "hmg|canLightFires"
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
                             ]
                         }
                     },
@@ -34494,8 +40171,32 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "flippers",
-                                "canReach|Swamp Hammer Switch",
-                                "hammer"
+                                {
+                                    "anyOf": [
+                                        {
+                                            "allOf": [
+                                                "canReach|Swamp Hammer Switch",
+                                                "hammer"
+                                            ]
+                                        },
+                                        {
+                                            "allOf": [
+                                                "hmg|canReach|Mire Torches Top",
+                                                {
+                                                    "anyOf": [
+                                                        "hmg|canDashClip",
+                                                        {
+                                                            "allOf": [
+                                                                "hmg|canBombClip",
+                                                                "hmg|canLightFires"
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -34648,15 +40349,95 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "hammer"
+                            "anyOf": [
+                                "hammer",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "hmg|canBombClip",
+                                                "hmg|canDashClip"
+                                            ]
+                                        },
+                                        "hmg|flippers",
+                                        "hmg|canReach|Hera 4F",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "hammer"
+                            "anyOf": [
+                                "hammer",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "hmg|canBombClip",
+                                                "hmg|canDashClip"
+                                            ]
+                                        },
+                                        "hmg|flippers",
+                                        "hmg|canReach|Hera 4F",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -34771,8 +40552,66 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Swamp Palace - Big Chest": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "bigkey",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "hmg|otherBigKey|mm",
+                                                "hmg|otherBigKey|toh"
+                                            ]
+                                        },
+                                        "hmg|flippers",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "bigkey",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "hmg|otherBigKey|mm",
+                                                "hmg|otherBigKey|toh"
+                                            ]
+                                        },
+                                        "hmg|flippers",
+                                        {
+                                            "anyOf": [
+                                                "hmg|canDashClip",
+                                                {
+                                                    "allOf": [
+                                                        "hmg|canBombClip",
+                                                        "hmg|canLightFires"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "hmg|canReach|Mire Torches Top"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 }
             },
             "Swamp Hub Enemy #2": {
@@ -35141,11 +40980,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "byrna"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "orangeSwitchDown"
-                                    ]
-                                }
+                                "orangeSwitchDown"
                             ]
                         }
                     },
@@ -35159,11 +40994,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "byrna"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "orangeSwitchDown"
-                                    ]
-                                }
+                                "orangeSwitchDown"
                             ]
                         }
                     }
@@ -35175,8 +41006,46 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Swamp Crystal Switch Outer Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
@@ -35261,11 +41130,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "byrna"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "orangeSwitchDown"
-                                    ]
-                                }
+                                "orangeSwitchDown"
                             ]
                         }
                     },
@@ -35279,11 +41144,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "byrna"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "orangeSwitchDown"
-                                    ]
-                                }
+                                "orangeSwitchDown"
                             ]
                         }
                     }
@@ -36042,8 +41903,46 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Swamp Push Statue Enemy #9": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
@@ -36093,8 +41992,46 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Swamp Shooters Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
@@ -36163,8 +42100,46 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Swamp Right Elbow Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             }
@@ -36928,6 +42903,26 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {},
                     "Inverted": {}
                 }
+            },
+            "SW Big Chest Bomb Jump": {
+                "to": "Skull Big Chest",
+                "type": "Dungeon",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "canBombJump"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "canBombJump"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -36935,8 +42930,46 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Skull 1 Lobby Enemy #9": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             }
@@ -36985,8 +43018,54 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Skull Map Room Enemy #8": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -37108,8 +43187,54 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Skull Pot Circle Enemy #7": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -37225,21 +43350,57 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Skull Woods - Big Chest": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    }
                 }
             },
             "Skull Big Chest Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    }
                 },
                 "type": "MiniMoldorm"
             },
             "Skull Big Chest Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    }
                 },
                 "type": "MiniMoldorm"
             }
@@ -37563,15 +43724,107 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Skull Compass Room Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Skull Compass Room Enemy #10": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -37644,22 +43897,160 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Skull Left Drop Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Skull Left Drop Enemy #6": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Skull Left Drop Enemy #7": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -37787,8 +44178,46 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Skull Big Key Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
@@ -37875,8 +44304,54 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Skull Small Hall Enemy #13": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -37923,15 +44398,107 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Skull Back Drop Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "Skull Back Drop Enemy #9": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -37954,15 +44521,17 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {
                         "always": {
-                            "allOf": [
-                                "boots"
+                            "anyOf": [
+                                "boots",
+                                "hidden pits"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
-                            "allOf": [
-                                "boots"
+                            "anyOf": [
+                                "boots",
+                                "hidden pits"
                             ]
                         }
                     }
@@ -37994,8 +44563,54 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Skull 2 West Lobby Enemy #11": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -38028,8 +44643,20 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "to": "Skull 2 West Lobby",
                 "type": "Dungeon",
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hidden pits"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hidden pits"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -38397,8 +45024,46 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Skull Star Pits Enemy #11": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
@@ -38634,8 +45299,54 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Skull Spike Corner Enemy #6": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -40186,6 +46897,78 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Thieves to Desert West Clip": {
+                "to": "Desert West Portal",
+                "type": "Dungeon",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hmg|canBombClip",
+                                "hmg|canReach|Thieves Attic",
+                                "hmg|canDashClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hmg|canBombClip",
+                                "hmg|canReach|Thieves Attic",
+                                "hmg|canDashClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Thieves to Desert South Clip": {
+                "to": "Desert South Portal",
+                "type": "Dungeon",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hmg|canBombClip",
+                                "hmg|canReach|Thieves Attic",
+                                "hmg|canDashClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hmg|canBombClip",
+                                "hmg|canReach|Thieves Attic",
+                                "hmg|canDashClip"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Thieves to Desert East Clip": {
+                "to": "Desert East Portal",
+                "type": "Dungeon",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hmg|canBombClip",
+                                "hmg|canReach|Thieves Attic",
+                                "hmg|canDashClip"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hmg|canBombClip",
+                                "hmg|canReach|Thieves Attic",
+                                "hmg|canDashClip"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -40698,8 +47481,20 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Thieves' Town - Blind's Cell": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    }
                 }
             },
             "Suspicious Maiden": {
@@ -40845,8 +47640,46 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Thieves Conveyor Bridge Enemy #7": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
@@ -40927,14 +47760,16 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
-                                "hammer"
+                                "hammer",
+                                "bigkey"
                             ]
                         }
                     },
                     "Inverted": {
                         "always": {
                             "allOf": [
-                                "hammer"
+                                "hammer",
+                                "bigkey"
                             ]
                         }
                     }
@@ -41006,6 +47841,48 @@ export const logic_regions: Record<string, RegionLogic> = {
                         "always": {
                             "allOf": [
                                 "canBurnThings"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Ice Lobby Clip": {
+                "to": "Ice Bomb Drop - Top",
+                "type": "Dungeon",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "hmg|canBombClip",
+                                        "hmg|canReach|Ice Lobby"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "hmg|canDashClip",
+                                        "hmg|canReach|Ice Lobby"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                {
+                                    "allOf": [
+                                        "hmg|canBombClip",
+                                        "hmg|canReach|Ice Lobby"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "hmg|canDashClip",
+                                        "hmg|canReach|Ice Lobby"
+                                    ]
+                                }
                             ]
                         }
                     }
@@ -41516,15 +48393,91 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Ice Bomb Drop Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
             "Ice Bomb Drop Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
@@ -41572,6 +48525,28 @@ export const logic_regions: Record<string, RegionLogic> = {
                         }
                     }
                 }
+            },
+            "Ice Bomb Drop Clip": {
+                "to": "Ice Bomb Drop",
+                "type": "Dungeon",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "hmg|bomb",
+                                "hmg|somaria"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "hmg|bomb",
+                                "hmg|somaria"
+                            ]
+                        }
+                    }
+                }
             }
         },
         "entrances": [],
@@ -41579,15 +48554,91 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Ice Bomb Drop - Top Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
             "Ice Bomb Drop - Top Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             }
@@ -41646,15 +48697,87 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Ice Stalfos Hint Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|40"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|40"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    }
                 },
                 "type": "StalfosKnight"
             },
             "Ice Stalfos Hint Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|40"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|40"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    }
                 },
                 "type": "StalfosKnight"
             }
@@ -42386,8 +49509,44 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Ice Right H Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|40"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|40"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    }
                 },
                 "type": "StalfosKnight"
             }
@@ -42550,8 +49709,44 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Ice Hammer Block Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|40"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|40"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    }
                 },
                 "type": "StalfosKnight"
             }
@@ -42794,29 +49989,261 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Ice Hookshot Ledge Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "firerod",
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "anyOf": [
+                                                        "sword",
+                                                        "swordbeams",
+                                                        "temperedSword",
+                                                        "goldSword"
+                                                    ]
+                                                },
+                                                "bombos"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "anyOf": [
+                                        "boomerang",
+                                        "hookshot"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "firerod",
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "anyOf": [
+                                                        "sword",
+                                                        "swordbeams",
+                                                        "temperedSword",
+                                                        "goldSword"
+                                                    ]
+                                                },
+                                                "bombos"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "anyOf": [
+                                        "boomerang",
+                                        "hookshot"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
             "Ice Hookshot Ledge Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "firerod",
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "anyOf": [
+                                                        "sword",
+                                                        "swordbeams",
+                                                        "temperedSword",
+                                                        "goldSword"
+                                                    ]
+                                                },
+                                                "bombos"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "anyOf": [
+                                        "boomerang",
+                                        "hookshot"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "firerod",
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "anyOf": [
+                                                        "sword",
+                                                        "swordbeams",
+                                                        "temperedSword",
+                                                        "goldSword"
+                                                    ]
+                                                },
+                                                "bombos"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "anyOf": [
+                                        "boomerang",
+                                        "hookshot"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
             "Ice Hookshot Ledge Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "firerod",
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "anyOf": [
+                                                        "sword",
+                                                        "swordbeams",
+                                                        "temperedSword",
+                                                        "goldSword"
+                                                    ]
+                                                },
+                                                "bombos"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "anyOf": [
+                                        "boomerang",
+                                        "hookshot"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "firerod",
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "anyOf": [
+                                                        "sword",
+                                                        "swordbeams",
+                                                        "temperedSword",
+                                                        "goldSword"
+                                                    ]
+                                                },
+                                                "bombos"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "anyOf": [
+                                        "boomerang",
+                                        "hookshot"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
             "Ice Hookshot Ledge Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "firerod",
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "anyOf": [
+                                                        "sword",
+                                                        "swordbeams",
+                                                        "temperedSword",
+                                                        "goldSword"
+                                                    ]
+                                                },
+                                                "bombos"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "anyOf": [
+                                        "boomerang",
+                                        "hookshot"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "firerod",
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "anyOf": [
+                                                        "sword",
+                                                        "swordbeams",
+                                                        "temperedSword",
+                                                        "goldSword"
+                                                    ]
+                                                },
+                                                "bombos"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "anyOf": [
+                                        "boomerang",
+                                        "hookshot"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             }
@@ -43383,8 +50810,20 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Ice Palace - Big Chest": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -43446,29 +50885,179 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Ice Backwards Room Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
             "Ice Backwards Room Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
             "Ice Backwards Room Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|40"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|40"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    }
                 },
                 "type": "StalfosKnight"
             },
             "Ice Backwards Room Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             }
@@ -43571,8 +51160,44 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Ice Switch Room Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|40"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|40"
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    }
                 },
                 "type": "StalfosKnight"
             },
@@ -43909,15 +51534,91 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Ice Antechamber Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
             "Ice Antechamber Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
@@ -44134,6 +51835,29 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|16"
+                                            ]
+                                        },
+                                        {
+                                            "allOf": [
+                                                "firerod",
+                                                "canExtendMagic|9"
+                                            ]
+                                        }
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -44141,6 +51865,29 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|16"
+                                            ]
+                                        },
+                                        {
+                                            "allOf": [
+                                                "firerod",
+                                                "canExtendMagic|9"
+                                            ]
+                                        }
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -44153,8 +51900,38 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Mire 2 Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             },
@@ -44167,15 +51944,75 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Mire 2 Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             },
             "Mire 2 Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             },
@@ -44195,8 +52032,38 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Mire 2 Enemy #8": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             },
@@ -44662,8 +52529,20 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Misery Mire - Big Chest": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -44924,6 +52803,40 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                "powder",
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        {
+                                            "allOf": [
+                                                "powder",
+                                                {
+                                                    "anyOf": [
+                                                        "sword",
+                                                        "swordbeams",
+                                                        "temperedSword",
+                                                        "goldSword",
+                                                        "hammer",
+                                                        "hookshot"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|24"
+                                            ]
+                                        },
+                                        "firerod"
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -44931,6 +52844,40 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                "powder",
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        {
+                                            "allOf": [
+                                                "powder",
+                                                {
+                                                    "anyOf": [
+                                                        "sword",
+                                                        "swordbeams",
+                                                        "temperedSword",
+                                                        "goldSword",
+                                                        "hammer",
+                                                        "hookshot"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|24"
+                                            ]
+                                        },
+                                        "firerod"
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -44951,29 +52898,261 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Mire Cross Enemy #6": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        "powder",
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword",
+                                                "hammer",
+                                                "hookshot"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        "powder",
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword",
+                                                "hammer",
+                                                "hookshot"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "Sluggula"
             },
             "Mire Cross Enemy #7": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        "powder",
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword",
+                                                "hammer",
+                                                "hookshot"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        "powder",
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword",
+                                                "hammer",
+                                                "hookshot"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "Sluggula"
             },
             "Mire Cross Enemy #11": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        "powder",
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword",
+                                                "hammer",
+                                                "hookshot"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        "powder",
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword",
+                                                "hammer",
+                                                "hookshot"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "Sluggula"
             },
             "Mire Cross Enemy #12": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        "powder",
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword",
+                                                "hammer",
+                                                "hookshot"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        "powder",
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword",
+                                                "hammer",
+                                                "hookshot"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "Sluggula"
             }
@@ -45076,8 +53255,38 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Mire BK Door Room Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             }
@@ -45436,8 +53645,38 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Mire Fishbone Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             },
@@ -45654,22 +53893,112 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Mire Square Rail Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             },
             "Mire Square Rail Enemy #8": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             },
             "Mire Square Rail Enemy #10": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             }
@@ -46063,8 +54392,66 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Mire Neglected Room Enemy #8": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        "powder",
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword",
+                                                "hammer",
+                                                "hookshot"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        "powder",
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword",
+                                                "hammer",
+                                                "hookshot"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "Sluggula"
             }
@@ -46123,29 +54510,213 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "Mire Conveyor Barrier Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             },
             "Mire Conveyor Barrier Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword"
+                                            ]
+                                        },
+                                        "bombos"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
             "Mire Conveyor Barrier Enemy #6": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        "powder",
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword",
+                                                "hammer",
+                                                "hookshot"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        "powder",
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword",
+                                                "hammer",
+                                                "hookshot"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "Sluggula"
             },
             "Mire Conveyor Barrier Enemy #7": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        "powder",
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword",
+                                                "hammer",
+                                                "hookshot"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "firerod",
+                                {
+                                    "allOf": [
+                                        "powder",
+                                        {
+                                            "anyOf": [
+                                                "sword",
+                                                "swordbeams",
+                                                "temperedSword",
+                                                "goldSword",
+                                                "hammer",
+                                                "hookshot"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "Sluggula"
             }
@@ -46235,6 +54806,92 @@ export const logic_regions: Record<string, RegionLogic> = {
                 "requirements": {
                     "Open": {},
                     "Inverted": {}
+                }
+            },
+            "Mire to Hera Clip": {
+                "to": "Hera Portal",
+                "type": "Dungeon",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "hmg|canDashClip",
+                                        {
+                                            "allOf": [
+                                                "hmg|canBombClip",
+                                                "hmg|canLightFires"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "hmg|canReach|Mire Torches Top"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "hmg|canDashClip",
+                                        {
+                                            "allOf": [
+                                                "hmg|canBombClip",
+                                                "hmg|canLightFires"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "hmg|canReach|Mire Torches Top"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Hera to Swamp Clip": {
+                "to": "Swamp Portal",
+                "type": "Dungeon",
+                "requirements": {
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "hmg|flippers",
+                                {
+                                    "anyOf": [
+                                        "hmg|canDashClip",
+                                        {
+                                            "allOf": [
+                                                "hmg|canBombClip",
+                                                "hmg|canLightFires"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "hmg|canReach|Mire Torches Top"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "hmg|flippers",
+                                {
+                                    "anyOf": [
+                                        "hmg|canDashClip",
+                                        {
+                                            "allOf": [
+                                                "hmg|canBombClip",
+                                                "hmg|canLightFires"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "hmg|canReach|Mire Torches Top"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -47525,36 +56182,106 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "TR Hub Ledges Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "boomerang",
+                                "hookshot"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "boomerang",
+                                "hookshot"
+                            ]
+                        }
+                    }
                 },
                 "type": "BlueBari"
             },
             "TR Hub Ledges Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "boomerang",
+                                "hookshot"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "boomerang",
+                                "hookshot"
+                            ]
+                        }
+                    }
                 },
                 "type": "BlueBari"
             },
             "TR Hub Ledges Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "boomerang",
+                                "hookshot"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "boomerang",
+                                "hookshot"
+                            ]
+                        }
+                    }
                 },
                 "type": "FloatingSkull"
             },
             "TR Hub Ledges Enemy #6": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "boomerang",
+                                "hookshot"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "boomerang",
+                                "hookshot"
+                            ]
+                        }
+                    }
                 },
                 "type": "BlueBari"
             },
             "TR Hub Ledges Enemy #7": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "boomerang",
+                                "hookshot"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "boomerang",
+                                "hookshot"
+                            ]
+                        }
+                    }
                 },
                 "type": "BlueBari"
             }
@@ -48491,6 +57218,25 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|40"
+                                            ]
+                                        },
+                                        "firerod",
+                                        "icerod"
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -48498,6 +57244,25 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|40"
+                                            ]
+                                        },
+                                        "firerod",
+                                        "icerod"
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -48511,6 +57276,25 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|40"
+                                            ]
+                                        },
+                                        "firerod",
+                                        "icerod"
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -48518,6 +57302,25 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|40"
+                                            ]
+                                        },
+                                        "firerod",
+                                        "icerod"
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -48711,8 +57514,20 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Turtle Rock - Big Chest": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -49176,11 +57991,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "boomerang"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "blueSwitchDown"
-                                    ]
-                                }
+                                "blueSwitchDown"
                             ]
                         }
                     },
@@ -49193,11 +58004,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "boomerang"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "blueSwitchDown"
-                                    ]
-                                }
+                                "blueSwitchDown"
                             ]
                         }
                     }
@@ -49820,8 +58627,54 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "TR Eye Bridge Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -50010,11 +58863,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "somaria"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "orangeSwitchDown"
-                                    ]
-                                }
+                                "orangeSwitchDown"
                             ]
                         }
                     },
@@ -50031,11 +58880,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "somaria"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "orangeSwitchDown"
-                                    ]
-                                }
+                                "orangeSwitchDown"
                             ]
                         }
                     }
@@ -50594,8 +59439,20 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "Ganons Tower - Big Chest": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bigkey"
+                            ]
+                        }
+                    }
                 }
             }
         },
@@ -50737,6 +59594,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                "powder",
                                 "canClearRoom"
                             ]
                         }
@@ -50744,6 +59602,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                "powder",
                                 "canClearRoom"
                             ]
                         }
@@ -51061,11 +59920,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "somaria"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "blueSwitchDown"
-                                    ]
-                                }
+                                "blueSwitchDown"
                             ]
                         }
                     },
@@ -51078,11 +59933,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "somaria"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "blueSwitchDown"
-                                    ]
-                                }
+                                "blueSwitchDown"
                             ]
                         }
                     }
@@ -51288,15 +60139,107 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "GT Compass Room Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "GT Compass Room Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -51385,8 +60328,54 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "GT Invisible Catwalk Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
@@ -51399,29 +60388,213 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "GT Invisible Catwalk Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "GT Invisible Catwalk Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "GT Invisible Catwalk Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "GT Invisible Catwalk Enemy #6": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -51751,11 +60924,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "somaria"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "orangeSwitchDown"
-                                    ]
-                                }
+                                "orangeSwitchDown"
                             ]
                         }
                     },
@@ -51769,11 +60938,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "somaria"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "orangeSwitchDown"
-                                    ]
-                                }
+                                "orangeSwitchDown"
                             ]
                         }
                     }
@@ -52162,11 +61327,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "boomerang"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "blueSwitchDown"
-                                    ]
-                                }
+                                "blueSwitchDown"
                             ]
                         }
                     },
@@ -52180,11 +61341,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "boomerang"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "blueSwitchDown"
-                                    ]
-                                }
+                                "blueSwitchDown"
                             ]
                         }
                     }
@@ -52485,11 +61642,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "icerod"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "blueSwitchDown"
-                                    ]
-                                }
+                                "blueSwitchDown"
                             ]
                         }
                     },
@@ -52505,11 +61658,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                                         "icerod"
                                     ]
                                 },
-                                {
-                                    "allOf": [
-                                        "blueSwitchDown"
-                                    ]
-                                }
+                                "blueSwitchDown"
                             ]
                         }
                     }
@@ -52680,15 +61829,107 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "GT Warp Maze - Pit Section Enemy #12": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             },
             "GT Warp Maze - Pit Section Enemy #13": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -52977,6 +62218,28 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        {
+                                            "allOf": [
+                                                "bow",
+                                                "canUseSilverArrows"
+                                            ]
+                                        },
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|24"
+                                            ]
+                                        }
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -52984,6 +62247,28 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        {
+                                            "allOf": [
+                                                "bow",
+                                                "canUseSilverArrows"
+                                            ]
+                                        },
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|24"
+                                            ]
+                                        }
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -53008,29 +62293,157 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "GT Petting Zoo Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "boomerang"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "boomerang"
+                            ]
+                        }
+                    }
                 },
                 "type": "Stalfos"
             },
             "GT Petting Zoo Enemy #8": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "boomerang"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "boomerang"
+                            ]
+                        }
+                    }
                 },
                 "type": "MiniHelmasaur"
             },
             "GT Petting Zoo Enemy #9": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "firerod",
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "anyOf": [
+                                                        "sword",
+                                                        "swordbeams",
+                                                        "temperedSword",
+                                                        "goldSword"
+                                                    ]
+                                                },
+                                                "bombos"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "firerod",
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "anyOf": [
+                                                        "sword",
+                                                        "swordbeams",
+                                                        "temperedSword",
+                                                        "goldSword"
+                                                    ]
+                                                },
+                                                "bombos"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    }
                 },
                 "type": "RedBari"
             },
             "GT Petting Zoo Enemy #11": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|24"
+                                            ]
+                                        },
+                                        {
+                                            "allOf": [
+                                                "bow",
+                                                "canUseSilverArrows"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "somaria",
+                                        {
+                                            "allOf": [
+                                                "byrna",
+                                                "canExtendMagic|24"
+                                            ]
+                                        },
+                                        {
+                                            "allOf": [
+                                                "bow",
+                                                "canUseSilverArrows"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                "boomerang"
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -53134,8 +62547,54 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "GT Hidden Star Enemy #8": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -53324,8 +62783,54 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "GT Falling Bridge Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                {
+                                    "allOf": [
+                                        "byrna",
+                                        "canExtendMagic|24"
+                                    ]
+                                },
+                                {
+                                    "allOf": [
+                                        "bow",
+                                        "canUseSilverArrows"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
                 },
                 "type": "HardhatBeetle"
             }
@@ -53625,8 +63130,20 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "GT Crystal Paths Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    }
                 },
                 "type": "RedEyegore"
             },
@@ -53660,6 +63177,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -53667,6 +63185,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -53680,6 +63199,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -53687,6 +63207,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -53699,15 +63220,39 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "GT Mimics 1 Enemy #7": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    }
                 },
                 "type": "RedEyegore"
             },
             "GT Mimics 1 Enemy #10": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    }
                 },
                 "type": "RedEyegore"
             }
@@ -53723,6 +63268,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -53730,6 +63276,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -53743,6 +63290,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -53750,6 +63298,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                "bow",
                                 "canClearRoom"
                             ]
                         }
@@ -53774,15 +63323,39 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "GT Mimics 2 Enemy #11": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    }
                 },
                 "type": "RedEyegore"
             },
             "GT Mimics 2 Enemy #14": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    }
                 },
                 "type": "RedEyegore"
             }
@@ -53868,8 +63441,20 @@ export const logic_regions: Record<string, RegionLogic> = {
             },
             "GT Hidden Spikes Enemy #5": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "allOf": [
+                                "bow"
+                            ]
+                        }
+                    }
                 },
                 "type": "RedEyegore"
             },
@@ -54558,6 +64143,20 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        "somaria",
+                                        "byrna",
+                                        "firerod",
+                                        "icerod"
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -54565,6 +64164,20 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        "somaria",
+                                        "byrna",
+                                        "firerod",
+                                        "icerod"
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -54577,22 +64190,112 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "GT Wizzrobes 1 Enemy #3": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             },
             "GT Wizzrobes 1 Enemy #4": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             },
             "GT Wizzrobes 1 Enemy #8": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             }
@@ -54647,6 +64350,20 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        "somaria",
+                                        "byrna",
+                                        "firerod",
+                                        "icerod"
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -54654,6 +64371,20 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        "somaria",
+                                        "byrna",
+                                        "firerod",
+                                        "icerod"
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -54667,6 +64398,20 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        "somaria",
+                                        "byrna",
+                                        "firerod",
+                                        "icerod"
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -54674,6 +64419,20 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "allOf": [
+                                {
+                                    "anyOf": [
+                                        "sword",
+                                        "swordbeams",
+                                        "temperedSword",
+                                        "goldSword",
+                                        "hammer",
+                                        "bow",
+                                        "somaria",
+                                        "byrna",
+                                        "firerod",
+                                        "icerod"
+                                    ]
+                                },
                                 "canClearRoom"
                             ]
                         }
@@ -54686,29 +64445,149 @@ export const logic_regions: Record<string, RegionLogic> = {
         "locations": {
             "GT Wizzrobes 2 Enemy #1": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             },
             "GT Wizzrobes 2 Enemy #2": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             },
             "GT Wizzrobes 2 Enemy #6": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             },
             "GT Wizzrobes 2 Enemy #7": {
                 "requirements": {
-                    "Open": {},
-                    "Inverted": {}
+                    "Open": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    },
+                    "Inverted": {
+                        "always": {
+                            "anyOf": [
+                                "sword",
+                                "swordbeams",
+                                "temperedSword",
+                                "goldSword",
+                                "hammer",
+                                "somaria",
+                                "byrna",
+                                "bow",
+                                "icerod",
+                                "firerod"
+                            ]
+                        }
+                    }
                 },
                 "type": "Wizzrobe"
             }
@@ -55331,11 +65210,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Open": {
                         "always": {
                             "anyOf": [
-                                {
-                                    "allOf": [
-                                        "hookshot"
-                                    ]
-                                },
+                                "hookshot",
                                 "canHover"
                             ]
                         }
@@ -55343,11 +65218,7 @@ export const logic_regions: Record<string, RegionLogic> = {
                     "Inverted": {
                         "always": {
                             "anyOf": [
-                                {
-                                    "allOf": [
-                                        "hookshot"
-                                    ]
-                                },
+                                "hookshot",
                                 "canHover"
                             ]
                         }

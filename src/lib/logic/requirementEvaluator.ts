@@ -1,6 +1,7 @@
 import type { CrystalSwitchState, LinkState, LogicRequirement, LogicState, LogicStatus, RegionLogic, WorldLogic } from "@/data/logic/logicTypes";
 import type { GameState } from "@/data/logic/logicTypes";
 import { getLogicStateForWorld, minimumStatus, maximumStatus } from "./logicHelpers";
+import { DungeonsData } from "@/data/dungeonData";
 
 export interface EvaluationContext {
   dungeonId?: string;
@@ -14,17 +15,44 @@ export interface EvaluationContext {
   /** OWR: Override world state for requirement evaluation on tiles whose effective
    *  world differs from the global setting (e.g., flipped tiles). */
   effectiveWorldState?: string;
-  /** Accumulates sequence-break reason keys whenever "ool" is returned. */
+  /** Accumulates reason keys whenever "ool" (sequence breaks) or "possible" (static key assumptions) is returned. */
   reasons?: Set<string>;
+}
+
+/** Per-traversal state for static key logic, shared by reference between all evaluators of a traversal. */
+export interface StaticKeyRuntime {
+  /** Small keys that may still be found in reachable unchecked locations (in-dungeon keys only), per dungeon */
+  extraKeys: Record<string, number>;
+}
+
+export interface RequirementEvaluatorOptions {
+  staticKeys?: StaticKeyRuntime;
+  /** All-items evaluators treat every static key requirement as met */
+  assumeAllStaticKeys?: boolean;
+  /** canReachFrom for contexts that don't carry one (dungeon traversal), answered by the overworld traverser */
+  canReachFrom?: (sourceRegionName: string, targetRegionName: string) => LogicStatus;
 }
 
 export class RequirementEvaluator {
   private state: GameState;
   private regions?: Record<string, RegionLogic>;
+  private options: RequirementEvaluatorOptions;
 
-  constructor(state: GameState, regions?: Record<string, RegionLogic>) {
+  constructor(state: GameState, regions?: Record<string, RegionLogic>, options: RequirementEvaluatorOptions = {}) {
     this.state = state;
     this.regions = regions;
+    this.options = options;
+  }
+
+  /** Universal small keys: the player is assumed to have as many small keys as they need. */
+  private hasUnlimitedSmallKeys(): boolean {
+    return this.state.settings.wildSmallKeys === "universal";
+  }
+
+  /** Chest keys collected for a dungeon; static key logic never counts vanilla key drops or pot keys. */
+  private collectedChestKeys(dungeonId: string): number {
+    const collected = this.state.dungeons[dungeonId]?.smallKeys ?? 0;
+    return Math.min(collected, DungeonsData[dungeonId]?.totalLocations?.smallkeys ?? collected);
   }
 
   public evaluateWorldLogic(worldLogic: WorldLogic, ctx: EvaluationContext): LogicStatus {
@@ -234,9 +262,9 @@ export class RequirementEvaluator {
         return this.boolToStatus(this.state.dungeons["ct"].bossDefeated);
       case "agahnim2":
         return this.boolToStatus(this.state.dungeons["gt"].bossDefeated);
-      case "bombs":
+      case "bomb":
         if (ctx.linkState !== "link") return "unavailable";
-        return this.boolToStatus(this.hasItem("bomb"));
+        return this.boolToStatus(this.hasItem("bomb") || this.hasItem("bombcapacity"));
       case "bottle":
         return this.boolToStatus(this.getBottleCount() > 0);
       case "bow":
@@ -293,6 +321,8 @@ export class RequirementEvaluator {
       case "canUseSilverArrows":
         return this.boolToStatus(items.bow.amount >= 4);
       case "canUseMedallionPad":
+        // Using a medallion needs Link: a bunny (no Moon Pearl) cannot use items
+        if (ctx.linkState === "bunny" || ctx.linkState === "superbunny") return "unavailable";
         return this.boolToStatus(this.hasItem("sword")); // || TODO: Add swordless logic
       case "canTakeDamage":
         if (ctx.linkState === "superbunny") return "unavailable";
@@ -347,7 +377,7 @@ export class RequirementEvaluator {
       case "canGetBonkableItem":
         return maximumStatus(this.resolveSimple("boots", ctx), minimumStatus(this.resolveSimple("quake", ctx), this.resolveSimple("sword", ctx)));
       case "canCrossEnergyBarrier":
-        return this.boolToStatus(this.hasItem("swordbeams") || this.hasItem("cape")); // || TODO: Add swordless logic
+        return maximumStatus(this.resolveSimple("swordbeams", ctx), this.boolToStatus(this.hasItem("cape"))); // || TODO: Add swordless logic
       case "canOpenGT":
         if (this.state.settings.gtOpen === "locksmith") {
           return this.resolveSimple("canCollectLocksmith", ctx);
@@ -368,10 +398,16 @@ export class RequirementEvaluator {
         // TODO Follower shuffle logic
         return this.resolveComplex("canReach|Old Man Cave (West)", ctx);
       case "canRescueOldMan":
+        // Optional assumption: collecting the Old Man's item proves he was rescued, so his S&Q spot is
+        // reachable even if the rescue caves have not been placed (entrance shuffle).
+        if (this.state.settings.assumeOldManOnCollect && this.state.checks?.["Old Man"]?.checked) return "available";
         return minimumStatus(this.resolveSimple("canCollectOldMan", ctx), this.resolveComplex("canReachFrom|Old Man Cave (West)|Old Man Drop Off", ctx));
       case "canCollectKiki":
         // TODO Follower shuffle logic
-        return minimumStatus(this.resolveComplex("canReach|Palace of Darkness Area", ctx), this.resolveSimple("moonpearl", ctx));
+        // Kiki must be picked up as Link. Only evaluated at the Palace of Darkness screen, so the link
+        // state there decides it: no Moon Pearl needed where the Dark World is home (inverted, flipped tiles).
+        if (ctx.linkState === "bunny") return "unavailable";
+        return this.resolveComplex("canReach|Palace of Darkness Area", ctx);
       case "canOpenPod":
         return minimumStatus(this.resolveSimple("canCollectKiki", ctx), this.resolveComplex("canReach|Palace of Darkness Area", ctx));
       case "canCollectLocksmith":
@@ -422,7 +458,7 @@ export class RequirementEvaluator {
       case "blueSwitchDown":
         return this.boolToStatus(ctx.crystalStates?.has("blue") ?? false);
       case "smallkey":
-        // In Dungeon or universal small keys do not block access - logically assumed to have access to all of them
+        // Universal keys: unlimited. In dungeon keys: logically assumed to have access to all of them.
         if (this.state.settings.wildSmallKeys !== "wild") {
           return "available";
         }
@@ -438,6 +474,11 @@ export class RequirementEvaluator {
           return "available";
         }
         if (ctx.dungeonId) {
+          // HC Exception. TODO maybe harden to check can kill? Pots should always allow
+          const totLocs = DungeonsData[ctx.dungeonId]?.totalLocations;
+          if (totLocs?.bigkeydrops && !totLocs?.bigkey && this.state.settings.enemyDrop === "none") {
+            return "available";
+          }
           return this.boolToStatus(this.state.dungeons[ctx.dungeonId]?.bigKey ?? false);
         }
         return "unavailable";
@@ -582,13 +623,24 @@ export class RequirementEvaluator {
       case "canHMGUnlockHeraLogic":
       case "canHMGUnlockSwampBreach":
       case "canHMGUnlockSwampLogic":
-      case "canHMGMirrorlessSwampBreach":
-      case "canHMGMirrorlessSwampLogic":
       case "never":
         return "unavailable";
 
+      // Dashing needs Link: a bunny cannot use the boots. OWR's can_boots_clip_lw/dw express this as
+      // "Moon Pearl in the other world"; the link state at the source region says the same thing.
       case "canBootsClip":
+        if (ctx.linkState === "bunny") return "unavailable";
         return this.boolToStatus(this.state.settings.logicMode !== "noglitches" && this.hasItem("boots"));
+      // OWR can_dash_clip / can_bomb_clip (HMG dungeon clips): not a bunny, boots (and bombs)
+      case "canDashClip":
+        if (ctx.linkState === "bunny") return "unavailable";
+        return this.boolToStatus(this.state.settings.logicMode !== "noglitches" && this.hasItem("boots"));
+      case "canBombClip":
+        return minimumStatus(this.resolveSimple("canDashClip", ctx), this.resolveSimple("bomb", ctx));
+      // OWR's HMG Swamp moat rule (UnderworldGlitchRules.py): swim the moat after reaching Swamp through
+      // the Mire clip, which needs Old Man S&Q and Hera or GT leading to the Mire or Hera portal
+      case "canHMGMirrorlessSwamp":
+        return this.canHMGMirrorlessSwamp(ctx);
 
       // The player is in superbunny state right now (this is decided by the
       // OverworldTraverser; we only mirror the decision here). In noglitches
@@ -607,11 +659,22 @@ export class RequirementEvaluator {
       case "canFakeFlipper":
         return this.boolToStatus(this.state.settings.logicMode !== "noglitches");
       case "canWaterWalk":
+        if (ctx.linkState === "bunny") return "unavailable";
         return this.boolToStatus(this.state.settings.logicMode !== "noglitches" && this.hasItem("boots"));
       case "canBunnyPocket":
         return this.boolToStatus(this.state.settings.logicMode !== "noglitches" && this.hasItem("boots") && (this.hasItem("mirror") || this.getBottleCount() > 0));
       case "canSpinSpeedClip":
+        if (ctx.linkState === "bunny") return "unavailable";
         return this.boolToStatus(this.state.settings.logicMode !== "noglitches" && this.hasItem("boots") && (this.hasItem("sword") || this.hasItem("hookshot")));
+      
+      // This is a meta check to show HC main as out of logic
+      case "canReachHCMain":
+        if (this.state.dungeons["ct"].bossDefeated) return "unavailable";
+        ctx.reasons?.add("canReachHCMain");
+        return "ool";
+      // Unconditional rule; only emitted behind a mode prefix (owg|true / hmg|true)
+      case "true":
+        return "available";
       default:
         // Covers all simple item checks - works because all items are counted now rather than boolean
         // Putting this here allows us to use more complex logic conditions above (i.e. flute)
@@ -621,6 +684,38 @@ export class RequirementEvaluator {
         // console.error(`Unknown simple logic condition: ${condition}`);
         return "available";
     }
+  }
+
+  private canHMGMirrorlessSwamp(ctx: EvaluationContext): LogicStatus {
+    const { logicMode, entranceMode, worldState } = this.state.settings;
+    if (logicMode !== "hybridglitches" && logicMode !== "nologic") return "unavailable";
+    if (!["none", "dungeonssimple", "dungeonsfull"].includes(entranceMode)) return "unavailable";
+
+    const oldManSQ = this.regions?.["Menu"]?.exits?.["Old Man S&Q"];
+    const mireClip = minimumStatus(
+      this.resolveComplex("canReach|Mire Torches Top", ctx),
+      maximumStatus(this.resolveSimple("canDashClip", ctx), minimumStatus(this.resolveSimple("canBombClip", ctx), this.resolveSimple("canLightFires", ctx))),
+    );
+    // Which interior the Tower of Hera / Ganons Tower doors lead to (unlinked in dungeon ER: unknown)
+    const portalBehind = (entrance: string): LogicStatus => {
+      const to = this.state.entrances[entrance]?.to ?? (entranceMode === "none" ? entrance : null);
+      if (to === "Misery Mire") return this.resolveComplex("canReach|Mire Torches Top", ctx);
+      if (to === "Tower of Hera") {
+        return minimumStatus(this.resolveComplex("canReach|Hera Startile Corner", ctx), this.resolveSimple("bigkey", { ...ctx, dungeonId: "toh" }));
+      }
+      return "unavailable";
+    };
+    const invertedDM = worldState === "inverted" || worldState === "inverted_1";
+    const pearl = this.resolveSimple("moonpearl", ctx);
+    const heraRule = minimumStatus(invertedDM ? pearl : "available", portalBehind("Tower of Hera"));
+    const gtRule = minimumStatus(invertedDM ? "available" : pearl, portalBehind("Ganons Tower"));
+
+    return minimumStatus(
+      oldManSQ?.requirements ? this.evaluateWorldLogic(oldManSQ.requirements, ctx) : "unavailable",
+      this.resolveSimple("flippers", ctx),
+      maximumStatus(heraRule, gtRule),
+      mireClip,
+    );
   }
 
   private checkMedallion(dungeonId: string): LogicStatus {
@@ -658,10 +753,11 @@ export class RequirementEvaluator {
       case "canReachFrom": {
         const sourceRegionName = conditionParts.length >= 3 ? conditionParts[1] : ctx.regionName;
         const targetRegionName = conditionParts.length >= 3 ? conditionParts[2] : conditionParts[1];
-        if (!sourceRegionName || !targetRegionName || !ctx.canReachFromRegion) {
+        const canReachFromRegion = ctx.canReachFromRegion ?? this.options.canReachFrom;
+        if (!sourceRegionName || !targetRegionName || !canReachFromRegion) {
           return "unavailable";
         }
-        const status = ctx.canReachFromRegion(sourceRegionName, targetRegionName);
+        const status = canReachFromRegion(sourceRegionName, targetRegionName);
         return status === "information" ? "available" : status;
       }
 
@@ -692,8 +788,29 @@ export class RequirementEvaluator {
         dungeon = this.state.dungeons[conditionParts[1]];
         return (dungeon.bigKey ?? false) ? "available" : "unavailable";
 
+      // Static key logic: keys|<dungeonId>|<count> of collected chest keys
       case "keys": {
-        return "available";
+        if (conditionParts.length < 3 || this.options.assumeAllStaticKeys || this.hasUnlimitedSmallKeys()) return "available";
+        const dungeonId = conditionParts[1];
+        const needed = parseInt(conditionParts[2]);
+        const collected = this.collectedChestKeys(dungeonId);
+        if (collected >= needed) return "available";
+        if (collected + (this.options.staticKeys?.extraKeys[dungeonId] ?? 0) >= needed) {
+          ctx.reasons?.add(`staticFindableKeys|${dungeonId}|${needed}`);
+          return "possible";
+        }
+        return "unavailable";
+      }
+
+      // Static key logic placement condition: assume|bigKey|<dungeonId>|<locations> or
+      // assume|smallKey|<dungeonId>|<locations>. The tracker never knows where items are, so these
+      // only ever make something "possible", with the condition kept as the reason.
+      case "assume": {
+        if (this.options.assumeAllStaticKeys) return "available";
+        // With unlimited small keys, where a small key was placed no longer matters
+        if (conditionParts[1] === "smallKey" && this.hasUnlimitedSmallKeys()) return "available";
+        ctx.reasons?.add(condition);
+        return "possible";
       }
 
       case "medallion": {
@@ -728,6 +845,16 @@ export class RequirementEvaluator {
       case "hearts": {
         return "available";
       }
+      // Another dungeon's keys used here (HMG clips: Mire keys open Swamp doors, the Mire/Hera big
+      // keys open Swamp's and Hera's big chests). Named apart from bigkey/smallkey so dungeon
+      // traversal doesn't treat these doors as this dungeon's own key doors.
+      case "otherBigKey":
+        if (!this.state.settings.wildBigKeys) return "available";
+        return this.boolToStatus(this.state.dungeons[conditionParts[1]]?.bigKey ?? false);
+      case "otherSmallKeys":
+        if (this.hasUnlimitedSmallKeys()) return "available";
+        return this.boolToStatus((this.state.dungeons[conditionParts[1]]?.smallKeys ?? 0) >= parseInt(conditionParts[2]));
+
       case "exception":
         return "unavailable";
 

@@ -1,7 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import userEvent from "@testing-library/user-event";
 import MapLocation from "../MapLocation";
-import { renderWithStore } from "./renderWithStore";
+import { createTestStore, renderWithStore } from "./renderWithStore";
+import { updateDungeonState } from "@/store/dungeonsSlice";
+import { setSettings } from "@/store/settingsSlice";
+import { setEntranceLink } from "@/store/entrancesSlice";
 import type { LogicStatus } from "@/data/logic/logicTypes";
 
 // Mock the hook that MapLocation depends on
@@ -122,5 +125,69 @@ describe("MapLocation", () => {
     const yPercent = (200 / 512) * 100;
     expect(el.style.left).toBe(`${xPercent}%`);
     expect(el.style.top).toBe(`${yPercent}%`);
+  });
+
+  describe("prize icon in the boss square", () => {
+    const epLocation = { ...defaultLocation, overworld: false, isDungeon: true };
+    const renderEP = (prize: string) => {
+      mockHookReturn.itemLocations = ["Eastern Palace - Boss"];
+      mockHookReturn.itemChecks = {
+        "Eastern Palace - Boss": {
+          displayName: "Boss",
+          status: { checked: false, logic: "available", manuallyChecked: false, scoutedItems: [] },
+        },
+      } as unknown as typeof mockHookReturn.itemChecks;
+      const store = createTestStore();
+      store.dispatch(updateDungeonState({ dungeon: "ep", newState: { prize: prize as never } }));
+      renderWithStore(<MapLocation name="Eastern Palace" location={epLocation} type="item" isEntrance={false} />, { store });
+      return Array.from(document.querySelectorAll<HTMLElement>("[style]")).map((el) => el.style.backgroundImage);
+    };
+
+    it("shows the prize once it is known", () => {
+      expect(renderEP("greenPendant").some((bg) => bg.includes("/dungeons/green_pendant.png"))).toBe(true);
+    });
+
+    it("shows the map icon when only the map is known", () => {
+      expect(renderEP("map").some((bg) => bg.includes("/dungeons/map.png"))).toBe(true);
+    });
+
+    it("shows nothing for an unknown prize", () => {
+      expect(renderEP("unknown").some((bg) => bg.includes("/dungeons/"))).toBe(false);
+    });
+  });
+
+  describe("old style dungeon squares", () => {
+    const renderLinkedToEP = (useOldStyleDungeonSquares: boolean) => {
+      mockHookReturn.itemLocations = ["Eastern Palace - Boss"];
+      mockHookReturn.itemChecks = {
+        "Eastern Palace - Boss": {
+          displayName: "Boss",
+          status: { checked: false, logic: "available", manuallyChecked: false, scoutedItems: [] },
+        },
+      } as unknown as typeof mockHookReturn.itemChecks;
+      mockHookReturn.maxLogicStatus = "available";
+      const store = createTestStore();
+      store.dispatch(setSettings({ entranceMode: "crossed", useOldStyleDungeonSquares }));
+      store.dispatch(setEntranceLink({ entrance: "Links House", to: "Eastern Palace", entranceMode: "crossed" }));
+      store.dispatch(updateDungeonState({ dungeon: "ep", newState: { prize: "greenPendant" } }));
+      renderWithStore(<MapLocation name="Links House" location={defaultLocation} type="entrance" isEntrance />, { store });
+      return document.querySelector(".absolute.inset-0") as HTMLElement;
+    };
+
+    it("draws a plain square in the dungeon label colour with a black outline", () => {
+      const square = renderLinkedToEP(true);
+      expect(square.style.backgroundColor).toBe("rgb(50, 205, 50)");
+      expect(square.className).toContain("border-black");
+      expect(square.className).not.toContain("bg-status-available");
+      // No boss square or prize icon
+      expect(document.querySelector(".inset-1")).toBeNull();
+      expect(document.querySelectorAll("[style*='/dungeons/']").length).toBe(0);
+    });
+
+    it("keeps logic colouring, boss square and prize when disabled", () => {
+      const square = renderLinkedToEP(false);
+      expect(square.className).toContain("bg-status-available");
+      expect(document.querySelector(".inset-1")).toBeTruthy();
+    });
   });
 });
